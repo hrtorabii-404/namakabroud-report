@@ -3,392 +3,669 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شناسنامه پروژه‌های سرمایه‌گذاری نمک‌آبرود</title>
+    <title>شناسنامه مدیریتی پروژه‌های عمرانی نمک‌آبرود</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for creating charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Persian Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: #f1f5f9;
+            background-color: #f1f5f9; /* slate-100 */
         }
-        .project-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            overflow: hidden;
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+        .summary-chart-container {
+            height: 550px;
+            width: 100%;
+        }
+        
+        /* --- PDF & Print Styling --- */
+        .pdf-page {
+            page-break-inside: avoid !important; 
+        }
+        .cover-page {
+            page-break-after: always !important;
+            min-height: 85vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        .card-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; }
-        .card-body { padding: 1.5rem; flex-grow: 1; }
-        .card-footer { padding: 1rem 1.5rem; background-color: #f8fafc; border-top: 1px solid #e2e8f0; }
-        .status-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; }
-        .status-incomplete { background-color: #fef9c3; color: #a16207; }
-        .status-unimplemented { background-color: #fee2e2; color: #991b1b; }
-        .status-new { background-color: #dbeafe; color: #1e40af; }
-        .metric-icon { flex-shrink: 0; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-        .section-header { font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 3px solid #0ea5e9; }
-        .chart-container { position: relative; width: 100%; }
-        .download-btn { transition: all 0.3s ease; }
-        .download-btn:hover { transform: scale(1.05); }
-        
-        /* Print and PDF Styles */
-        .pdf-page {
-            break-inside: avoid;
-            page-break-inside: avoid;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        .pdf-page-break-after {
-            page-break-after: always;
-        }
+
         @media print {
-            body {
-                background-color: white;
+            html, body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background-color: #ffffff;
             }
             .no-print {
                 display: none !important;
             }
-            .project-card {
-                box-shadow: none !important;
-                border: 1px solid #e2e8f0;
+            .pdf-page:not(.cover-page) {
+                page-break-before: always !important;
             }
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 lg:p-8">
-    <div id="content-to-download">
-        <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 bg-white">
-            <div class="pdf-page">
-                <header class="text-center" style="height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border-radius: 12px;">
-                    <div class="border-4 border-sky-400 p-10 rounded-lg">
-                        <h1 class="text-5xl font-extrabold text-white">داشبورد مدیریتی پروژه‌های بالقوه</h1>
-                        <h2 class="text-3xl font-semibold text-sky-300 mt-4">شهرک نمک‌آبرود</h2>
-                        <p class="text-xl text-slate-300 mt-8">تحلیل وضعیت پروژه‌های عمرانی به تفکیک محلات</p>
-                    </div>
-                </header>
+<body class="bg-slate-100 text-slate-800 p-2 sm:p-4 md:p-6">
+
+    <div id="report-content" class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-4 md:p-10">
+        
+        <header class="text-center pdf-page cover-page">
+            <div class="border-y-4 border-indigo-700 py-10 px-6 md:py-12 md:px-8 w-full">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-900">شناسنامه پروژه‌های بالقوه</h1>
+                <p class="text-lg md:text-xl text-slate-600 mt-4">گزارش مدیریتی و تحلیلی شهرک نمک‌آبرود</p>
+                <p class="text-sm text-slate-400 mt-12">بر اساس طرح بهنگام - ویرایش ششم - تابستان ۱۴۰۴</p>
             </div>
-            <div class="pdf-page-break-after"></div>
+        </header>
 
-            <!-- Dynamic Content for Neighborhoods -->
-            <div id="neighborhoods"></div>
+        <!-- Overall Town Summary Page -->
+        <div class="pdf-page">
+             <section class="pt-2">
+                <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-4">نمای کلی شهرک نمک‌آبرود</h2>
+                <p class="text-center text-base md:text-lg text-slate-600 max-w-3xl mx-auto mb-10">این بخش، شاخص‌های کلان و وضعیت کلی کاربری اراضی در کل شهرک را نمایش می‌دهد. (توجه: مساحت کل شهرک ۷۱۹.۴۳ هکتار است که بخش‌هایی از آن در جدول کاربری زیر لحاظ نشده‌اند).</p>
+                <div id="town-kpi-container" class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    <!-- Town KPIs will be populated here -->
+                </div>
+                <div id="land-use-table-container">
+                    <!-- Land use table will be populated here -->
+                </div>
+            </section>
+        </div>
 
-            <!-- Summary Chart Section -->
-            <section class="pdf-page">
-                <h2 class="section-header">نمودار مقایسه‌ای تکمیل زیرساخت‌ها در کل محلات</h2>
-                <div class="bg-white p-6 rounded-xl">
-                    <div class="chart-container" style="height: 500px;">
-                        <canvas id="summary-chart"></canvas>
+
+        <main id="neighborhoods-container">
+            <!-- This will be populated by JavaScript -->
+        </main>
+        
+        <div class="pdf-page">
+            <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
+            <section class="pt-2">
+                <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-4">نمودار تعاملی مقایسه پیشرفت محلات</h2>
+                 <p class="text-center text-base md:text-lg text-slate-600 max-w-3xl mx-auto mb-10">این نمودار، وضعیت پیشرفت هر حوزه پروژه را به تفکیک در تمام محلات نمایش می‌دهد. با کلیک بر روی نام هر پروژه در بالای نمودار، می‌توانید آن را مخفی یا نمایان کرده و حوزه‌های مورد نظر را با هم مقایسه کنید.</p>
+                 <div class="bg-slate-50 p-4 sm:p-6 rounded-xl shadow-lg">
+                    <div class="summary-chart-container relative">
+                        <canvas id="summary-bar-chart"></canvas>
                     </div>
                 </div>
             </section>
-            <div class="pdf-page-break-after"></div>
+        </div>
 
-
-            <!-- Supra-neighborhood Section -->
-            <section class="pdf-page">
-                <h2 class="section-header">پروژه‌های کلان (مقیاس فرامحله‌ای)</h2>
-                <div id="supra-neighborhoods" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
+        <div class="pdf-page">
+            <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
+            <section class="pt-2">
+                <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-4">تحلیل چالش‌ها و شاخص‌های کلیدی</h2>
+                <p class="text-center text-base md:text-lg text-slate-600 max-w-3xl mx-auto mb-10">نمای کلی از وضعیت پروژه‌ها و ارزیابی مهم‌ترین چالش‌های پیش رو در سطح شهرک.</p>
+                <div id="analysis-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- This will be populated by JavaScript -->
+                </div>
+                 <div id="comparison-table-container" class="mt-8">
+                    <!-- This will be populated by JavaScript -->
+                </div>
             </section>
         </div>
-    </div>
 
-    <!-- Download Button Section -->
-    <div class="mt-16 text-center space-y-4 no-print">
-        <button id="download-pdf-btn" class="download-btn bg-sky-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            دانلود با فرمت PDF
-        </button>
-        <div id="loader" class="hidden mt-4">
-            <p class="text-slate-600">در حال آماده‌سازی فایل با کیفیت بالا... لطفاً منتظر بمانید.</p>
+        <div class="pdf-page">
+            <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
+            <section class="pt-2">
+                <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-8">داشبورد پروژه‌های استراتژیک (فرامحله‌ای)</h2>
+                <div id="supra-local-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- This will be populated by JavaScript -->
+                </div>
+            </section>
         </div>
+
+        <footer class="text-center mt-20 pt-10 border-t-2 border-slate-200 no-print">
+            <button id="download-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                دانلود شناسنامه به صورت PDF
+            </button>
+             <div id="loading-spinner" class="hidden mt-4 flex items-center justify-center">
+                <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-slate-600 mr-2">در حال آماده‌سازی فایل PDF...</span>
+            </div>
+        </footer>
     </div>
-
+    
+    <!-- MAIN APPLICATION SCRIPT -->
     <script>
-        const neighborhoodsData = {
-            "محله ۱": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 20, value: "۲,۲۶۱ متر", details: "شامل خاک‌برداری، زیرسازی، تسطیح و آسفالت معابر باقی‌مانده.", goal: "تسهیل دسترسی به قطعات و ارتقاء کیفیت معابر داخلی." },
-                    { title: "شبکه آب", deficit: 14, value: "۱,۵۸۴ متر", details: "شامل لوله‌گذاری با اقطار ۶۳ تا ۲۵۰ میلی‌متر.", goal: "تأمین آب شرب پایدار برای کلیه قطعات." },
-                    { title: "شبکه برق", deficit: 8, value: "۹۲۰ متر", details: "شامل کابل‌کشی جهت برق‌رسانی و تأمین روشنایی معابر.", goal: "تأمین برق پایدار و ایمن و افزایش امنیت در شب." },
-                    { title: "شبکه گاز", deficit: 17, value: "۱,۸۷۷ متر", details: "شامل لوله‌گذاری پلی‌اتیلن (PG) با اقطار ۶۳ تا ۱۶۰ میلی‌متر.", goal: "فراهم‌سازی امکان استفاده از گاز شهری." }
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = {
+                "محله ۱": {
+                    description: "محله‌ای کم‌تراکم با زیرساخت‌های نسبتاً متوازن که چالش اصلی آن، کمبود شدید خدمات روبنایی و نیاز به فعال‌سازی ظرفیت‌های خالی است.",
+                    stats: { area: 54.23, area_percent: 7.5, density: 2.9, households: 53, population: 159, land_price: 30, building_price: 45, unbuilt_services_count: 27 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۲,۲۶۱ متر", incompleteness: 20 },
+                        { name: "شبکه توزیع آب", quantity: "۱,۵۸۴ متر", incompleteness: 14 },
+                        { name: "شبکه توزیع برق", quantity: "۹۲۰ متر", incompleteness: 8 },
+                        { name: "شبکه توزیع گاز", quantity: "۱,۸۷۷ متر", incompleteness: 17 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۱۱,۰۳۲ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 32, area: 17002 }, in_progress: { count: 4, area: 5282 }, unbuilt: { count: 27, area: 70242 } }
+                },
+                "محله ۲": {
+                    description: "پُرجمعیت‌ترین و توسعه‌یافته‌ترین محله شهرک از نظر زیرساختی که اکنون نیازمند تمرکز بر ارتقاء کیفی و تکمیل خدمات روبنایی است.",
+                    stats: { area: 66.68, area_percent: 9.3, density: 63.79, households: 1418, population: 4254, land_price: 35, building_price: 45, unbuilt_services_count: 31 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۱,۳۳۴ متر", incompleteness: 10 },
+                        { name: "شبکه توزیع آب", quantity: "۸۵۱ متر", incompleteness: 7 },
+                        { name: "شبکه توزیع برق", quantity: "۲۲۴ متر", incompleteness: 2 },
+                        { name: "شبکه توزیع گاز", quantity: "۱,۳۶۱ متر", incompleteness: 10 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۱۲,۸۵۶ متر", incompleteness: 99 }
+                    ],
+                    services: { executed: { count: 20, area: 37303 }, in_progress: { count: 13, area: 19502 }, unbuilt: { count: 31, area: 50237 } }
+                },
+                "محله ۳": {
+                    description: "متراکم‌ترین محله شهرک با زیرساخت‌های تقریباً کامل که اولویت اصلی آن، توسعه فضاهای تجاری محلی و رفع کمبود خدمات عمومی است.",
+                    stats: { area: 37.84, area_percent: 5.3, density: 77.61, households: 979, population: 2937, land_price: 40, building_price: 50, unbuilt_services_count: 24 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۸۱۲ متر", incompleteness: 10 },
+                        { name: "شبکه توزیع آب", quantity: "۵۶۴ متر", incompleteness: 7 },
+                        { name: "شبکه توزیع برق", quantity: "۷۲۸ متر", incompleteness: 9 },
+                        { name: "شبکه توزیع گاز", quantity: "۴۸۹ متر", incompleteness: 6 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۷,۸۳۴ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 7, area: 8243 }, in_progress: { count: 7, area: 13839 }, unbuilt: { count: 24, area: 33129 } }
+                },
+                "محله ۴": {
+                    description: "محله‌ای وسیع با تراکم جمعیتی پایین که به دلیل حجم بالای پروژه‌های نیمه‌تمام زیرساختی، نیازمند سرمایه‌گذاری متمرکز است.",
+                    stats: { area: 69.11, area_percent: 9.6, density: 4.60, households: 106, population: 318, land_price: 30, building_price: 45, unbuilt_services_count: 48 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۳,۴۰۳ متر", incompleteness: 26 },
+                        { name: "شبکه توزیع آب", quantity: "۳,۷۶۷ متر", incompleteness: 28 },
+                        { name: "شبکه توزیع برق", quantity: "۳,۵۳۶ متر", incompleteness: 27 },
+                        { name: "شبکه توزیع گاز", quantity: "۲,۲۶۸ متر", incompleteness: 17 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۱۳,۲۴۷ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 24, area: 32359 }, in_progress: { count: 8, area: 11225 }, unbuilt: { count: 48, area: 89172 } }
+                },
+                "محله ۵": {
+                    description: "توسعه‌یافته‌ترین محله از نظر تکمیل زیرساخت‌ها که با کمترین حجم پروژه‌های باقی‌مانده، بر توسعه خدمات تجاری و اداری متمرکز است.",
+                    stats: { area: 35.66, area_percent: 5.0, density: 71.34, households: 848, population: 2544, land_price: 40, building_price: 60, unbuilt_services_count: 18 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۱۶۳ متر", incompleteness: 3 },
+                        { name: "شبکه توزیع آب", quantity: "۷۱ متر", incompleteness: 1 },
+                        { name: "شبکه توزیع برق", quantity: "۶۸ متر", incompleteness: 1 },
+                        { name: "شبکه توزیع گاز", quantity: "۷۱ متر", incompleteness: 1 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۵,۱۰۸ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 7, area: 69148 }, in_progress: { count: 3, area: 91977 }, unbuilt: { count: 18, area: 38797 } }
+                },
+                "محله ۶": {
+                    description: "محله‌ای با بالاترین ارزش زمین و تمرکز بر بلندمرتبه‌سازی که چالش اصلی آن، ایجاد خدمات پشتیبان متناسب با سکونت متراکم است.",
+                    stats: { area: 36.28, area_percent: 5.0, density: 27.20, households: 329, population: 987, land_price: 100, building_price: 120, unbuilt_services_count: 9 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۱,۲۱۵ متر", incompleteness: 22 },
+                        { name: "شبکه توزیع آب", quantity: "۸۱۶ متر", incompleteness: 15 },
+                        { name: "شبکه توزیع برق", quantity: "۶۰۲ متر", incompleteness: 11 },
+                        { name: "شبکه توزیع گاز", quantity: "۶۴۳ متر", incompleteness: 11 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۵,۵۹۷ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 5, area: 10607 }, in_progress: { count: 4, area: 7729 }, unbuilt: { count: 9, area: 28549 } }
+                },
+                "محله ۷": {
+                    description: "محله‌ای توسعه‌نیافته با زیرساخت‌های بسیار ضعیف که اجرای کامل و بنیادین تمام شبکه‌های پایه در آن یک اولویت مطلق است.",
+                    stats: { area: 35.85, area_percent: 5.0, density: 2.17, households: 26, population: 78, land_price: 20, building_price: 35, unbuilt_services_count: 14 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۳,۵۹۸ متر", incompleteness: 43 },
+                        { name: "شبکه توزیع آب", quantity: "۳,۹۶۰ متر", incompleteness: 47 },
+                        { name: "شبکه توزیع برق", quantity: "۴,۲۹۵ متر", incompleteness: 51 },
+                        { name: "شبکه توزیع گاز", quantity: "۴,۷۶۶ متر", incompleteness: 57 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۸,۴۲۹ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 2, area: 452 }, in_progress: { count: 5, area: 1976 }, unbuilt: { count: 14, area: 26119 } }
+                },
+                "محله ۸": {
+                    description: "عقب‌مانده‌ترین محله از نظر پیشرفت زیرساختی که با توجه به وسعت آن، نیازمند یک برنامه توسعه جامع و سرمایه‌گذاری کلان است.",
+                    stats: { area: 65.99, area_percent: 9.2, density: 4.95, households: 109, population: 327, land_price: 15, building_price: 30, unbuilt_services_count: 36 },
+                    projects: [
+                        { name: "شبکه راه و معابر", quantity: "۶,۷۹۱ متر", incompleteness: 54 },
+                        { name: "شبکه توزیع آب", quantity: "۴,۵۰۸ متر", incompleteness: 36 },
+                        { name: "شبکه توزیع برق", quantity: "۷,۰۷۳ متر", incompleteness: 56 },
+                        { name: "شبکه توزیع گاز", quantity: "۷,۰۷۳ متر", incompleteness: 56 },
+                        { name: "شبکه جمع‌آوری فاضلاب", quantity: "۱۲,۶۷۳ متر", incompleteness: 100 }
+                    ],
+                    services: { executed: { count: 18, area: 4599 }, in_progress: { count: 8, area: 25519 }, unbuilt: { count: 36, area: 82173 } }
+                }
+            };
+            const supraLocalProjects = [
+                 { name: "اجرای کامل شبکه جمع‌آوری و تصفیه فاضلاب", status: "اجرا نشده", quantity: "کل شهرک (طول نامشخص)", details: "پروژه کلان و حیاتی برای کل شهرک. اجرای آن برای صدور پایان‌کار بسیاری از واحدها ضروری است.", icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+                { name: "توسعه یکپارچه عرصه ساحلی", status: "پروژه جدید پیشنهادی", quantity: "۳۱۷,۳۱۵ متر مربع", details: "احداث مارینا (بندرگاه قایق‌های تفریحی)، ایجاد پلاژ و خدمات سرگرمی‌های ساحلی و احداث هتل‌ویلا.", icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C19.955 11 21 9.537 21 8s-1.045-3-2.945-3H19V4a1 1 0 00-1-1H6a1 1 0 00-1 1v1H3.055C1.045 5 0 6.537 0 8s1.045 3 3.055 3z' },
+                { name: "توسعه پارک جنگلی", status: "پروژه جدید پیشنهادی", quantity: "۵۵۴,۱۴۲ متر مربع", details: "ایجاد پارک ماجراجویی (Adventure Park) با رویکرد اکوتوریسم و احداث اقامتگاه‌های سازگار با محیط زیست.", icon: 'M17.657 18.343A8 8 0 016.343 7.657l-1.414-1.414A10 10 0 1019.07 19.07l-1.414-1.414zM16 12a4 4 0 11-8 0 4 4 0 018 0z' },
+                { name: "توسعه ورودی شهرک", status: "پروژه جدید پیشنهادی", quantity: "۶۱۱,۳۳۴ متر مربع", details: "ایجاد مجموعه‌های بازی، مراکز آموزشی و سالن‌های ورزشی در ورودی شهرک برای جذب بازدیدکنندگان.", icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.623 5.91L12 20.828l-1.377-1.91A6 6 0 013 9a2 2 0 012-2m10 0V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m10 0h-4' },
+                { name: "توسعه عرصه میانی", status: "پروژه جدید پیشنهادی", quantity: "۱۷ هکتار", details: "ایجاد فضاهای گردشگری مبتنی بر غذا (کافه و رستوران) و توسعه فضاهای عمومی ورزشی و فرهنگی روباز.", icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a6 6 0 00-12 0v2' },
+                { name: "توسعه ناحیه گردشگری تله‌کابین", status: "پروژه جدید پیشنهادی", quantity: "۶۸,۸۴۷ متر مربع", details: "ایجاد خدمات گردشگری مکمل، احداث پارکینگ طبقاتی و مراکز تجاری پشتیبان.", icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v4.512l-3 3-3-3V5L8 4z' },
+                { name: "پروژه بام سبز نمک‌آبرود", status: "پروژه جدید پیشنهادی", quantity: "مکان‌یابی دقیق", details: "ایجاد یک جاذبه منحصربه‌فرد با دید پانوراما در عرصه‌های جنوبی شهرک.", icon: 'M3 12a9 9 0 1018 0 9 9 0 00-18 0zm13-1a1 1 0 10-2 0v2a1 1 0 102 0v-2zM7 11a1 1 0 10-2 0v2a1 1 0 102 0v-2zm7-4a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1V7z' },
+                { name: "ایجاد دسترسی از آزادراه چالوس-رامسر", status: "پروژه جدید پیشنهادی", quantity: "پروژه استراتژیک", details: "حل مشکل ترافیک ورودی و ارتقاء جایگاه شهرک در منطقه.", icon: 'M13 10V3L4 14h7v7l9-11h-7z' }
+            ];
+            const analysisData = {
+                challenges: [
+                    { title: "توسعه‌نیافتگی شدید در محلات ۷ و ۸", details: "این دو محله با میانگین پیشرفت زیرساختی کمتر از ۵۰٪، به عنوان نقاط بحرانی شهرک شناخته می‌شوند و نیازمند تخصیص منابع فوری هستند." },
+                    { title: "کمبود خدمات روبنایی در کل شهرک", details: "حتی در محلات توسعه‌یافته، کمبود خدمات روبنایی (تجاری، فرهنگی, ورزشی) یک چالش عمومی است که بر کیفیت زندگی ساکنان تأثیر منفی می‌گذارد." },
+                    { title: "عدم توازن در توسعه", details: "شکاف عمیقی بین محلات پیشرفته (مانند محله ۵ با تکمیل ۹۹٪ زیرساخت) و محلات عقب‌مانده (مانند محله ۷) وجود دارد که نیازمند یک برنامه توسعه متوازن است." }
                 ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۷۵,۵۲۴ متر مربع", percent: "۸۱٪", details: "این مساحت به مجموعه‌ای از خدمات اجرا نشده (تجاری، فرهنگی، ورزشی و فضای سبز) اختصاص دارد.", goal: "رفع کمبودهای خدماتی و افزایش جذابیت محله." }
-            },
-            "محله ۲": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 10, value: "۱,۳۳۴ متر", details: "شامل زیرسازی و آسفالت معابر باقی‌مانده.", goal: "تسهیل دسترسی به قطعات و ارتقاء کیفیت معابر داخلی." },
-                    { title: "شبکه آب", deficit: 7, value: "۸۵۱ متر", details: "شامل لوله‌گذاری با اقطار ۶۳ تا ۲۵۰ میلی‌متر.", goal: "تأمین آب شرب پایدار برای کلیه قطعات." },
-                    { title: "شبکه برق", deficit: 2, value: "۲۲۴ متر", details: "شامل کابل‌کشی‌های باقی‌مانده جهت برق‌رسانی و روشنایی.", goal: "تأمین برق پایدار و ایمن." },
-                    { title: "شبکه گاز", deficit: 10, value: "۱,۳۶۱ متر", details: "شامل لوله‌گذاری پلی‌اتیلن (PG) با اقطار ۶۳ تا ۱۶۰ میلی‌متر.", goal: "فراهم‌سازی امکان استفاده از گاز شهری." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۵۵,۵۳۰ متر مربع", percent: "۴۹٪", details: "این مساحت به خدمات اجرا نشده (عمدتاً آموزشی، درمانی و ورزشی) اختصاص دارد.", goal: "تکمیل خدمات پایه و افزایش کیفیت زندگی." }
-            },
-             "محله ۳": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 10, value: "۸۱۲ متر", details: "شامل آسفالت معابر فرعی باقی‌مانده.", goal: "بهبود کیفیت تردد در معابر داخلی." },
-                    { title: "شبکه آب", deficit: 7, value: "۵۶۴ متر", details: "شامل لوله‌گذاری انشعابات با اقطار ۶۳ تا ۲۰۰ میلی‌متر.", goal: "تضمین فشار و کیفیت آب." },
-                    { title: "شبکه برق", deficit: 9, value: "۷۲۸ متر", details: "شامل کابل‌کشی‌های باقی‌مانده و نصب تجهیزات روشنایی.", goal: "افزایش روشنایی و ایمنی معابر." },
-                    { title: "شبکه گاز", deficit: 6, value: "۴۸۹ متر", details: "شامل لوله‌گذاری پلی‌اتیلن (PG) و نصب انشعابات.", goal: "تکمیل پوشش گاز شهری در محله." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۳۶,۰۶۳ متر مربع", percent: "۶۲٪", details: "این مساحت به خدمات اجرا نشده (تجاری محلی و فضای سبز) اختصاص دارد.", goal: "ایجاد مراکز محلی پویا و افزایش سرانه فضای سبز." }
-            },
-            "محله ۴": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 26, value: "۳,۴۰۳ متر", details: "شامل خاک‌برداری، زیرسازی و آسفالت معابر.", goal: "فراهم‌سازی زیرساخت تردد در بخش‌های توسعه‌نیافته." },
-                    { title: "شبکه آب", deficit: 28, value: "۳,۷۶۷ متر", details: "شامل لوله‌گذاری با اقطار ۶۳ تا ۲۵۰ میلی‌متر.", goal: "تأمین آب شرب پایدار برای کلیه قطعات." },
-                    { title: "شبکه برق", deficit: 27, value: "۳,۵۳۶ متر", details: "شامل کابل‌کشی‌های اصلی و فرعی و روشنایی معابر.", goal: "تأمین برق پایدار و ایمن." },
-                    { title: "شبکه گاز", deficit: 17, value: "۲,۲۶۸ متر", details: "شامل لوله‌گذاری پلی‌اتیلن (PG).", goal: "فراهم‌سازی امکان استفاده از گاز شهری." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۸۹,۱۷۲ متر مربع", percent: "۷۵٪", details: "این مساحت به خدمات اجرا نشده (آموزشی، فرهنگی و فضای سبز) اختصاص دارد.", goal: "رفع کمبودهای اساسی و افزایش جذابیت محله." }
-            },
-            "محله ۵": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 3, value: "۱۶۳ متر", details: "شامل تکمیل آسفالت معابر فرعی.", goal: "بهبود کیفیت تردد در معابر داخلی." },
-                    { title: "شبکه آب", deficit: 1, value: "۷۱ متر", details: "شامل انشعابات باقی‌مانده.", goal: "تضمین فشار و کیفیت آب." },
-                    { title: "شبکه برق", deficit: 1, value: "۶۸ متر", details: "شامل انشعابات باقی‌مانده.", goal: "تکمیل پوشش برق." },
-                    { title: "شبکه گاز", deficit: 1, value: "۷۱ متر", details: "شامل انشعابات باقی‌مانده.", goal: "تکمیل پوشش گاز شهری." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۳۹,۶۲۳ متر مربع", percent: "۲۰٪", details: "این مساحت به خدمات اجرا نشده (عمدتاً تجاری و اداری) اختصاص دارد.", goal: "ایجاد مراکز محلی پویا و ارائه خدمات." }
-            },
-            "محله ۶": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 22, value: "۱,۲۱۵ متر", details: "شامل زیرسازی و آسفالت معابر دسترسی به قطعات بلندمرتبه.", goal: "تسهیل دسترسی به برج‌های مسکونی." },
-                    { title: "شبکه آب", deficit: 15, value: "۸۱۶ متر", details: "شامل تکمیل رینگ اصلی و انشعابات.", goal: "تأمین آب پایدار برای واحدهای بلندمرتبه." },
-                    { title: "شبکه برق", deficit: 11, value: "۶۰۲ متر", details: "شامل تأمین برق پایدار برای برج‌ها و روشنایی معابر.", goal: "تأمین برق ایمن و پایدار." },
-                    { title: "شبکه گاز", deficit: 11, value: "۶۴۳ متر", details: "شامل تکمیل انشعابات اصلی.", goal: "تکمیل پوشش گاز شهری." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۳۲,۰۷۸ متر مربع", percent: "۶۴٪", details: "این مساحت به خدمات پشتیبان سکونت بلندمرتبه (تجاری، ورزشی) اختصاص دارد.", goal: "تأمین خدمات مورد نیاز ساکنین برج‌ها." }
-            },
-             "محله ۷": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 43, value: "۳,۵۹۸ متر", details: "پروژه‌ای کلیدی؛ شامل اجرای کامل معابر.", goal: "ایجاد زیرساخت اولیه برای توسعه محله." },
-                    { title: "شبکه آب", deficit: 47, value: "۳,۹۶۰ متر", details: "شامل اجرای کامل شبکه اصلی و فرعی.", goal: "فراهم‌سازی امکان سکونت و ساخت‌وساز." },
-                    { title: "شبکه برق", deficit: 51, value: "۴,۲۹۵ متر", details: "شامل اجرای کامل شبکه برق‌رسانی و روشنایی.", goal: "تأمین برق مورد نیاز برای توسعه آتی." },
-                    { title: "شبکه گاز", deficit: 57, value: "۴,۷۶۶ متر", details: "شامل اجرای کامل شبکه اصلی و فرعی.", goal: "آماده‌سازی محله برای گازرسانی." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۲۶,۶۷۹ متر مربع", percent: "۹۳٪", details: "این مساحت به کلیه خدمات پایه محله‌ای اختصاص دارد.", goal: "تأمین حداقل خدمات برای شروع توسعه." }
-            },
-            "محله ۸": {
-                infrastructure: [
-                    { title: "شبکه راه", deficit: 54, value: "۶,۷۹۱ متر", details: "پروژه‌ای کلیدی؛ شامل اجرای کامل معابر.", goal: "ایجاد زیرساخت اولیه برای توسعه محله." },
-                    { title: "شبکه آب", deficit: 36, value: "۴,۵۰۸ متر", details: "شامل اجرای کامل شبکه اصلی و فرعی.", goal: "فراهم‌سازی امکان سکونت و ساخت‌وساز." },
-                    { title: "شبکه برق", deficit: 56, value: "۷,۰۷۳ متر", details: "شامل اجرای کامل شبکه برق‌رسانی و روشنایی.", goal: "تأمین برق مورد نیاز برای توسعه آتی." },
-                    { title: "شبکه گاز", deficit: 56, value: "۷,۰۷۳ متر", details: "شامل اجرای کامل شبکه اصلی و فرعی.", goal: "آماده‌سازی محله برای گازرسانی." }
-                ],
-                services: { title: "اجرا و تکمیل خدمات روبنایی", status: "اجرا نشده", value: "۸۶,۳۸۰ متر مربع", percent: "۷۴٪", details: "این مساحت به کلیه خدمات پایه محله‌ای اختصاص دارد.", goal: "تأمین حداقل خدمات برای شروع توسعه." }
+                kpis: [
+                    { value: "۷۸٪", label: "پیشرفت کل زیربنایی" },
+                    { value: "۲۴٪", label: "پیشرفت کل روبنایی" },
+                    { value: "محله ۵", label: "بهترین عملکرد زیرساختی" },
+                    { value: "محله ۷", label: "بیشترین نیاز به توجه" }
+                ]
+            };
+
+            function getColorForPercentage(percentage) {
+                const p = Math.max(0, Math.min(100, percentage)) / 100;
+                const red = { r: 239, g: 68, b: 68 };
+                const yellow = { r: 245, g: 158, b: 11 };
+                const green = { r: 34, g: 197, b: 94 };
+                let r, g, b;
+                if (p < 0.5) {
+                    const t = p * 2;
+                    r = Math.round(red.r + (yellow.r - red.r) * t);
+                    g = Math.round(red.g + (yellow.g - red.g) * t);
+                    b = Math.round(red.b + (yellow.b - red.b) * t);
+                } else {
+                    const t = (p - 0.5) * 2;
+                    r = Math.round(yellow.r + (green.r - yellow.r) * t);
+                    g = Math.round(yellow.g + (green.g - yellow.g) * t);
+                    b = Math.round(yellow.b + (green.b - yellow.b) * t);
+                }
+                return `rgba(${r}, ${g}, ${b}, 0.8)`;
             }
-        };
 
-        const supraData = [
-            { title: "اجرای کامل شبکه جمع‌آوری و تصفیه فاضلاب", status: "اجرا نشده", value: "کل شهرک", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>`, bgColor: 'bg-red-500', details: "پروژه‌ای کلان و حیاتی برای کل شهرک که اجرای آن برای صدور پایان‌کار بسیاری از واحدها ضروری است." },
-            { title: "توسعه یکپارچه عرصه ساحلی", status: "پروژه جدید", value: "۳۱۷,۳۱۵ متر مربع", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>`, bgColor: 'bg-blue-500', details: "شامل <b>احداث مارینا</b> (بندرگاه قایق‌های تفریحی)، <b>ایجاد پلاژ</b> و خدمات سرگرمی‌های ساحلی، و <b>احداث هتل‌ویلا</b> و مراکز گردشگری درمانی." },
-            { title: "توسعه پارک جنگلی", status: "پروژه جدید", value: "۵۵۴,۱۴۲ متر مربع", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.085a2 2 0 00-1.736.93L5 9m7 1v3.314a1 1 0 01-.67 1.95l-2.12.53a1 1 0 01-1.29-.96V10m7-1h-2M5 9V5a2 2 0 012-2h3.172a2 2 0 011.414.586l.828.828A2 2 0 0014 5h2a2 2 0 012 2v2m-6 4h.01" /></svg>`, bgColor: 'bg-green-500', details: "شامل ایجاد <b>پارک ماجراجویی (Adventure Park)</b> با رویکرد اکوتوریسم در بوستان بنفشه و شمشاد و <b>احداث اقامتگاه‌های موقت</b> سازگار با محیط زیست." },
-            { title: "توسعه ورودی شهرک", status: "پروژه جدید", value: "۶۱۱,۳۳۴ متر مربع", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>`, bgColor: 'bg-violet-500', details: "شامل ایجاد <b>مجموعه‌های بازی</b>، <b>مراکز آموزشی</b> و <b>سالن‌های ورزشی</b> در ورودی شهرک برای جذب بازدیدکنندگان و ساماندهی خدمات فرامنطقه‌ای." },
-            { title: "توسعه عرصه میانی", status: "پروژه جدید", value: "۱۷ هکتار", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.871 4A17.926 17.926 0 0112 3c2.874 0 5.603.673 8.129 1M4.871 4L3 2m1.871 2L5 6m14-2l1.871-2M19.129 4L19 6M12 11a4 4 0 100-8 4 4 0 000 8z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 100-18 9 9 0 000 18z" /></svg>`, bgColor: 'bg-amber-500', details: "شامل ایجاد <b>فضاهای گردشگری مبتنی بر غذا</b> (کافه و رستوران) و <b>توسعه فضاهای عمومی ورزشی و فرهنگی روباز</b> برای ایجاد یک محور اجتماعی پویا." },
-            { title: "توسعه ناحیه تله‌کابین", status: "پروژه جدید", value: "۶۸,۸۴۷ متر مربع", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11.5a1.5 1.5 0 0 1 3 0V17a1.5 1.5 0 0 1-3 0V11.5Z"/><path d="M16 11.5a1.5 1.5 0 0 1 3 0V17a1.5 1.5 0 0 1-3 0V11.5Z"/><path d="M8 17h8"/><path d="M7.5 11.5l1-9.5h7l1 9.5"/><path d="M4.5 11.5h15"/><path d="m5 6 1-4"/><path d="m19 6-1-4"/><path d="M12 3V2"/><path d="M5 21v-3"/><path d="M19 21v-3"/></svg>`, bgColor: 'bg-teal-500', details: "شامل ایجاد <b>خدمات گردشگری مکمل</b> برای افزایش جذابیت مجموعه تله‌کابین و <b>احداث پارکینگ طبقاتی</b> و مراکز تجاری پشتیبان." },
-            { title: "پروژه بام سبز نمک‌آبرود", status: "پروژه جدید", value: "مکان‌یابی در عرصه‌های جنوبی", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`, bgColor: 'bg-slate-700', details: "پروژه‌ای استراتژیک برای ایجاد یک جاذبه منحصر به فرد با دید پانوراما به دریا و جنگل." },
-            { title: "ایجاد دسترسی از آزادراه", status: "پروژه جدید", value: "نیازمند طراحی", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>`, bgColor: 'bg-slate-700', details: "پروژه‌ای کلیدی برای حل مشکل ترافیک ورودی و ارتقاء جایگاه شهرک در منطقه." }
-        ];
-
-        function getStatusInfo(status) {
-            switch(status) {
-                case "نیمه‌تمام": return { className: "status-incomplete" };
-                case "اجرا نشده": return { className: "status-unimplemented" };
-                case "پروژه جدید": return { className: "status-new" };
-                default: return { className: "bg-slate-100 text-slate-800" };
-            }
-        }
-
-        const neighborhoodsContainer = document.getElementById('neighborhoods');
-        
-        window.addEventListener('load', () => {
-            for (const [name, data] of Object.entries(neighborhoodsData)) {
-                const section = document.createElement('section');
-                section.className = 'pdf-page';
-                
-                const header = document.createElement('h2');
-                header.className = 'section-header';
-                header.textContent = `شناسنامه پروژه‌های ${name}`;
-                section.appendChild(header);
-
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6';
-                
-                data.infrastructure.forEach(proj => {
-                    const statusInfo = getStatusInfo("نیمه‌تمام");
-                    grid.innerHTML += `
-                        <div class="project-card border-l-4 border-sky-500">
-                            <div class="card-header"><div class="flex justify-between items-center"><h3 class="text-lg font-bold text-slate-800">${proj.title}</h3><span class="status-badge ${statusInfo.className}">نیمه‌تمام</span></div></div>
-                            <div class="card-body space-y-4">
-                                <div class="grid grid-cols-2 gap-4 text-center">
-                                    <div class="bg-slate-50 p-3 rounded-lg"><p class="text-sm text-slate-500">مقدار</p><p class="text-xl font-bold text-sky-600">${proj.value}</p></div>
-                                    <div class="bg-slate-50 p-3 rounded-lg"><p class="text-sm text-slate-500">درصد تکمیل نشده</p><p class="text-xl font-bold text-sky-600">${proj.deficit}%</p></div>
-                                </div>
-                                <div><h4 class="font-semibold mb-2">شرح و جزئیات فنی:</h4><p class="text-sm text-slate-600">${proj.details}</p></div>
-                            </div>
-                            <div class="card-footer"><p class="text-sm"><b class="font-semibold">هدف سرمایه‌گذاری:</b> ${proj.goal}</p></div>
-                        </div>`;
-                });
-                
-                const serviceProj = data.services;
-                const serviceStatusInfo = getStatusInfo(serviceProj.status);
-                grid.innerHTML += `
-                    <div class="project-card border-l-4 border-emerald-500">
-                        <div class="card-header"><div class="flex justify-between items-center"><h3 class="text-lg font-bold text-slate-800">${serviceProj.title}</h3><span class="status-badge ${serviceStatusInfo.className}">${serviceProj.status}</span></div></div>
-                        <div class="card-body space-y-4">
-                            <div class="grid grid-cols-2 gap-4 text-center">
-                                <div class="bg-slate-50 p-3 rounded-lg"><p class="text-sm text-slate-500">مساحت</p><p class="text-xl font-bold text-emerald-600">${serviceProj.value}</p></div>
-                                <div class="bg-slate-50 p-3 rounded-lg"><p class="text-sm text-slate-500">کسری خدمات</p><p class="text-xl font-bold text-emerald-600">${serviceProj.percent}</p></div>
-                            </div>
-                            <div><h4 class="font-semibold mb-2">شرح و جزئیات فنی:</h4><p class="text-sm text-slate-600">${serviceProj.details}</p></div>
-                        </div>
-                        <div class="card-footer"><p class="text-sm"><b class="font-semibold">هدف سرمایه‌گذاری:</b> ${serviceProj.goal}</p></div>
-                    </div>`;
-                
-                const chartId = `chart-${name.replace(/\s+/g, '-')}`;
-                grid.innerHTML += `
-                    <div class="project-card border-l-4 border-amber-500 md:col-span-2 xl:col-span-1">
-                        <div class="card-header"><h3 class="text-lg font-bold text-slate-800">وضعیت تکمیل زیرساخت‌ها در ${name}</h3></div>
-                        <div class="card-body flex flex-col items-center justify-center">
-                            <div class="chart-container" style="height: 220px;">
-                                <canvas id="${chartId}"></canvas>
-                            </div>
-                        </div>
-                    </div>`;
-                
-                section.appendChild(grid);
-                neighborhoodsContainer.appendChild(section);
-                
-                setTimeout(() => {
-                    const ctx = document.getElementById(chartId).getContext('2d');
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: data.infrastructure.map(p => p.title),
-                            datasets: [{
-                                label: 'درصد تکمیل',
-                                data: data.infrastructure.map(p => 100 - p.deficit),
-                                backgroundColor: [
-                                    'rgba(14, 165, 233, 0.7)',
-                                    'rgba(59, 130, 246, 0.7)',
-                                    'rgba(234, 179, 8, 0.7)',
-                                    'rgba(249, 115, 22, 0.7)'
-                                ],
-                                borderColor: [
-                                    'rgba(14, 165, 233, 1)',
-                                    'rgba(59, 130, 246, 1)',
-                                    'rgba(234, 179, 8, 1)',
-                                    'rgba(249, 115, 22, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            indexAxis: 'y',
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                x: { beginAtZero: true, max: 100, ticks: { callback: value => `${value}%` } },
-                                y: { ticks: { font: { family: 'Vazirmatn', size: 12 } } }
-                            },
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    titleFont: { family: 'Vazirmatn' },
-                                    bodyFont: { family: 'Vazirmatn' },
-                                    callbacks: { label: (context) => `تکمیل شده: ${context.raw}%` }
+            function createServicesChart(services, canvasId) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                const total = services.executed.area + services.in_progress.area + services.unbuilt.area;
+                const data = {
+                    labels: [
+                        `اجرا شده (${((services.executed.area / total) * 100).toFixed(1)}%)`,
+                        `در حال اجرا (${((services.in_progress.area / total) * 100).toFixed(1)}%)`,
+                        `اجرا نشده (${((services.unbuilt.area / total) * 100).toFixed(1)}%)`
+                    ],
+                    datasets: [{
+                        label: 'وضعیت خدمات روبنایی',
+                        data: [services.executed.area, services.in_progress.area, services.unbuilt.area],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { family: "'Vazirmatn', sans-serif", size: 11 } } },
+                            tooltip: { 
+                                bodyFont: { family: "'Vazirmatn', sans-serif" }, 
+                                titleFont: { family: "'Vazirmatn', sans-serif" },
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw;
+                                        const count = context.dataset.data.indexOf(value) === 0 ? services.executed.count : context.dataset.data.indexOf(value) === 1 ? services.in_progress.count : services.unbuilt.count;
+                                        return `${label}: ${value.toLocaleString()} م.م. (${count} مورد)`;
+                                    }
                                 }
                             }
                         }
-                    });
-                }, 100);
+                    }
+                });
             }
+            
+            function createInteractiveBarChart() {
+                const projectTypes = [...new Set(Object.values(projectData).flatMap(data => data.projects.map(p => p.name)))];
+                const neighborhoodNames = Object.keys(projectData);
 
-            const supraContainer = document.getElementById('supra-neighborhoods');
-            supraData.forEach(proj => {
-                const statusInfo = getStatusInfo(proj.status === 'پروژه جدید' ? 'پروژه جدید' : 'اجرا نشده');
-                 supraContainer.innerHTML += `
-                    <div class="project-card border-l-4 ${proj.bgColor.replace('bg-', 'border-')}">
-                        <div class="card-header"><div class="flex items-center gap-4"><div class="metric-icon ${proj.bgColor}">${proj.icon}</div><div><h3 class="text-xl font-bold text-slate-800">${proj.title}</h3><span class="status-badge ${statusInfo.className}">${proj.status}</span></div></div></div>
-                        <div class="card-body space-y-4">
-                            <div class="bg-slate-50 p-4 rounded-lg"><p class="text-sm text-slate-500">مساحت / مقیاس</p><p class="text-2xl font-bold text-slate-700">${proj.value}</p></div>
-                            <div><h4 class="font-semibold mb-2">شرح و اهداف پروژه:</h4><p class="text-sm text-slate-600 leading-relaxed">${proj.details}</p></div>
-                        </div>
-                    </div>`;
-            });
+                const datasets = projectTypes.map((type) => {
+                    const dataPoints = neighborhoodNames.map(name => {
+                        const project = projectData[name].projects.find(p => p.name === type);
+                        return project ? 100 - project.incompleteness : null;
+                    });
+                    return {
+                        label: type,
+                        data: dataPoints,
+                        backgroundColor: dataPoints.map(p => p !== null ? getColorForPercentage(p) : 'transparent'),
+                        borderColor: 'rgba(255, 255, 255, 0.5)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    };
+                });
 
-            setTimeout(() => {
-                const ctxSummary = document.getElementById('summary-chart').getContext('2d');
-                const labels = Object.keys(neighborhoodsData);
-                const roadData = labels.map(name => 100 - neighborhoodsData[name].infrastructure.find(p => p.title === 'شبکه راه').deficit);
-                const waterData = labels.map(name => 100 - neighborhoodsData[name].infrastructure.find(p => p.title === 'شبکه آب').deficit);
-                const electricityData = labels.map(name => 100 - neighborhoodsData[name].infrastructure.find(p => p.title === 'شبکه برق').deficit);
-                const gasData = labels.map(name => 100 - neighborhoodsData[name].infrastructure.find(p => p.title === 'شبکه گاز').deficit);
-
-                new Chart(ctxSummary, {
+                const ctx = document.getElementById('summary-bar-chart').getContext('2d');
+                new Chart(ctx, {
                     type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'شبکه راه', data: roadData, backgroundColor: 'rgba(14, 165, 233, 0.7)' },
-                            { label: 'شبکه آب', data: waterData, backgroundColor: 'rgba(59, 130, 246, 0.7)' },
-                            { label: 'شبکه برق', data: electricityData, backgroundColor: 'rgba(234, 179, 8, 0.7)' },
-                            { label: 'شبکه گاز', data: gasData, backgroundColor: 'rgba(249, 115, 22, 0.7)' }
-                        ]
-                    },
+                    data: { labels: neighborhoodNames, datasets: datasets },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: value => `${value}%` } },
-                            x: { ticks: { font: { family: 'Vazirmatn' } } }
+                            y: { beginAtZero: true, max: 100, ticks: { callback: value => value + '%', font: { family: "'Vazirmatn', sans-serif" } } },
+                            x: { ticks: { font: { family: "'Vazirmatn', sans-serif", size: 12 } } }
                         },
                         plugins: {
-                            legend: { position: 'top', labels: { font: { family: 'Vazirmatn', size: 14 } } },
-                            tooltip: { titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' }, callbacks: { label: (context) => `${context.dataset.label}: ${context.raw.toFixed(1)}%` } }
+                            legend: { 
+                                position: 'top', 
+                                labels: { font: { family: "'Vazirmatn', sans-serif", size: 12 } },
+                                onClick: (e, legendItem, legend) => {
+                                    const index = legendItem.datasetIndex;
+                                    const ci = legend.chart;
+                                    if (ci.isDatasetVisible(index)) {
+                                        ci.hide(index);
+                                        legendItem.hidden = true;
+                                    } else {
+                                        ci.show(index);
+                                        legendItem.hidden = false;
+                                    }
+                                }
+                            },
+                            tooltip: { 
+                                bodyFont: { family: "'Vazirmatn', sans-serif" }, 
+                                titleFont: { family: "'Vazirmatn', sans-serif" }, 
+                                callbacks: { 
+                                    label: function(context) {
+                                        const neighborhoodName = context.label;
+                                        const projectName = context.dataset.label;
+                                        const completion = context.raw.toFixed(1);
+                                        const projectDetails = projectData[neighborhoodName].projects.find(p => p.name === projectName);
+                                        const quantity = projectDetails ? projectDetails.quantity : 'N/A';
+                                        let status = completion > 75 ? 'پیشرفت عالی' : completion > 40 ? 'وضعیت مطلوب' : 'وضعیت بحرانی';
+                                        
+                                        return [
+                                            `محله: ${neighborhoodName}`,
+                                            `پروژه: ${projectName}`,
+                                            `درصد تکمیل: ${completion}% (${status})`,
+                                            `مقدار باقی‌مانده: ${quantity}`
+                                        ];
+                                    }
+                                } 
+                            }
                         }
                     }
                 });
-            }, 100);
+            }
             
-            function showLoader(show) {
-                const btn = document.getElementById('download-pdf-btn');
-                const loader = document.getElementById('loader');
-                if (btn) btn.style.display = show ? 'none' : 'inline-block';
-                if (loader) loader.style.display = show ? 'block' : 'none';
-            }
-
-            // PDF Download Logic
-            const pdfBtn = document.getElementById('download-pdf-btn');
-            if (pdfBtn) {
-                pdfBtn.addEventListener('click', () => {
-                    showLoader(true);
-                    const element = document.getElementById('content-to-download');
-                    const cards = element.querySelectorAll('.project-card');
-                    cards.forEach(card => card.style.boxShadow = 'none');
-
-                    const opt = {
-                        margin:       [0.4, 0.2, 0.4, 0.2],
-                        filename:     'شناسنامه_پروژه_نمک‌آبرود.pdf',
-                        image:        { type: 'jpeg', quality: 1.0 },
-                        html2canvas:  { scale: 3, useCORS: true, letterRendering: true, scrollY: 0 },
-                        jsPDF:        { unit: 'in', format: 'a3', orientation: 'portrait' },
-                        pagebreak:    { mode: ['css'], before: '.pdf-page' }
-                    };
+            function populateContent() {
+                const container = document.getElementById('neighborhoods-container');
+                let neighborhoodIndex = 1;
+                for (const [name, data] of Object.entries(projectData)) {
+                    const canvasId = `services-chart-${neighborhoodIndex}`;
                     
-                    html2pdf().from(element).set(opt).save().then(() => {
-                        cards.forEach(card => card.style.boxShadow = '');
-                        showLoader(false);
-                    });
-                });
+                    const statsHtml = `
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-slate-100 p-4 rounded-lg flex items-center space-x-3 space-x-reverse shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
+                                <div><p class="text-indigo-800 font-bold text-lg">${data.stats.area} هکتار</p><p class="text-xs text-slate-500">${data.stats.area_percent}% از کل</p></div>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg flex items-center space-x-3 space-x-reverse shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                <div><p class="text-indigo-800 font-bold text-lg">${data.stats.population} نفر</p><p class="text-xs text-slate-500">${data.stats.households} خانوار</p></div>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg flex items-center space-x-3 space-x-reverse shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                <div><p class="text-indigo-800 font-bold text-lg">${data.stats.land_price} م.ت</p><p class="text-xs text-slate-500">قیمت زمین</p></div>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg flex items-center space-x-3 space-x-reverse shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                <div><p class="text-indigo-800 font-bold text-lg">${data.stats.unbuilt_services_count} مورد</p><p class="text-xs text-slate-500">خدمات اجرا نشده</p></div>
+                            </div>
+                        </div>
+                    `;
+
+                    const projectDetailsHtml = data.projects.map(p => {
+                        const completion = 100 - p.incompleteness;
+                        const colorName = completion > 75 ? 'green' : completion > 40 ? 'amber' : 'red';
+                        return `
+                            <div class="bg-white p-3 rounded-lg shadow-sm border-r-4 border-${colorName}-400">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-semibold text-slate-700">${p.name}</span>
+                                    <span class="text-sm font-bold text-${colorName}-600">${completion}%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-${colorName}-500 h-2 rounded-full" style="width: ${completion}%;"></div>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1 text-left">مقدار باقی‌مانده: ${p.quantity}</p>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const sectionHtml = `
+                        <div class="pdf-page">
+                            <section>
+                                <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
+                                <h2 class="text-3xl font-bold text-indigo-900">${name}</h2>
+                                <p class="text-md text-slate-600 mt-1 italic">"${data.description}"</p>
+                                ${statsHtml}
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+                                    <div class="space-y-4 bg-slate-50 p-4 rounded-xl">
+                                        <h3 class="font-bold text-lg text-slate-800 mb-3 text-center">جزئیات پیشرفت پروژه‌های زیربنایی</h3>
+                                        ${projectDetailsHtml}
+                                    </div>
+                                    <div class="bg-slate-50 p-4 rounded-xl flex flex-col justify-center">
+                                        <h3 class="font-bold text-lg text-slate-800 mb-3 text-center">تحلیل وضعیت خدمات روبنایی</h3>
+                                        <div class="chart-container relative"><canvas id="${canvasId}"></canvas></div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>`;
+                    container.innerHTML += sectionHtml;
+                    neighborhoodIndex++;
+                }
             }
+
+            function populateAnalysisAndKPIs() {
+                const analysisContainer = document.getElementById('analysis-container');
+                const kpiHtml = analysisData.kpis.map(kpi => `
+                    <div class="bg-indigo-600 text-white p-4 rounded-lg shadow-lg text-center">
+                        <p class="text-4xl font-bold">${kpi.value}</p>
+                        <p class="text-sm opacity-80 mt-1">${kpi.label}</p>
+                    </div>
+                `).join('');
+
+                const challengesHtml = analysisData.challenges.map(c => `
+                    <div class="bg-white p-4 rounded-lg border-r-4 border-amber-500 shadow-md">
+                        <h4 class="font-bold text-amber-700">${c.title}</h4>
+                        <p class="text-sm text-slate-600 mt-1">${c.details}</p>
+                    </div>
+                `).join('');
+
+                analysisContainer.innerHTML = `
+                    <div class="space-y-4">${kpiHtml}</div>
+                    <div class="space-y-4">${challengesHtml}</div>
+                `;
+
+                const comparisonTableContainer = document.getElementById('comparison-table-container');
+                const tableHeader = `
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-2 text-sm font-semibold text-slate-600 text-right">محله</th>
+                            <th class="p-2 text-sm font-semibold text-slate-600 text-center">مساحت (هکتار)</th>
+                            <th class="p-2 text-sm font-semibold text-slate-600 text-center">تراکم جمعیتی</th>
+                            <th class="p-2 text-sm font-semibold text-slate-600 text-center">قیمت زمین (میلیون تومان)</th>
+                        </tr>
+                    </thead>
+                `;
+                const tableBody = Object.entries(projectData).map(([name, data]) => `
+                    <tr class="border-b border-slate-200">
+                        <td class="p-2 font-bold text-slate-800">${name}</td>
+                        <td class="p-2 text-center text-slate-600">${data.stats.area}</td>
+                        <td class="p-2 text-center text-slate-600">${data.stats.density}</td>
+                        <td class="p-2 text-center text-slate-600">${data.stats.land_price}</td>
+                    </tr>
+                `).join('');
+                
+                comparisonTableContainer.innerHTML = `
+                    <h3 class="text-xl font-bold text-center text-indigo-900 mb-4 mt-10">جدول مقایسه‌ای شاخص‌های کلیدی محلات</h3>
+                    <div class="overflow-x-auto rounded-lg shadow-md">
+                        <table class="w-full text-sm">${tableHeader}<tbody>${tableBody}</tbody></table>
+                    </div>
+                `;
+            }
+            
+            function populateSupraLocal() {
+                const container = document.getElementById('supra-local-container');
+                container.innerHTML = supraLocalProjects.map(p => `
+                    <div class="bg-slate-50 rounded-xl shadow-md p-5 border-r-4 border-indigo-500">
+                        <div class="flex items-start space-x-4 space-x-reverse">
+                            <div class="flex-shrink-0 p-3 bg-indigo-100 rounded-full">
+                                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${p.icon}"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-indigo-800">${p.name}</h3>
+                                <span class="text-xs font-semibold py-1 px-2.5 uppercase rounded-full text-indigo-600 bg-indigo-100">${p.status}</span>
+                                 <p class="text-sm text-slate-600 mt-2"><strong class="font-semibold">مقیاس:</strong> ${p.quantity}</p>
+                                <p class="text-sm text-slate-500 mt-2 border-t pt-2">${p.details}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function populateTownKPIs() {
+                const container = document.getElementById('town-kpi-container');
+                const kpis = [
+                    { value: "۷۱۹.۴۳ هکتار", label: "مساحت کل شهرک", icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' },
+                    { value: "۱۱,۶۱۹ نفر", label: "جمعیت برآوردی (۱۴۰۰)", icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+                    { value: "۶۷۳ نفر", label: "جمعیت دائمی موجود", icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a6 6 0 00-12 0v2' },
+                    { value: "۷۸٪", label: "پیشرفت کل زیربنایی" , icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+                    { value: "۲۴٪", label: "پیشرفت کل روبنایی", icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' }
+                ];
+                 container.innerHTML = kpis.map(kpi => `
+                    <div class="bg-indigo-50 p-4 rounded-lg flex items-center space-x-4 space-x-reverse shadow-sm">
+                        <div class="flex-shrink-0 p-3 bg-indigo-200 rounded-full">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${kpi.icon}" /></svg>
+                        </div>
+                        <div><p class="text-indigo-800 font-bold text-xl">${kpi.value}</p><p class="text-sm text-slate-500">${kpi.label}</p></div>
+                    </div>
+                `).join('');
+            }
+            
+            function populateLandUseTable() {
+                const container = document.getElementById('land-use-table-container');
+                const landUseData = [
+                    { name: "مسکونی", area: 56.7, area_percent: 10.5, count: 1178, count_percent: 25.0 },
+                    { name: "تجاری", area: 0.9, area_percent: 0.2, count: 19, count_percent: 0.4 },
+                    { name: "اداری و انتظامی", area: 0.9, area_percent: 0.2, count: 14, count_percent: 0.3 },
+                    { name: "ورزشی", area: 3.5, area_percent: 0.6, count: 4, count_percent: 0.1 },
+                    { name: "تفریحی توریستی", area: 30.7, area_percent: 5.7, count: 43, count_percent: 0.9 },
+                    { name: "پارک و فضای سبز", area: 7.5, area_percent: 1.4, count: 44, count_percent: 0.9 },
+                    { name: "طبیعی (پارک جنگلی)", area: 163, area_percent: 30.3, count: 12, count_percent: 0.3 },
+                    { name: "معابر", area: 169, area_percent: 31.4, count: 0, count_percent: 0 },
+                    { name: "بایر", area: 161, area_percent: 29.9, count: 2551, count_percent: 54.3 },
+                ];
+
+                const tableHeader = `
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-3 text-sm font-semibold text-slate-600 text-right">کاربری</th>
+                            <th class="p-3 text-sm font-semibold text-slate-600 text-center">تعداد قطعات</th>
+                            <th class="p-3 text-sm font-semibold text-slate-600 text-center">درصد از کل قطعات</th>
+                            <th class="p-3 text-sm font-semibold text-slate-600 text-center">مساحت (هکتار)</th>
+                            <th class="p-3 text-sm font-semibold text-slate-600 text-center">درصد از کل مساحت</th>
+                        </tr>
+                    </thead>
+                `;
+                const tableBody = landUseData.map(item => `
+                    <tr class="border-b border-slate-200">
+                        <td class="p-3 font-bold text-slate-800">${item.name}</td>
+                        <td class="p-3 text-center text-slate-600">${item.count.toLocaleString()}</td>
+                        <td class="p-3 text-center text-slate-600">${item.count_percent}%</td>
+                        <td class="p-3 text-center text-slate-600">${item.area.toLocaleString()}</td>
+                        <td class="p-3 text-center text-slate-600">${item.area_percent}%</td>
+                    </tr>
+                `).join('');
+                
+                const totalCount = landUseData.reduce((sum, item) => sum + item.count, 0);
+                const totalArea = landUseData.reduce((sum, item) => sum + item.area, 0);
+
+                const tableFooter = `
+                    <tfoot class="bg-slate-200 font-bold">
+                        <tr>
+                            <td class="p-3 text-right">جمع کل</td>
+                            <td class="p-3 text-center">${totalCount.toLocaleString()}</td>
+                            <td class="p-3 text-center">۱۰۰٪</td>
+                            <td class="p-3 text-center">${totalArea.toFixed(2).toLocaleString()}</td>
+                            <td class="p-3 text-center">۱۰۰٪</td>
+                        </tr>
+                    </tfoot>
+                `;
+
+                container.innerHTML = `
+                    <h3 class="text-xl font-bold text-center text-indigo-900 mb-4 mt-10">جدول وضعیت کاربری اراضی شهرک</h3>
+                    <div class="overflow-x-auto rounded-lg shadow-md">
+                        <table class="w-full text-sm">${tableHeader}<tbody>${tableBody}</tbody>${tableFooter}</table>
+                    </div>
+                `;
+            }
+            
+            // --- Initial Load ---
+            populateTownKPIs();
+            populateLandUseTable();
+            populateContent();
+            populateAnalysisAndKPIs();
+            populateSupraLocal();
+            createInteractiveBarChart();
+            
+            let neighborhoodIndex = 1;
+            for (const [name, data] of Object.entries(projectData)) {
+                createServicesChart(data.services, `services-chart-${neighborhoodIndex}`);
+                neighborhoodIndex++;
+            }
+
+            // --- PDF Download Logic ---
+            document.getElementById('download-btn').addEventListener('click', () => {
+                const btn = document.getElementById('download-btn');
+                const spinner = document.getElementById('loading-spinner');
+                const content = document.getElementById('report-content');
+
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                spinner.classList.remove('hidden');
+                window.scrollTo(0, 0);
+
+                const opt = {
+                    margin: [0.4, 0.2, 0.4, 0.2],
+                    filename: 'شناسنامه-مدیریتی-پروژه-ها.pdf',
+                    image: { type: 'jpeg', quality: 1.0 },
+                    html2canvas: { scale: 3, useCORS: true, logging: false },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+
+                setTimeout(() => {
+                    html2pdf().from(content).set(opt).save().then(() => {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        spinner.classList.add('hidden');
+                    }).catch(err => {
+                        console.error("PDF generation error:", err);
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        spinner.classList.add('hidden');
+                    });
+                }, 500);
+            });
         });
     </script>
 </body>
