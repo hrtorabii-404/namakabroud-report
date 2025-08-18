@@ -10,22 +10,34 @@
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap');
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: #f3f4f6; /* A light gray background */
+            background-color: #f4f4f5; /* A neutral gray background */
         }
         .card {
             background-color: white;
             border-radius: 1rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 4px solid #f97316; /* Vibrant orange accent */
+            border-bottom: 4px solid #16a34a; /* Green accent */
+            display: flex;
+            flex-direction: column;
         }
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        .icon-bg-mountain {
-            background-color: #ffedd5; /* Light orange */
-            color: #c2410c; /* Deep orange */
+        .icon-bg {
+             background-color: #dcfce7; /* Lighter green */
+            color: #15803d; /* Deep green */
+        }
+        .cost-item-bar {
+            background-color: #f0fdf4;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            height: 8px;
+        }
+        .cost-item-bar-fill {
+            background-color: #22c55e;
+            height: 100%;
         }
     </style>
 </head>
@@ -34,71 +46,152 @@
 
         <!-- Header Section -->
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">دهکده کوهپایه نمک‌آبرود</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-green-800 mb-4">دهکده کوهپایه نمک‌آبرود</h1>
             <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto">
-                دروازه ورود به ماجراجویی‌های کوهستانی؛ یک مجموعه یکپارچه تجاری، تفریحی و رفاهی در پای کوه.
+                ایجاد یک دهکده توریستی متمرکز در پای کوه به عنوان دروازه ورود به ماجراجویی‌های کوهستانی، با خدمات تجاری، تفریحی و رفاهی یکپارچه.
             </p>
         </header>
 
-        <!-- Main Layout with a Central Image -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center mb-12">
-            <!-- Left Column: Components -->
-            <div class="space-y-8">
-                <div class="card p-6">
-                    <div class="flex items-center mb-3">
-                        <div class="icon-bg-mountain p-3 rounded-full ml-4"><i class="fas fa-ticket-alt fa-2x"></i></div>
-                        <h2 class="text-xl font-bold text-gray-700">میدان کوهستان و مرکز پذیرش</h2>
-                    </div>
-                    <p class="text-gray-600">نقطه کانونی دهکده با مرکز فروش بلیط یکپارچه، اطلاعات گردشگری و یک پلازای زیبا برای تجمع و استراحت.</p>
-                </div>
-                <div class="card p-6">
-                    <div class="flex items-center mb-3">
-                        <div class="icon-bg-mountain p-3 rounded-full ml-4"><i class="fas fa-store fa-2x"></i></div>
-                        <h2 class="text-xl font-bold text-gray-700">بازارچه آلپاین و فود هال</h2>
-                    </div>
-                    <p class="text-gray-600">مجموعه‌ای تجاری با معماری کوهستانی شامل فروشگاه‌های تخصصی، فود هال مدرن و رستوران با چشم‌انداز.</p>
-                </div>
-            </div>
+        <!-- Image Gallery -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            <div class="rounded-2xl overflow-hidden shadow-lg"><img src="https://uploadkon.ir/uploads/ad0f18_25Kuhpayeh-Gemini-Generated-Image-a0g2pta0g2pta0g2.png" alt="نمای میدان کوهستان و مرکز پذیرش" class="w-full h-full object-cover"></div>
+            <div class="rounded-2xl overflow-hidden shadow-lg"><img src="https://uploadkon.ir/uploads/fc4618_25Kuhpaye-Gemini-Generated-Image-824tnh824tnh824t.png" alt="نمای کلی دهکده کوهپایه" class="w-full h-full object-cover"></div>
+            <div class="rounded-2xl overflow-hidden shadow-lg"><img src="https://uploadkon.ir/uploads/a3e018_25تلهGemini-Generated-Image-klynoyklynoyklyn.png" alt="محوطه ماجراجویی و پارکینگ سبز" class="w-full h-full object-cover"></div>
+        </div>
 
-            <!-- Center Column: Main Image -->
-            <div class="rounded-2xl overflow-hidden shadow-2xl">
-                <img src="https://uploadkon.ir/uploads/fc4618_25Kuhpaye-Gemini-Generated-Image-824tnh824tnh824t.png" alt="نمای کلی از دهکده کوهپایه" class="w-full h-auto object-cover">
-            </div>
 
-            <!-- Right Column: Components -->
-            <div class="space-y-8">
-                <div class="card p-6">
-                    <div class="flex items-center mb-3">
-                        <div class="icon-bg-mountain p-3 rounded-full ml-4"><i class="fas fa-gamepad fa-2x"></i></div>
-                        <h2 class="text-xl font-bold text-gray-700">محوطه ماجراجویی و خانواده</h2>
-                    </div>
-                    <p class="text-gray-600">شامل دیواره صخره‌نوردی، سینمای چهاربعدی "پرواز بر فراز البرز" و زمین بازی خلاقانه برای کودکان.</p>
-                </div>
-                <div class="card p-6">
-                    <div class="flex items-center mb-3">
-                        <div class="icon-bg-mountain p-3 rounded-full ml-4"><i class="fas fa-parking fa-2x"></i></div>
-                        <h2 class="text-xl font-bold text-gray-700">پارکینگ طبقاتی سبز</h2>
-                    </div>
-                    <p class="text-gray-600">یک پارکینگ هوشمند با ظرفیت بالا و نمای دیوار سبز که به عنوان ایستگاه حمل‌ونقل یکپارچه نیز عمل می‌کند.</p>
-                </div>
+        <!-- Key Components Section -->
+        <h2 class="text-3xl font-bold text-center text-green-800 mb-10">اجزای کلیدی طرح</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="card p-6">
+                <div class="flex items-center mb-4"><div class="icon-bg p-3 rounded-full ml-4"><i class="fas fa-ticket-alt fa-2x"></i></div><h3 class="text-2xl font-bold text-green-700">میدان و مرکز پذیرش</h3></div>
+                <p class="text-gray-600 flex-grow">نقطه کانونی دهکده با مرکز فروش بلیط یکپارچه، اطلاعات گردشگری، کافه و یک پلازای زیبا برای تجمع.</p>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center mb-4"><div class="icon-bg p-3 rounded-full ml-4"><i class="fas fa-store fa-2x"></i></div><h3 class="text-2xl font-bold text-green-700">بازارچه آلپاین</h3></div>
+                <p class="text-gray-600 flex-grow">مجموعه تجاری با معماری کوهستانی شامل فروشگاه‌های تخصصی، فود هال مدرن و رستوران با چشم‌انداز.</p>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center mb-4"><div class="icon-bg p-3 rounded-full ml-4"><i class="fas fa-mountain fa-2x"></i></div><h3 class="text-2xl font-bold text-green-700">محوطه ماجراجویی</h3></div>
+                <p class="text-gray-600 flex-grow">فضای سرگرمی با دیواره صخره‌نوردی، سینمای چهاربعدی "پرواز بر فراز البرز" و زمین بازی کودکان.</p>
+            </div>
+            <div class="card p-6">
+                <div class="flex items-center mb-4"><div class="icon-bg p-3 rounded-full ml-4"><i class="fas fa-car fa-2x"></i></div><h3 class="text-2xl font-bold text-green-700">پارکینگ طبقاتی سبز</h3></div>
+                <p class="text-gray-600 flex-grow">پارکینگ هوشمند با ظرفیت بالا و نمای دیوار سبز که به عنوان ایستگاه حمل‌ونقل یکپارچه نیز عمل می‌کند.</p>
             </div>
         </div>
         
-        <div class="rounded-2xl overflow-hidden shadow-2xl mb-12">
-             <img src="https://uploadkon.ir/uploads/ad0f18_25Kuhpayeh-Gemini-Generated-Image-a0g2pta0g2pta0g2.png" alt="بازارچه و ورودی دهکده" class="w-full h-auto object-cover">
+        <!-- Strategic Advantages Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-12">
+            <h2 class="text-3xl font-bold text-center text-green-800 mb-8">توجیه استراتژیک و سرمایه‌گذاری</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="flex flex-col items-center"><div class="bg-blue-100 text-blue-700 p-4 rounded-full mb-4"><i class="fas fa-exchange-alt fa-2x"></i></div><h3 class="text-xl font-bold mb-2">تبدیل ضعف به قوت</h3><p class="text-gray-600">تبدیل ناحیه آشفته فعلی به یک دهکده توریستی منظم، جذاب و سودآور.</p></div>
+                <div class="flex flex-col items-center"><div class="bg-yellow-100 text-yellow-700 p-4 rounded-full mb-4"><i class="fas fa-chart-line fa-2x"></i></div><h3 class="text-xl font-bold mb-2">افزایش چشمگیر درآمد</h3><p class="text-gray-600">افزایش زمان ماندگاری و هزینه هر بازدیدکننده با جاذبه‌های مکمل و مراکز تجاری.</p></div>
+                <div class="flex flex-col items-center"><div class="bg-red-100 text-red-700 p-4 rounded-full mb-4"><i class="fas fa-users fa-2x"></i></div><h3 class="text-xl font-bold mb-2">ایجاد تجربه کامل</h3><p class="text-gray-600">فراهم کردن یک تجربه کامل "قبل و بعد از سفر به قله" برای خانواده‌ها و بازدیدکنندگان.</p></div>
+                <div class="flex flex-col items-center"><div class="bg-purple-100 text-purple-700 p-4 rounded-full mb-4"><i class="fas fa-cloud-sun-rain fa-2x"></i></div><h3 class="text-xl font-bold mb-2">جاذبه چهارفصل</h3><p class="text-gray-600">فعال بودن دهکده در تمام فصول و شرایط جوی با فضاهای سرپوشیده جذاب.</p></div>
+            </div>
         </div>
 
-        <!-- Strategic Advantages Section -->
-        <div class="mt-12 bg-white rounded-2xl shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">توجیه استراتژیک و مزایا</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="flex flex-col items-center"><div class="bg-green-100 text-green-700 p-4 rounded-full mb-4"><i class="fas fa-exchange-alt fa-2x"></i></div><h3 class="text-xl font-bold mb-2">تبدیل ضعف به قوت</h3><p class="text-gray-600">ساماندهی و جذاب‌سازی ناحیه تله‌کابین و تبدیل آن به یک مقصد سودآور.</p></div>
-                <div class="flex flex-col items-center"><div class="bg-yellow-100 text-yellow-700 p-4 rounded-full mb-4"><i class="fas fa-arrow-up fa-2x"></i></div><h3 class="text-xl font-bold mb-2">افزایش چشمگیر درآمد</h3><p class="text-gray-600">افزایش زمان ماندگاری و هزینه هر بازدیدکننده با جاذبه‌های مکمل.</p></div>
-                <div class="flex flex-col items-center"><div class="bg-blue-100 text-blue-700 p-4 rounded-full mb-4"><i class="fas fa-check-circle fa-2x"></i></div><h3 class="text-xl font-bold mb-2">ایجاد تجربه کامل</h3><p class="text-gray-600">فراهم کردن سرگرمی، خرید و غذا برای بازدیدکنندگان قبل و بعد از سفر به قله.</p></div>
-                <div class="flex flex-col items-center"><div class="bg-purple-100 text-purple-700 p-4 rounded-full mb-4"><i class="fas fa-cloud-sun fa-2x"></i></div><h3 class="text-xl font-bold mb-2">جاذبه چهارفصل</h3><p class="text-gray-600">فعال بودن دهکده حتی در شرایط جوی نامناسب با فضاهای سرپوشیده.</p></div>
+        <!-- NEW: Costs Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center text-green-800 mb-2">برآورد هزینه های پروژه</h2>
+            <p class="text-center text-gray-500 mb-10">(مبالغ به میلیون تومان)</p>
+
+            <div id="costs-container" class="space-y-8">
+                <!-- Data will be injected here by JavaScript -->
+            </div>
+
+            <div class="mt-12 pt-6 border-t-2 border-dashed border-green-200">
+                <div class="flex justify-between items-center bg-green-700 text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold">مجموع کل هزینه‌ها</h3>
+                    <div class="text-left">
+                        <p id="total-cost" class="text-4xl font-extrabold">636,700</p>
+                        <span class="text-green-200">میلیون تومان</span>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
+
+    <script>
+        const costsData = [
+            {
+                category: "هزینه قبل از بهره برداری",
+                icon: "fa-clipboard-list",
+                total: 1800,
+                items: [
+                    { name: "طراحی", cost: 1000 },
+                    { name: "نظارت", cost: 800 },
+                ]
+            },
+            {
+                category: "احداث پارکینگ طبقاتی",
+                icon: "fa-parking",
+                total: 480000,
+                items: [
+                    { name: "ساخت پارکینگ طبقاتی", cost: 480000 },
+                ]
+            },
+            {
+                category: "زیرساخت، تجاری و محوطه سازی",
+                icon: "fa-store",
+                total: 154900,
+                items: [
+                    { name: "راه دسترسی", cost: 32500 },
+                    { name: "فضای سبز", cost: 1800 },
+                    { name: "پارکینگ خودرو (سطحی)", cost: 4200 },
+                    { name: "مرکز تجاری", cost: 102000 },
+                    { name: "سرویس های بهداشتی", cost: 14400 },
+                ]
+            }
+        ];
+
+        const costsContainer = document.getElementById('costs-container');
+        const totalCostElement = document.getElementById('total-cost');
+
+        const grandTotal = costsData.reduce((sum, group) => sum + group.total, 0);
+        totalCostElement.textContent = grandTotal.toLocaleString('fa-IR');
+
+        costsData.forEach(group => {
+            const groupElement = document.createElement('div');
+            groupElement.className = 'card p-6 !border-green-200';
+
+            let itemsHtml = '';
+            group.items.forEach(item => {
+                const percentage = group.total > 0 ? (item.cost / group.total) * 100 : 0;
+                itemsHtml += `
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1 text-gray-600">
+                            <span>${item.name}</span>
+                            <span class="font-bold text-green-800">${item.cost.toLocaleString('fa-IR')}</span>
+                        </div>
+                        <div class="cost-item-bar">
+                            <div class="cost-item-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            groupElement.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <div class="icon-bg p-3 rounded-full ml-3"><i class="fas ${group.icon} fa-lg"></i></div>
+                            <h3 class="text-xl font-bold text-green-700">${group.category}</h3>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-green-800">${group.total.toLocaleString('fa-IR')}</p>
+                        <span class="text-sm text-gray-500">میلیون تومان</span>
+                    </div>
+                </div>
+                <div>
+                    ${itemsHtml}
+                </div>
+            `;
+            costsContainer.appendChild(groupElement);
+        });
+    </script>
 </body>
 </html>
