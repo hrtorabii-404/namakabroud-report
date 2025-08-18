@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap');
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: #f0f4f8;
@@ -15,19 +15,29 @@
         .card {
             background-color: white;
             border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-bottom: 4px solid #22c55e; /* Green accent */
+            display: flex;
+            flex-direction: column;
         }
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         .icon-bg {
-            background-color: #e0f2fe;
-            color: #0c4a6e;
+             background-color: #dcfce7; /* Lighter green */
+            color: #15803d; /* Deep green */
         }
-        .rtl-grid {
-            direction: rtl;
+        .cost-item-bar {
+            background-color: #f0fdf4;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            height: 8px;
+        }
+        .cost-item-bar-fill {
+            background-color: #22c55e;
+            height: 100%;
         }
     </style>
 </head>
@@ -36,7 +46,7 @@
 
         <!-- Header Section -->
         <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-sky-800 mb-4">پروژه محوطه کاسپین (The Caspian Yard)</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-green-800 mb-4">پروژه محوطه کاسپین (The Caspian Yard)</h1>
             <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                 تبدیل ورودی شهرک نمک‌آبرود به قلب تپنده اجتماعی، فرهنگی و تجاری؛ یک مرکز روباز و پویا برای خلق تجربه‌های ماندگار.
             </p>
@@ -48,115 +58,148 @@
         </div>
 
         <!-- Key Components Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
-
-            <!-- Card 1: Interactive Water Plaza -->
-            <div class="card p-6 flex flex-col">
-                <div class="flex items-center mb-4">
-                    <div class="icon-bg p-3 rounded-full mr-4 ml-4">
-                        <i class="fas fa-water fa-2x"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-sky-700">پلازای آبی تعاملی</h2>
-                        <h3 class="text-md text-gray-500">منظر آبی هوشمند و چهارفصل</h3>
-                    </div>
-                </div>
-                <p class="text-gray-600 flex-grow">
-                    فضایی برای بازی و هیجان در تابستان با فواره‌های کف‌پوش، جاذبه بصری در شب با رقص نور و موسیقی، و میدانی برای رویدادهای فصلی در فصول سرد.
-                </p>
-            </div>
-
-            <!-- Card 2: Cool Drops Retail Walkway -->
-            <div class="card p-6 flex flex-col">
-                <div class="flex items-center mb-4">
-                    <div class="icon-bg p-3 rounded-full mr-4 ml-4">
-                        <i class="fas fa-shopping-bag fa-2x"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-sky-700">گذرگاه خرید "کول‌دراپس"</h2>
-                        <h3 class="text-md text-gray-500">تجربه‌ای نوین از خرید</h3>
-                    </div>
-                </div>
-                <p class="text-gray-600 flex-grow">
-                    پاویون‌هایی با معماری مدرن الهام‌گرفته از طبیعت، میزبان برندهای خاص، گالری‌های هنری و کافه‌های دنج، در مسیری که حس قدم زدن در باغ را تداعی می‌کند.
-                </p>
-            </div>
-
-            <!-- Card 3: Digital Art Wall -->
-            <div class="card p-6 flex flex-col">
-                <div class="flex items-center mb-4">
-                    <div class="icon-bg p-3 rounded-full mr-4 ml-4">
-                        <i class="fas fa-desktop fa-2x"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-sky-700">دیوار هنر دیجیتال</h2>
-                        <h3 class="text-md text-gray-500">نماد مدرن ورودی شهرک</h3>
-                    </div>
-                </div>
-                <p class="text-gray-600 flex-grow">
-                    یک نمایشگر LED عظیم برای نمایش آثار هنری دیجیتال، اطلاعات رویدادها و محتوای تعاملی که ورودی را به فضایی پویا و همیشه در حال تغییر تبدیل می‌کند.
-                </p>
-            </div>
-
-            <!-- Card 4: Smart Underground Parking -->
-            <div class="card p-6 flex flex-col">
-                <div class="flex items-center mb-4">
-                    <div class="icon-bg p-3 rounded-full mr-4 ml-4">
-                        <i class="fas fa-car fa-2x"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-sky-700">پارکینگ زیرسطحی هوشمند</h2>
-                        <h3 class="text-md text-gray-500">سرمایه‌گذاری برای فضا</h3>
-                    </div>
-                </div>
-                <p class="text-gray-600 flex-grow">
-                    آزادسازی سطح زمین برای ایجاد فضایی کاملاً پیاده‌مدار، ایمن و زیبا. مجهز به سیستم‌های هوشمند برای بهینه‌سازی تجربه کاربری.
-                p>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="card p-6 !border-sky-500"><div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4 ml-4 bg-sky-100 text-sky-700"><i class="fas fa-water fa-2x"></i></div><div><h2 class="text-2xl font-bold text-sky-700">پلازای آبی تعاملی</h2><h3 class="text-md text-gray-500">منظر آبی هوشمند و چهارفصل</h3></div></div><p class="text-gray-600 flex-grow">فضایی برای بازی و هیجان در تابستان با فواره‌های کف‌پوش، جاذبه بصری در شب با رقص نور و موسیقی، و میدانی برای رویدادهای فصلی در فصول سرد.</p></div>
+            <div class="card p-6 !border-amber-500"><div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4 ml-4 bg-amber-100 text-amber-700"><i class="fas fa-shopping-bag fa-2x"></i></div><div><h2 class="text-2xl font-bold text-amber-700">گذرگاه خرید "کول‌دراپس"</h2><h3 class="text-md text-gray-500">تجربه‌ای نوین از خرید</h3></div></div><p class="text-gray-600 flex-grow">پاویون‌هایی با معماری مدرن الهام‌گرفته از طبیعت، میزبان برندهای خاص، گالری‌های هنری و کافه‌های دنج، در مسیری که حس قدم زدن در باغ را تداعی می‌کند.</p></div>
+            <div class="card p-6 !border-indigo-500"><div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4 ml-4 bg-indigo-100 text-indigo-700"><i class="fas fa-desktop fa-2x"></i></div><div><h2 class="text-2xl font-bold text-indigo-700">دیوار هنر دیجیتال</h2><h3 class="text-md text-gray-500">نماد مدرن ورودی شهرک</h3></div></div><p class="text-gray-600 flex-grow">یک نمایشگر LED عظیم برای نمایش آثار هنری دیجیتال، اطلاعات رویدادها و محتوای تعاملی که ورودی را به فضایی پویا و همیشه در حال تغییر تبدیل می‌کند.</p></div>
+            <div class="card p-6 !border-slate-500"><div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4 ml-4 bg-slate-100 text-slate-700"><i class="fas fa-car fa-2x"></i></div><div><h2 class="text-2xl font-bold text-slate-700">پارکینگ زیرسطحی هوشمند</h2><h3 class="text-md text-gray-500">سرمایه‌گذاری برای فضا</h3></div></div><p class="text-gray-600 flex-grow">آزادسازی سطح زمین برای ایجاد فضایی کاملاً پیاده‌مدار، ایمن و زیبا. مجهز به سیستم‌های هوشمند برای بهینه‌سازی تجربه کاربری.</p></div>
         </div>
+        
+        <!-- NEW: Costs Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mt-12">
+            <h2 class="text-3xl font-bold text-center text-green-800 mb-2">برآورد هزینه های پروژه</h2>
+            <p class="text-center text-gray-500 mb-10">(مبالغ به میلیون تومان)</p>
 
-        <!-- Second Image Section -->
-        <div class="my-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-             <div class="rounded-2xl overflow-hidden shadow-xl">
-                <img src="https://uploadkon.ir/uploads/140618_25ChatGPT-Image-Aug-18-2025-09-36-56-AM.png" alt="نمایی از دیوار دیجیتال و ورودی پارکینگ" class="w-full h-auto object-cover">
+            <div id="costs-container" class="space-y-8">
+                <!-- Data will be injected here by JavaScript -->
             </div>
-            <div class="rounded-2xl overflow-hidden shadow-xl">
-                <img src="https://uploadkon.ir/uploads/426218_25ChatGPT-Image-Aug-18-2025-09-47-04-AM.png" alt="کودکان در حال بازی در پلازای آبی" class="w-full h-auto object-cover">
-            </div>
-        </div>
 
-
-        <!-- Strategic Advantages Section -->
-        <div class="mt-12 bg-white rounded-2xl shadow-lg p-8">
-            <h2 class="text-3xl font-bold text-center text-sky-800 mb-8">توجیه استراتژیک و مزایا</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center rtl-grid">
-                <!-- Advantage 1 -->
-                <div class="flex flex-col items-center">
-                    <div class="bg-green-100 text-green-700 p-4 rounded-full mb-4">
-                        <i class="fas fa-sign-in-alt fa-2x"></i>
+            <div class="mt-12 pt-6 border-t-2 border-dashed border-green-200">
+                <div class="flex justify-between items-center bg-green-700 text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold">مجموع کل هزینه‌ها</h3>
+                    <div class="text-left">
+                        <p id="total-cost" class="text-4xl font-extrabold">284,780</p>
+                        <span class="text-green-200">میلیون تومان</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">ایجاد "حس ورود" قدرتمند</h3>
-                    <p class="text-gray-600">ارتقای تصویر ذهنی بازدیدکنندگان با یک ورودی به یادماندنی و درخور.</p>
-                </div>
-                <!-- Advantage 2 -->
-                <div class="flex flex-col items-center">
-                    <div class="bg-yellow-100 text-yellow-700 p-4 rounded-full mb-4">
-                        <i class="fas fa-users fa-2x"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">مرکز ثقل اجتماعی</h3>
-                    <p class="text-gray-600">پر کردن خلأ یک مرکز اجتماعی یکپارچه برای تعامل ساکنین و گردشگران.</p>
-                </div>
-                <!-- Advantage 3 -->
-                <div class="flex flex-col items-center">
-                    <div class="bg-blue-100 text-blue-700 p-4 rounded-full mb-4">
-                        <i class="fas fa-chart-line fa-2x"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">افزایش درآمدزایی</h3>
-                    <p class="text-gray-600">تضمین جریانی پایدار از درآمد از طریق اجاره، تبلیغات و مدیریت پارکینگ.</p>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <script>
+        const costsData = [
+            {
+                category: "هزینه قبل از بهره برداری",
+                icon: "fa-clipboard-list",
+                total: 650,
+                items: [
+                    { name: "طراحی", cost: 400 },
+                    { name: "نظارت", cost: 250 },
+                ]
+            },
+            {
+                category: "زمین گلف ۹ سوراخه",
+                icon: "fa-golf-ball-tee",
+                total: 100830,
+                items: [
+                    { name: "طراحی و برنامه ریزی", cost: 2700 },
+                    { name: "نقشه برداری", cost: 2100 },
+                    { name: "مطالعات خاک شناسی", cost: 1000 },
+                    { name: "آماده سازی زمین", cost: 13200 },
+                    { name: "آبیاری و زهکشی", cost: 22000 },
+                    { name: "ساخت سوراخ و موانع", cost: 8100 },
+                    { name: "ساخت بونکر شنی", cost: 4730 },
+                    { name: "کاشت چمن", cost: 900 },
+                    { name: "کلاب هاوس", cost: 22100 },
+                    { name: "زمین تمرین ساده", cost: 15000 },
+                    { name: "جاده داخلی", cost: 9000 },
+                ]
+            },
+            {
+                category: "ساخت ماز (Hedge Maze)",
+                icon: "fa-border-all",
+                total: 11100,
+                items: [
+                    { name: "طراحی و برنامه ریزی", cost: 400 },
+                    { name: "تهیه نهال شمشاد", cost: 3000 },
+                    { name: "سیستم آبیاری", cost: 5500 },
+                    { name: "آماده سازی زمین", cost: 2200 },
+                ]
+            },
+            {
+                category: "پیست موتور سواری",
+                icon: "fa-motorcycle",
+                total: 107200,
+                items: [
+                    { name: "طراحی و برنامه ریزی", cost: 1600 },
+                    { name: "زیرسازی و آماده سازی زمین", cost: 7500 },
+                    { name: "ساخت پیست", cost: 52500 },
+                    { name: "زیرساخت های ایمنی و زهکشی", cost: 15000 },
+                    { name: "کلاب هاوس", cost: 22100 },
+                    { name: "گاراژ موتورها", cost: 8500 },
+                ]
+            },
+            {
+                category: "تاسیسات عمومی و محوطه",
+                icon: "fa-tree",
+                total: 65000,
+                items: [
+                    { name: "آب نما", cost: 12000 },
+                    { name: "دریاچه", cost: 30000 },
+                    { name: "پارکینگ خودرو", cost: 14000 },
+                    { name: "سرویس های بهداشتی", cost: 9000 },
+                ]
+            }
+        ];
+
+        const costsContainer = document.getElementById('costs-container');
+        const totalCostElement = document.getElementById('total-cost');
+
+        const grandTotal = costsData.reduce((sum, group) => sum + group.total, 0);
+        totalCostElement.textContent = grandTotal.toLocaleString('fa-IR');
+
+        costsData.forEach(group => {
+            const groupElement = document.createElement('div');
+            groupElement.className = 'card p-6 !border-green-300';
+
+            let itemsHtml = '';
+            group.items.forEach(item => {
+                if (item.cost > 0) {
+                    const percentage = group.total > 0 ? (item.cost / group.total) * 100 : 0;
+                    itemsHtml += `
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-1 text-gray-600">
+                                <span>${item.name}</span>
+                                <span class="font-bold text-green-800">${item.cost.toLocaleString('fa-IR')}</span>
+                            </div>
+                            <div class="cost-item-bar">
+                                <div class="cost-item-bar-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            groupElement.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <div class="icon-bg p-3 rounded-full ml-3"><i class="fas ${group.icon} fa-lg"></i></div>
+                            <h3 class="text-xl font-bold text-green-700">${group.category}</h3>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-green-800">${group.total.toLocaleString('fa-IR')}</p>
+                        <span class="text-sm text-gray-500">میلیون تومان</span>
+                    </div>
+                </div>
+                <div>
+                    ${itemsHtml}
+                </div>
+            `;
+            costsContainer.appendChild(groupElement);
+        });
+    </script>
 </body>
 </html>
