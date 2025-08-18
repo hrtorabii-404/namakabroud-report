@@ -29,6 +29,16 @@
             background-color: #e0f2fe; /* Lighter blue */
             color: #0369a1; /* Deep blue */
         }
+        .cost-item-bar {
+            background-color: #e0f2fe;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            height: 8px;
+        }
+        .cost-item-bar-fill {
+            background-color: #0ea5e9;
+            height: 100%;
+        }
     </style>
 </head>
 <body class="bg-sky-50 text-gray-800 p-4 sm:p-6 md:p-8">
@@ -89,7 +99,7 @@
         </div>
 
         <!-- Strategic Advantages Section -->
-        <div class="mt-12 bg-white rounded-2xl shadow-lg p-8">
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-12">
             <h2 class="text-3xl font-bold text-center text-sky-800 mb-8">توجیه استراتژیک و مزایا</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div class="flex flex-col items-center"><div class="bg-green-100 text-green-700 p-4 rounded-full mb-4"><i class="fas fa-gem fa-2x"></i></div><h3 class="text-xl font-bold mb-2">محصول گردشگری کامل</h3><p class="text-gray-600">ارائه یکپارچه تفریح، سرگرمی و اقامت لوکس در یک مجموعه.</p></div>
@@ -98,7 +108,126 @@
                 <div class="flex flex-col items-center"><div class="bg-purple-100 text-purple-700 p-4 rounded-full mb-4"><i class="fas fa-link fa-2x"></i></div><h3 class="text-xl font-bold mb-2">تکمیل زنجیره گردشگری</h3><p class="text-gray-600">ایجاد تجربه کامل "جنگل تا دریا" و تبدیل شهرک به مقصد چندروزه.</p></div>
             </div>
         </div>
+        
+        <!-- NEW: Costs Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-center text-sky-800 mb-2">برآورد هزینه های تجهیزات و جزئیات</h2>
+            <p class="text-center text-gray-500 mb-10">(مبالغ به میلیون تومان)</p>
+
+            <div id="costs-container" class="space-y-8">
+                <!-- Data will be injected here by JavaScript -->
+            </div>
+
+            <div class="mt-12 pt-6 border-t-2 border-dashed border-sky-200">
+                <div class="flex justify-between items-center bg-sky-700 text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold">مجموع کل هزینه‌ها</h3>
+                    <div class="text-left">
+                        <p id="total-cost" class="text-4xl font-extrabold">245,950</p>
+                        <span class="text-sky-200">میلیون تومان</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
+
+    <script>
+        const costsData = [
+            {
+                category: "هزینه قبل از بهره برداری",
+                icon: "fa-clipboard-list",
+                total: 1650,
+                items: [
+                    { name: "طراحی", cost: 500 },
+                    { name: "نظارت", cost: 300 },
+                    { name: "پروانه", cost: 0 },
+                    { name: "مشاوره", cost: 850 },
+                ]
+            },
+            {
+                category: "هزینه های زیرساختی بندرگاه تفریحی",
+                icon: "fa-water",
+                total: 25800,
+                items: [
+                    { name: "پل دسترسی", cost: 3850 },
+                    { name: "اسکله اصلی", cost: 6550 },
+                    { name: "موج‌شکن", cost: 14400 },
+                    { name: "تاسیسات به آب اندازی", cost: 1000 },
+                ]
+            },
+            {
+                category: "هزینه های زیرساختی",
+                icon: "fa-road",
+                total: 17500,
+                items: [
+                    { name: "پیست دوچرخه سواری", cost: 13500 },
+                    { name: "غیره", cost: 4000 },
+                ]
+            },
+            {
+                category: "ساختمان‌ها و محوطه‌سازی",
+                icon: "fa-building",
+                total: 195400,
+                items: [
+                    { name: "پارکینگ خودرو", cost: 70000 },
+                    { name: "ساختمان اداری", cost: 4050 },
+                    { name: "رستوران", cost: 4650 },
+                    { name: "کافه", cost: 6800 },
+                    { name: "لانژ دریایی", cost: 18900 },
+                    { name: "واحدهای تجاری (غرفه)", cost: 4200 },
+                    { name: "شهربازی روباز", cost: 50000 },
+                    { name: "شهربازی سرپوشیده", cost: 25000 },
+                    { name: "پارک ساحلی", cost: 7000 },
+                    { name: "سرویس های بهداشتی", cost: 10400 },
+                ]
+            }
+        ];
+
+        const costsContainer = document.getElementById('costs-container');
+        const totalCostElement = document.getElementById('total-cost');
+
+        const grandTotal = costsData.reduce((sum, group) => sum + group.total, 0);
+        totalCostElement.textContent = grandTotal.toLocaleString('fa-IR');
+
+        costsData.forEach(group => {
+            const groupElement = document.createElement('div');
+            groupElement.className = 'card p-6 !border-sky-200';
+
+            let itemsHtml = '';
+            group.items.forEach(item => {
+                const percentage = group.total > 0 ? (item.cost / group.total) * 100 : 0;
+                itemsHtml += `
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-1 text-gray-600">
+                            <span>${item.name}</span>
+                            <span class="font-bold text-sky-800">${item.cost.toLocaleString('fa-IR')}</span>
+                        </div>
+                        <div class="cost-item-bar">
+                            <div class="cost-item-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            groupElement.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center mb-2">
+                            <div class="icon-bg-marina p-3 rounded-full ml-3"><i class="fas ${group.icon} fa-lg"></i></div>
+                            <h3 class="text-xl font-bold text-sky-700">${group.category}</h3>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-2xl font-bold text-sky-800">${group.total.toLocaleString('fa-IR')}</p>
+                        <span class="text-sm text-gray-400">مجموع</span>
+                    </div>
+                </div>
+                <div>
+                    ${itemsHtml}
+                </div>
+            `;
+            costsContainer.appendChild(groupElement);
+        });
+    </script>
 </body>
 </html>
