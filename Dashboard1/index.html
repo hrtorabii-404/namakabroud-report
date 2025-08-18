@@ -247,13 +247,50 @@
             };
             const supraLocalProjects = [
                  { name: "اجرای کامل شبکه جمع‌آوری و تصفیه فاضلاب", status: "اجرا نشده", quantity: "کل شهرک (طول نامشخص)", details: "پروژه کلان و حیاتی برای کل شهرک. اجرای آن برای صدور پایان‌کار بسیاری از واحدها ضروری است.", icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-                { name: "توسعه یکپارچه عرصه ساحلی", status: "پروژه جدید پیشنهادی", quantity: "۳۱۷,۳۱۵ متر مربع", details: "احداث مارینا (بندرگاه قایق‌های تفریحی)، ایجاد پلاژ و خدمات سرگرمی‌های ساحلی و احداث هتل‌ویلا.", icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C19.955 11 21 9.537 21 8s-1.045-3-2.945-3H19V4a1 1 0 00-1-1H6a1 1 0 00-1 1v1H3.055C1.045 5 0 6.537 0 8s1.045 3 3.055 3z' },
-                { name: "توسعه پارک جنگلی", status: "پروژه جدید پیشنهادی", quantity: "۵۵۴,۱۴۲ متر مربع", details: "ایجاد پارک ماجراجویی (Adventure Park) با رویکرد اکوتوریسم و احداث اقامتگاه‌های سازگار با محیط زیست.", icon: 'M17.657 18.343A8 8 0 016.343 7.657l-1.414-1.414A10 10 0 1019.07 19.07l-1.414-1.414zM16 12a4 4 0 11-8 0 4 4 0 018 0z' },
-                { name: "توسعه ورودی شهرک", status: "پروژه جدید پیشنهادی", quantity: "۶۱۱,۳۳۴ متر مربع", details: "ایجاد مجموعه‌های بازی، مراکز آموزشی و سالن‌های ورزشی در ورودی شهرک برای جذب بازدیدکنندگان.", icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.623 5.91L12 20.828l-1.377-1.91A6 6 0 013 9a2 2 0 012-2m10 0V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m10 0h-4' },
+                { 
+                    name: "توسعه یکپارچه عرصه ساحلی", 
+                    status: "پروژه جدید پیشنهادی", 
+                    quantity: "۳۱۷,۳۱۵ متر مربع", 
+                    details: "احداث مارینا (بندرگاه قایق‌های تفریحی)، ایجاد پلاژ و خدمات سرگرمی‌های ساحلی و احداث هتل‌ویلا.", 
+                    icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945C19.955 11 21 9.537 21 8s-1.045-3-2.945-3H19V4a1 1 0 00-1-1H6a1 1 0 00-1 1v1H3.055C1.045 5 0 6.537 0 8s1.045 3 3.055 3z',
+                    sub_projects: [
+                        { title: 'مارینا پارک ساحلی نمک‌آبرود', url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/Marina/' },
+                        { title: 'دهکده جامع تندرستی و آب‌درمانی نمک‌آبرود', url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/wellness/' }
+                    ]
+                },
+                { 
+                    name: "توسعه پارک جنگلی", 
+                    status: "پروژه جدید پیشنهادی", 
+                    quantity: "۵۵۴,۱۴۲ متر مربع", 
+                    details: "ایجاد پارک ماجراجویی (Adventure Park) با رویکرد اکوتوریسم و احداث اقامتگاه‌های سازگار با محیط زیست.", 
+                    icon: 'M17.657 18.343A8 8 0 016.343 7.657l-1.414-1.414A10 10 0 1019.07 19.07l-1.414-1.414zM16 12a4 4 0 11-8 0 4 4 0 018 0z',
+                    sub_projects: [
+                        { title: 'اکوپارک جنگلی پناهگاه داروَگ', url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/Darvag/' }
+                    ]
+                },
+                { 
+                    name: "توسعه ورودی شهرک", 
+                    status: "پروژه جدید پیشنهادی", 
+                    quantity: "۶۱۱,۳۳۴ متر مربع", 
+                    details: "ایجاد مجموعه‌های بازی، مراکز آموزشی و سالن‌های ورزشی در ورودی شهرک برای جذب بازدیدکنندگان.", 
+                    icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.623 5.91L12 20.828l-1.377-1.91A6 6 0 013 9a2 2 0 012-2m10 0V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m10 0h-4',
+                    sub_projects: [
+                        { title: 'ایده ۱: "محوطه کاسپین" (The Caspian Yard)', url: 'https://hrtorabii-404.github.io/namakabroud-report/CaspianYard/' },
+                        { title: 'ایده ۲: "سفره مازندران" (The Mazandaran Table)', url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/SofreMazandaran/' },
+                        { title: 'ایده ۳: "باغ گمشده هیرکانی" (The Lost Hyrcanian Garden)', url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/HyrcanianGarden/' }
+                    ]
+                },
                 { name: "توسعه عرصه میانی", status: "پروژه جدید پیشنهادی", quantity: "۱۷ هکتار", details: "ایجاد فضاهای گردشگری مبتنی بر غذا (کافه و رستوران) و توسعه فضاهای عمومی ورزشی و فرهنگی روباز.", icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a6 6 0 00-12 0v2' },
                 { name: "توسعه ناحیه گردشگری تله‌کابین", status: "پروژه جدید پیشنهادی", quantity: "۶۸,۸۴۷ متر مربع", details: "ایجاد خدمات گردشگری مکمل، احداث پارکینگ طبقاتی و مراکز تجاری پشتیبان.", icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v4.512l-3 3-3-3V5L8 4z' },
                 { name: "پروژه بام سبز نمک‌آبرود", status: "پروژه جدید پیشنهادی", quantity: "مکان‌یابی دقیق", details: "ایجاد یک جاذبه منحصربه‌فرد با دید پانوراما در عرصه‌های جنوبی شهرک.", icon: 'M3 12a9 9 0 1018 0 9 9 0 00-18 0zm13-1a1 1 0 10-2 0v2a1 1 0 102 0v-2zM7 11a1 1 0 10-2 0v2a1 1 0 102 0v-2zm7-4a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1V7z' },
-                { name: "ایجاد دسترسی از آزادراه چالوس-رامسر", status: "پروژه جدید پیشنهادی", quantity: "پروژه استراتژیک", details: "حل مشکل ترافیک ورودی و ارتقاء جایگاه شهرک در منطقه.", icon: 'M13 10V3L4 14h7v7l9-11h-7z' }
+                { 
+                    name: "اسکای‌واک هیرکانی و گنبد نوآوری", 
+                    status: "پیشنهاد پروژه خلاقانه", 
+                    quantity: "پروژه استراتژیک", 
+                    details: "Hyrcanian Skywalk & Innovation Dome", 
+                    icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
+                    url: 'https://hrtorabii-404.github.io/namakabroud-report/Dashboard1/SkyWalk/' 
+                }
             ];
             const analysisData = {
                 challenges: [
@@ -526,8 +563,8 @@
             
             function populateSupraLocal() {
                 const container = document.getElementById('supra-local-container');
-                container.innerHTML = supraLocalProjects.map(p => `
-                    <div class="bg-slate-50 rounded-xl shadow-md p-5 border-r-4 border-indigo-500">
+                container.innerHTML = supraLocalProjects.map(p => {
+                    let innerCardHtml = `
                         <div class="flex items-start space-x-4 space-x-reverse">
                             <div class="flex-shrink-0 p-3 bg-indigo-100 rounded-full">
                                 <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${p.icon}"></path></svg>
@@ -537,10 +574,34 @@
                                 <span class="text-xs font-semibold py-1 px-2.5 uppercase rounded-full text-indigo-600 bg-indigo-100">${p.status}</span>
                                  <p class="text-sm text-slate-600 mt-2"><strong class="font-semibold">مقیاس:</strong> ${p.quantity}</p>
                                 <p class="text-sm text-slate-500 mt-2 border-t pt-2">${p.details}</p>
+                    `;
+
+                    if (p.sub_projects && p.sub_projects.length > 0) {
+                        innerCardHtml += `<div class="mt-3 pt-3 border-t space-y-2">`;
+                        p.sub_projects.forEach(sub => {
+                            innerCardHtml += `
+                                <a href="${sub.url}" target="_blank" rel="noopener noreferrer" class="flex items-center text-sm text-blue-600 hover:text-blue-800 hover:underline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                    <span>${sub.title}</span>
+                                </a>
+                            `;
+                        });
+                        innerCardHtml += `</div>`;
+                    }
+
+                    innerCardHtml += `
                             </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+
+                    const cardContainerClass = "bg-slate-50 rounded-xl shadow-md p-5 border-r-4 border-indigo-500";
+
+                    if (p.url) {
+                        return `<a href="${p.url}" target="_blank" rel="noopener noreferrer" class="${cardContainerClass} block hover:bg-indigo-50 transition-colors">${innerCardHtml}</a>`;
+                    } else {
+                        return `<div class="${cardContainerClass}">${innerCardHtml}</div>`;
+                    }
+                }).join('');
             }
 
             function populateTownKPIs() {
