@@ -62,6 +62,16 @@
              padding: 1.5rem;
              box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
+        .flowchart-step {
+            background-color: #e0f2fe;
+            border: 2px solid #94C9FF;
+            color: #004AAD;
+        }
+        .flowchart-arrow {
+            color: #419BFF;
+            font-size: 2.5rem;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -99,9 +109,37 @@
                     <p class="kpi-unit">میلیون تومان / متر طول</p>
                 </div>
                 <div class="kpi-card border-[#17A2B8]">
-                    <h3 class="text-xl font-bold mb-2 flex items-center justify-center">💧 آبرسانی</h3>
+                    <h3 class="text-xl font-bold mb-2 flex items-center justify-center">� آبرسانی</h3>
                     <p class="kpi-value text-[#17A2B8]">۴.۳۸</p>
                     <p class="kpi-unit">میلیون تومان / متر طول</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center text-[#004AAD] mb-6">رویکرد اعتبارسنجی: تحلیل از پایین به بالا</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">
+                برای تضمین دقت، هزینه‌ها بر اساس مراجع رسمی بازسازی شدند. این فرآیند مستند، اتکا به تخمین‌های کلی را حذف کرده و یک مبنای قابل دفاع برای بودجه‌ریزی فراهم می‌کند.
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
+                <div class="flowchart-step p-4 rounded-lg shadow-md text-center w-60">
+                    <div class="text-4xl mb-2">۱</div>
+                    <h4 class="font-bold">استخراج هزینه پایه</h4>
+                    <p class="text-sm">بر اساس فهرست بهای واحد پایه سال ۱۴۰۴</p>
+                </div>
+                <div class="flowchart-arrow mx-4 hidden md:block">&larr;</div>
+                <div class="flowchart-arrow my-4 md:hidden">&darr;</div>
+                <div class="flowchart-step p-4 rounded-lg shadow-md text-center w-60">
+                    <div class="text-4xl mb-2">۲</div>
+                    <h4 class="font-bold">اعمال ضرایب بالاسری</h4>
+                    <p class="text-sm">شامل سود پیمانکار، تجهیز کارگاه و...</p>
+                </div>
+                <div class="flowchart-arrow mx-4 hidden md:block">&larr;</div>
+                <div class="flowchart-arrow my-4 md:hidden">&darr;</div>
+                <div class="flowchart-step p-4 rounded-lg shadow-md text-center w-60 bg-[#419BFF] text-white border-0">
+                    <div class="text-4xl mb-2">۳</div>
+                    <h4 class="font-bold">مقایسه و تأیید نهایی</h4>
+                    <p class="text-sm">تطبیق هزینه بازسازی شده با عدد هدف</p>
                 </div>
             </div>
         </section>
@@ -293,3 +331,4 @@
     </script>
 </body>
 </html>
+�
