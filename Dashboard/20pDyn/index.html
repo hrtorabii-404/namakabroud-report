@@ -210,6 +210,13 @@
             { id: 13, areaName: 'عرصه تله‌کابین', approvedUsage: 'گردشگری مکمل', zoneCode: 'S41', projectName: 'پکیج تجاری و پارکینگ تله‌کابین', projectArea: 68847, proposedOccupancy: 25, proposedFloors: 6, proposedDensity: 100, proposedBuiltArea: 103271, partnershipType: 'BOT / BOLT', subProjects: ['پارکینگ طبقاتی هوشمند (۳ طبقه)', 'مرکز خرید و فودکورت (۳ طبقه تجاری)'] }
         ];
 
+        // Clean and normalize data before use
+        initialProjectsData.forEach(p => {
+            if (p.approvedUsage === 'تفریحی توریستی') {
+                p.approvedUsage = 'تفریحی و توریستی';
+            }
+        });
+
         let projects = JSON.parse(JSON.stringify(initialProjectsData));
         let initialAreaTotals = {};
         let builtAreaChart, areaComparisonChart;
@@ -228,6 +235,10 @@
 
         const formatNumber = (num) => num ? new Intl.NumberFormat('fa-IR').format(num) : 'N/A';
         
+        // Custom sort order
+        const areaOrder = ['عرصه ساحلی', 'دامنه کوه مدوبن', 'عرصه ورودی', 'عرصه میانی', 'عرصه مراکز محلات', 'پروژه استراتژیک', 'عرصه تله‌کابین'];
+        const customSort = (a, b) => areaOrder.indexOf(a.areaName) - areaOrder.indexOf(b.areaName);
+
         function renderTable(data) {
             tableBody.innerHTML = '';
             if (data.length === 0) {
@@ -375,8 +386,8 @@
                 (partnershipValue === 'all' || p.partnershipType === partnershipValue) &&
                 (usageValue === 'all' || p.approvedUsage === usageValue)
             );
-            // Sort data to make cell merging work correctly
-            filteredData.sort((a, b) => a.areaName.localeCompare(b.areaName));
+            // Sort data based on the custom order
+            filteredData.sort(customSort);
             renderTable(filteredData);
             renderCharts(filteredData);
             updateKpiCards(filteredData);
@@ -388,19 +399,23 @@
             const zones = [...new Set(projects.map(p => p.zoneCode))];
             const partnerships = [...new Set(projects.map(p => p.partnershipType))];
             const usages = [...new Set(projects.map(p => p.approvedUsage))];
-            areas.forEach(val => filterArea.innerHTML += `<option value="${val}">${val}</option>`);
+            areas.sort((a,b) => areaOrder.indexOf(a) - areaOrder.indexOf(b)).forEach(val => filterArea.innerHTML += `<option value="${val}">${val}</option>`);
             zones.forEach(val => filterZone.innerHTML += `<option value="${val}">${val}</option>`);
             partnerships.forEach(val => filterPartnership.innerHTML += `<option value="${val}">${val}</option>`);
             usages.forEach(val => filterUsage.innerHTML += `<option value="${val}">${val}</option>`);
         }
         
         function initializeDashboard() {
+            // Sort the main data array initially
+            projects.sort(customSort);
+            
             initialAreaTotals = initialProjectsData.reduce((acc, p) => ({ ...acc, [p.areaName]: (acc[p.areaName] || 0) + p.projectArea }), {});
             populateFilters();
             applyFilters();
             [filterArea, filterZone, filterPartnership, filterUsage].forEach(f => f.addEventListener('change', applyFilters));
             resetButton.addEventListener('click', () => {
                 projects = JSON.parse(JSON.stringify(initialProjectsData));
+                projects.sort(customSort); // Re-sort after reset
                 populateFilters();
                 applyFilters();
             });
