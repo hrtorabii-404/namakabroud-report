@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه‌های پیشنهادی عرصه‌های نمک‌آبرود</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 0.5rem center;
+            background-size: 1.5em 1.5em;
+            padding-left: 2.5rem;
+        }
+        .table-v-align td {
+            vertical-align: middle;
+        }
+        /* Treemap Styles */
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: #1e293b;
+            color: white;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+        .treemap-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4px;
+            color: #1e293b;
+            font-size: 13px;
+            font-weight: 500;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            word-break: break-word;
+            box-sizing: border-box;
+        }
+        .zone-label {
+             display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0,0,0,0.6);
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 p-4 lg:p-8">
+
+    <div class="container mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl lg:text-4xl font-bold text-slate-800">داشبورد تحلیلی پروژه‌های نمک‌آبرود</h1>
+            <p class="text-slate-500 mt-2">نمایش اطلاعات کلیدی و نمودارهای پویا بر اساس داده‌های پروژه</p>
+        </header>
+
+        <!-- Filters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="card p-4">
+                <label for="area-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس عرصه</label>
+                <select id="area-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                    <option value="all">همه عرصه‌ها</option>
+                </select>
+            </div>
+            <div class="card p-4">
+                <label for="landuse-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس کاربری</label>
+                <select id="landuse-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                    <option value="all">همه کاربری‌ها</option>
+                </select>
+            </div>
+            <div class="card p-4">
+                <label for="partnership-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس نوع مشارکت</label>
+                <select id="partnership-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                    <option value="all">همه مشارکت‌ها</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Card 1: Total Projects -->
+            <div class="card bg-stone-100 p-6 flex flex-col items-center justify-center text-center">
+                <div class="bg-stone-200 text-stone-600 p-3 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <p id="total-projects" class="text-4xl font-bold text-stone-800">0</p>
+                <h3 class="text-base font-medium text-stone-500 mt-1">تعداد پروژه‌ها</h3>
+            </div>
+            <!-- Card 2: Total Area -->
+            <div class="card bg-teal-50 p-6 flex flex-col items-center justify-center text-center">
+                <div class="bg-teal-100 text-teal-600 p-3 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <p id="total-area" class="text-4xl font-bold text-teal-800">0</p>
+                <h3 class="text-base font-medium text-teal-500 mt-1">مساحت کل (مترمربع)</h3>
+            </div>
+            <!-- Card 3: Total Built Area -->
+            <div class="card bg-amber-50 p-6 flex flex-col items-center justify-center text-center">
+                <div class="bg-amber-100 text-amber-600 p-3 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <p id="total-built-area" class="text-4xl font-bold text-amber-800">0</p>
+                <h3 class="text-base font-medium text-amber-500 mt-1">مجموع زیربنا (مترمربع)</h3>
+            </div>
+            <!-- Card 4: Average Density -->
+            <div class="card bg-indigo-50 p-6 flex flex-col items-center justify-center text-center">
+                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m12.76-1.857L17 15V9c0-1.355-.446-2.62-1.214-3.624M7.24 16.143L7 15V9c0-1.355.446-2.62 1.214-3.624M12 15V9c0-1.355-.446-2.62-1.214-3.624M12 15c0 2.21 1.79 4 4 4h1m-1-4c0 2.21-1.79 4-4 4H7m5-12c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z" /></svg>
+                </div>
+                <p id="avg-density" class="text-4xl font-bold text-indigo-800">0</p>
+                <h3 class="text-base font-medium text-indigo-500 mt-1">متوسط تراکم (%)</h3>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="card p-6 lg:col-span-1">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه مساحت عرصه‌ها</h3>
+                <div class="chart-container">
+                    <canvas id="areaComparisonChart"></canvas>
+                </div>
+            </div>
+            <div class="card p-6 lg:col-span-2">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه زیربنای پیشنهادی پروژه‌ها</h3>
+                <div class="chart-container">
+                    <canvas id="builtAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Treemap Chart -->
+        <div class="card p-6 mb-8">
+            <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نمودار درختی: مساحت پروژه‌ها در هر عرصه</h3>
+            <div id="treemap-chart" style="min-height: 500px;"></div>
+        </div>
+
+        <!-- Table -->
+        <div class="card overflow-x-auto">
+            <h3 class="text-xl font-semibold text-slate-700 p-6">لیست کامل پروژه‌ها</h3>
+            <table class="w-full text-sm text-right text-slate-500 table-v-align">
+                <thead class="text-xs text-slate-700 uppercase bg-slate-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">عرصه</th>
+                        <th scope="col" class="px-6 py-3">مساحت کل عرصه (مترمربع)</th>
+                        <th scope="col" class="px-6 py-3">نام پروژه</th>
+                        <th scope="col" class="px-6 py-3">مساحت پروژه (مترمربع)</th>
+                        <th scope="col" class="px-6 py-3">زیربنا (مترمربع)</th>
+                        <th scope="col" class="px-6 py-3">سطح اشغال (%)</th>
+                        <th scope="col" class="px-6 py-3">طبقات</th>
+                        <th scope="col" class="px-6 py-3">تراکم (%)</th>
+                        <th scope="col" class="px-6 py-3">نوع مشارکت</th>
+                    </tr>
+                </thead>
+                <tbody id="projects-table-body">
+                    <!-- Rows will be injected by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    
+    <div class="tooltip"></div>
+
+    <script>
+        // --- DATASET ---
+        const projectsData = [
+            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "پلاژها و خدمات ساحلی موجود", "projectArea": 74000, "occupancyPercentage": null, "floors": null, "densityPercentage": null, "proposedBuiltUpArea": 0, "partnershipType": "بهره‌برداری توسط کارفرما" },
+            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "دهکده سلامت و مرکز تندرستی", "projectArea": 40000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 24000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
+            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "دهکده ویلایی اقامتی", "projectArea": 36000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 21600, "partnershipType": "مشارکت در ساخت" },
+            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "هتل آپارتمان 6 طبقه", "projectArea": 57000, "occupancyPercentage": 20, "floors": 6, "densityPercentage": 120, "proposedBuiltUpArea": 68400, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "هتل 5 ستاره 25 طبقه", "projectArea": 61000, "occupancyPercentage": 10, "floors": 25, "densityPercentage": 250, "proposedBuiltUpArea": 152500, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "پروژه استراتژیک", "landUse": "اتصال بین عرصه یی", "totalArea": 20000, "projectName": "پل طبیعت (اسکای واک اتصال‌دهنده)", "projectArea": 20000, "occupancyPercentage": null, "floors": null, "densityPercentage": null, "proposedBuiltUpArea": 5000, "partnershipType": "DBOT (طراحی، ساخت، بهره‌برداری، انتقال)" },
+            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "پارک ماجراجویی (Adventure Park)", "projectArea": 800000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 80000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
+            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "سایت گلمپینگ و کلبه‌های چوبی اقامتی", "projectArea": 300000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 30000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
+            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "مسیرهای پیاده‌روی و دوچرخه‌سواری جنگلی", "projectArea": 237000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 23700, "partnershipType": "مشارکت در ساخت" },
+            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "آکواریوم بزرگ و باغ پرندگان", "projectArea": 681000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 68100, "partnershipType": "DBOT (طراحی، ساخت، بهره‌برداری، انتقال)" },
+            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "مجموعه ورزشی چندمنظوره (گلف، استخر)", "projectArea": 150000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 90000, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "پیست کارتینگ و موتورسواری", "projectArea": 110000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 66000, "partnershipType": "اجاره بلندمدت زمین" },
+            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "شهر بازی سرپوشیده مدرن", "projectArea": 150000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 90000, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "آکادمی آموزش ورزش‌های آبی", "projectArea": 110000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 66000, "partnershipType": "مشارکت در ساخت" },
+            { "area": "عرصه مراکز محلات", "landUse": "فرهنگی و تفریحی", "totalArea": 171873, "projectName": "مجموعه تئاتر و هنرهای نمایشی", "projectArea": 80000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 32000, "partnershipType": "ساخت توسط کارفرما و بهره‌برداری مشارکتی" },
+            { "area": "عرصه مراکز محلات", "landUse": "فرهنگی و تفریحی", "totalArea": 171873, "projectName": "پردیس کافه کتاب و گالری‌های هنری", "projectArea": 91000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 36400, "partnershipType": "اجاره بلندمدت به بهره‌برداران متعدد" },
+            { "area": "عرصه میانی", "landUse": "خدمات عمومی", "totalArea": 170000, "projectName": "بلوار گردشگری غذا و بازارچه بومی", "projectArea": 170000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 68000, "partnershipType": "ساخت توسط کارفرما و اجاره غرفه‌ها" },
+            { "area": "عرصه میانی", "landUse": "خدمات عمومی", "totalArea": 260000, "projectName": "مجتمع خدمات عمومی و رفاهی", "projectArea": 260000, "occupancyPercentage": 20, "floors": 5, "densityPercentage": 100, "proposedBuiltUpArea": 260000, "partnershipType": "مشارکت در ساخت" },
+            { "area": "عرصه تله‌کابین", "landUse": "گردشگری مکمل", "totalArea": 68847, "projectName": "پارکینگ عمومی طبقاتی (3 طبقه)", "projectArea": 30000, "occupancyPercentage": 25, "floors": 6, "densityPercentage": 100, "proposedBuiltUpArea": 45000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
+            { "area": "عرصه تله‌کابین", "landUse": "گردشگری مکمل", "totalArea": 68847, "projectName": "مرکز خرید و فودکورت (3 طبقه)", "projectArea": 38847, "occupancyPercentage": 25, "floors": 6, "densityPercentage": 100, "proposedBuiltUpArea": 58271, "partnershipType": "BOLT (ساخت، بهره‌برداری، اجاره، انتقال)" }
+        ];
+
+        // --- CHART & DASHBOARD LOGIC ---
+        
+        // Chart instances
+        let builtAreaChart, areaComparisonChart;
+        Chart.defaults.font.family = "'Vazirmatn', sans-serif"; // Set default font for all charts
+
+        // DOM Elements
+        const areaFilter = document.getElementById('area-filter');
+        const landuseFilter = document.getElementById('landuse-filter');
+        const partnershipFilter = document.getElementById('partnership-filter');
+        const tableBody = document.getElementById('projects-table-body');
+        
+        // KPI Elements
+        const totalProjectsEl = document.getElementById('total-projects');
+        const totalAreaEl = document.getElementById('total-area');
+        const totalBuiltAreaEl = document.getElementById('total-built-area');
+        const avgDensityEl = document.getElementById('avg-density');
+
+        // --- UNIFIED COLOR MAPPING ---
+        const areaColorMap = new Map([
+            ["عرصه ساحلی", "#bae6fd"], // sky-200
+            ["دامنه کوه مدوبن", "#bbf7d0"], // green-200
+            ["عرصه ورودی", "#fed7aa"], // orange-200
+            ["عرصه مراکز محلات", "#fef08a"], // yellow-200
+            ["عرصه میانی", "#fbcfe8"], // pink-200
+            ["عرصه تله‌کابین", "#a7f3d0"], // teal-200
+            ["پروژه استراتژیک", "#e7e5e4"] // stone-200
+        ]);
+        
+        const areaTailwindColorMap = new Map([
+            ["عرصه ساحلی", "bg-sky-100"],
+            ["دامنه کوه مدوبن", "bg-green-100"],
+            ["عرصه ورودی", "bg-orange-100"],
+            ["عرصه مراکز محلات", "bg-yellow-100"],
+            ["عرصه میانی", "bg-pink-100"],
+            ["عرصه تله‌کابین", "bg-teal-100"],
+            ["پروژه استراتژیک", "bg-stone-100"]
+        ]);
+
+        // Utility to format numbers with commas
+        const formatNumber = (num) => num ? num.toLocaleString('fa-IR') : '-';
+        const formatPercentage = (num) => num ? `${num.toLocaleString('fa-IR')}%` : '-';
+
+        // Function to populate filter dropdowns
+        function populateFilters() {
+            const areas = [...new Set(projectsData.map(p => p.area))];
+            const landuses = [...new Set(projectsData.map(p => p.landUse))];
+            const partnerships = [...new Set(projectsData.map(p => p.partnershipType))];
+
+            areas.forEach(area => {
+                const option = document.createElement('option');
+                option.value = area;
+                option.textContent = area;
+                areaFilter.appendChild(option);
+            });
+            landuses.forEach(landuse => {
+                if(landuse) {
+                    const option = document.createElement('option');
+                    option.value = landuse;
+                    option.textContent = landuse;
+                    landuseFilter.appendChild(option);
+                }
+            });
+            partnerships.forEach(partnership => {
+                const option = document.createElement('option');
+                option.value = partnership;
+                option.textContent = partnership;
+                partnershipFilter.appendChild(option);
+            });
+        }
+
+        // Main function to update all dashboard components
+        function updateDashboard() {
+            const selectedArea = areaFilter.value;
+            const selectedLanduse = landuseFilter.value;
+            const selectedPartnership = partnershipFilter.value;
+
+            const filteredData = projectsData.filter(p => {
+                const areaMatch = selectedArea === 'all' || p.area === selectedArea;
+                const landuseMatch = selectedLanduse === 'all' || p.landUse === selectedLanduse;
+                const partnershipMatch = selectedPartnership === 'all' || p.partnershipType === selectedPartnership;
+                return areaMatch && landuseMatch && partnershipMatch;
+            });
+
+            updateKPIs(filteredData);
+            updateAreaComparisonChart(filteredData);
+            updateBuiltAreaChart(filteredData);
+            updateTreemap(filteredData);
+            updateTable(filteredData);
+        }
+
+        function updateKPIs(data) {
+            totalProjectsEl.textContent = formatNumber(data.length);
+
+            const uniqueAreas = new Map();
+            data.forEach(p => {
+                if (p.area && p.totalArea && !uniqueAreas.has(p.area)) {
+                    uniqueAreas.set(p.area, p.totalArea);
+                }
+            });
+            const totalArea = Array.from(uniqueAreas.values()).reduce((sum, area) => sum + (area || 0), 0);
+            totalAreaEl.textContent = formatNumber(totalArea);
+
+            const totalBuiltArea = data.reduce((sum, p) => sum + (p.proposedBuiltUpArea || 0), 0);
+            totalBuiltAreaEl.textContent = formatNumber(totalBuiltArea);
+
+            const densities = data.map(p => p.densityPercentage).filter(d => d !== null);
+            const avgDensity = densities.length > 0 ? (densities.reduce((a, b) => a + b, 0) / densities.length) : 0;
+            avgDensityEl.textContent = formatNumber(Math.round(avgDensity));
+        }
+        
+        function updateAreaComparisonChart(data) {
+            const ctx = document.getElementById('areaComparisonChart').getContext('2d');
+            const areaData = data.reduce((acc, p) => {
+                 if (p.totalArea) {
+                    acc[p.area] = p.totalArea;
+                 }
+                 return acc;
+            }, {});
+
+            const labels = Object.keys(areaData);
+            const chartData = Object.values(areaData);
+            const backgroundColors = labels.map(label => areaColorMap.get(label) || '#cccccc');
+
+            if (areaComparisonChart) {
+                areaComparisonChart.destroy();
+            }
+
+            areaComparisonChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'مساحت عرصه (مترمربع)',
+                        data: chartData,
+                        backgroundColor: backgroundColors,
+                        borderColor: '#fff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false, // Legend is removed
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += formatNumber(context.parsed) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateBuiltAreaChart(data) {
+            const ctx = document.getElementById('builtAreaChart').getContext('2d');
+            const labels = data.map(p => p.projectName);
+            const chartData = data.map(p => p.proposedBuiltUpArea);
+
+            if (builtAreaChart) {
+                builtAreaChart.destroy();
+            }
+
+            builtAreaChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'زیربنای پیشنهادی (مترمربع)',
+                        data: chartData,
+                        backgroundColor: '#93c5fd',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { callback: (value) => formatNumber(value) } } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += formatNumber(context.parsed.y) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateTable(data) {
+            tableBody.innerHTML = '';
+            const groupedByArea = data.reduce((acc, p) => {
+                if (!acc[p.area]) {
+                    acc[p.area] = [];
+                }
+                acc[p.area].push(p);
+                return acc;
+            }, {});
+
+            for (const areaName in groupedByArea) {
+                const projectsInArea = groupedByArea[areaName];
+                const rowCount = projectsInArea.length;
+                const bgColor = areaTailwindColorMap.get(areaName) || 'bg-slate-50';
+                
+                projectsInArea.forEach((p, index) => {
+                    const row = document.createElement('tr');
+                    row.className = `${bgColor} border-b border-white`;
+                    
+                    let cells = '';
+                    if (index === 0) {
+                        cells += `<td class="px-6 py-4 font-medium text-slate-900" rowspan="${rowCount}">${p.area}</td>`;
+                        cells += `<td class="px-6 py-4" rowspan="${rowCount}">${formatNumber(p.totalArea)}</td>`;
+                    }
+                    
+                    cells += `
+                        <td class="px-6 py-4 font-medium text-slate-800">${p.projectName}</td>
+                        <td class="px-6 py-4">${formatNumber(p.projectArea)}</td>
+                        <td class="px-6 py-4">${formatNumber(p.proposedBuiltUpArea)}</td>
+                        <td class="px-6 py-4">${formatNumber(p.occupancyPercentage)}</td>
+                        <td class="px-6 py-4">${formatNumber(p.floors)}</td>
+                        <td class="px-6 py-4">${formatNumber(p.densityPercentage)}</td>
+                        <td class="px-6 py-4">${p.partnershipType}</td>
+                    `;
+                    row.innerHTML = cells;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+        
+        // --- TREEMAP FUNCTION ---
+        const tooltip = d3.select(".tooltip");
+        
+        function updateTreemap(data) {
+            const selector = '#treemap-chart';
+            const container = d3.select(selector);
+            if (container.empty()) return;
+            container.selectAll("*").remove();
+
+            const treemapData = {
+                name: "root",
+                children: Array.from(d3.group(data, d => d.area), ([key, value]) => ({
+                    name: key,
+                    children: value.map(d => ({ name: d.projectName, value: d.projectArea }))
+                }))
+            };
+
+            const width = container.node().getBoundingClientRect().width;
+            const height = 500;
+
+            const treemap = d3.treemap().size([width, height]).padding(3).paddingTop(28);
+            const root = d3.hierarchy(treemapData).sum(d => d.value).sort((a, b) => b.value - a.value);
+            treemap(root);
+
+            const svg = container.append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("font-family", "Vazirmatn");
+
+            const node = svg.selectAll("g")
+                .data(root.descendants())
+                .join("g")
+                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+            node.append("rect")
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => d.y1 - d.y0)
+                .attr("fill", d => {
+                    if (d.depth === 0) return "transparent";
+                    if (d.depth === 1) return areaColorMap.get(d.data.name);
+                    return d3.color(areaColorMap.get(d.parent.data.name)).brighter(0.6);
+                })
+                .attr("rx", 5)
+                .style("opacity", 0)
+                .transition().duration(800)
+                .style("opacity", 1);
+            
+            node.on("mouseover", (event, d) => {
+                if(d.depth < 2) return;
+                tooltip.transition().duration(200).style("opacity", .9);
+                tooltip.html(`<strong>${d.data.name}</strong><br/>مساحت: ${formatNumber(d.value)} م²`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            }).on("mouseout", () => {
+                tooltip.transition().duration(500).style("opacity", 0);
+            });
+
+            const zoneLabels = node.filter(d => d.depth === 1);
+            zoneLabels.append("foreignObject")
+                .attr("x", 0).attr("y", 0)
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", 28)
+                .append("xhtml:div")
+                .attr("class", "zone-label")
+                .html(d => d.data.name);
+
+            const projectLabels = node.filter(d => d.depth === 2);
+            projectLabels.append("foreignObject")
+                .attr("x", 2).attr("y", 2)
+                .attr("width", d => (d.x1 - d.x0) - 4)
+                .attr("height", d => (d.y1 - d.y0) - 4)
+                .style("display", d => (d.x1 - d.x0 < 50 || d.y1 - d.y0 < 40) ? "none" : "block")
+                .append("xhtml:div")
+                .attr("class", "treemap-label")
+                .html(d => `${d.data.name}<br><span style="font-size: 11px; opacity: 0.7;">(${formatNumber(d.value)} م²)</span>`);
+        }
+
+        // --- INITIALIZATION ---
+        
+        areaFilter.addEventListener('change', updateDashboard);
+        landuseFilter.addEventListener('change', updateDashboard);
+        partnershipFilter.addEventListener('change', updateDashboard);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFilters();
+            updateDashboard();
+            
+            const chartContainer = document.querySelector('#treemap-chart');
+            new ResizeObserver(() => {
+                 updateDashboard();
+            }).observe(chartContainer);
+        });
+    </script>
+
+</body>
+</html>
