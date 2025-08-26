@@ -91,8 +91,8 @@
     <div class="container mx-auto">
         <!-- Header -->
         <header class="text-center mb-8">
-            <h1 class="text-3xl lg:text-4xl font-bold text-slate-800">داشبورد تحلیلی پروژه‌های نمک‌آبرود</h1>
-            <p class="text-slate-500 mt-2">نمایش اطلاعات کلیدی و نمودارهای پویا بر اساس داده‌های پروژه</p>
+            <h1 class="text-3xl lg:text-4xl font-bold text-slate-800">داشبورد تحلیلی پکیج‌های سرمایه‌گذاری نمک‌آبرود</h1>
+            <p class="text-slate-500 mt-2">نمایش اطلاعات کلیدی و نمودارهای پویا بر اساس داده‌های جدید پروژه</p>
         </header>
 
         <!-- Filters -->
@@ -104,9 +104,9 @@
                 </select>
             </div>
             <div class="card p-4">
-                <label for="landuse-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس کاربری</label>
-                <select id="landuse-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
-                    <option value="all">همه کاربری‌ها</option>
+                <label for="zone-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس کد پهنه</label>
+                <select id="zone-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                    <option value="all">همه پهنه‌ها</option>
                 </select>
             </div>
             <div class="card p-4">
@@ -125,7 +125,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                 </div>
                 <p id="total-projects" class="text-4xl font-bold text-stone-800">0</p>
-                <h3 class="text-base font-medium text-stone-500 mt-1">تعداد پروژه‌ها</h3>
+                <h3 class="text-base font-medium text-stone-500 mt-1">تعداد پکیج/پروژه</h3>
             </div>
             <!-- Card 2: Total Area -->
             <div class="card bg-teal-50 p-6 flex flex-col items-center justify-center text-center">
@@ -149,7 +149,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m12.76-1.857L17 15V9c0-1.355-.446-2.62-1.214-3.624M7.24 16.143L7 15V9c0-1.355.446-2.62 1.214-3.624M12 15V9c0-1.355-.446-2.62-1.214-3.624M12 15c0 2.21 1.79 4 4 4h1m-1-4c0 2.21-1.79 4-4 4H7m5-12c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z" /></svg>
                 </div>
                 <p id="avg-density" class="text-4xl font-bold text-indigo-800">0</p>
-                <h3 class="text-base font-medium text-indigo-500 mt-1">متوسط تراکم (%)</h3>
+                <h3 class="text-base font-medium text-indigo-500 mt-1">متوسط تراکم پیشنهادی (%)</h3>
             </div>
         </div>
 
@@ -162,7 +162,7 @@
                 </div>
             </div>
             <div class="card p-6 lg:col-span-2">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه زیربنای پیشنهادی پروژه‌ها</h3>
+                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه زیربنای پیشنهادی پکیج‌ها</h3>
                 <div class="chart-container">
                     <canvas id="builtAreaChart"></canvas>
                 </div>
@@ -171,20 +171,20 @@
         
         <!-- Treemap Chart -->
         <div class="card p-6 mb-8">
-            <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نمودار درختی: مساحت پروژه‌ها در هر عرصه</h3>
+            <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نمودار درختی: مساحت پکیج‌ها در هر عرصه</h3>
             <div id="treemap-chart" style="min-height: 500px;"></div>
         </div>
 
         <!-- Table -->
         <div class="card overflow-x-auto">
-            <h3 class="text-xl font-semibold text-slate-700 p-6">لیست کامل پروژه‌ها</h3>
+            <h3 class="text-xl font-semibold text-slate-700 p-6">لیست کامل پکیج‌های سرمایه‌گذاری</h3>
             <table class="w-full text-sm text-right text-slate-500 table-v-align">
                 <thead class="text-xs text-slate-700 uppercase bg-slate-200">
                     <tr>
                         <th scope="col" class="px-6 py-3">عرصه</th>
-                        <th scope="col" class="px-6 py-3">مساحت کل عرصه (مترمربع)</th>
-                        <th scope="col" class="px-6 py-3">نام پروژه</th>
-                        <th scope="col" class="px-6 py-3">مساحت پروژه (مترمربع)</th>
+                        <th scope="col" class="px-6 py-3">کد پهنه</th>
+                        <th scope="col" class="px-6 py-3">پکیج سرمایه‌گذاری (پروژه)</th>
+                        <th scope="col" class="px-6 py-3">مساحت پکیج (مترمربع)</th>
                         <th scope="col" class="px-6 py-3">زیربنا (مترمربع)</th>
                         <th scope="col" class="px-6 py-3">سطح اشغال (%)</th>
                         <th scope="col" class="px-6 py-3">طبقات</th>
@@ -203,28 +203,21 @@
     <div class="tooltip"></div>
 
     <script>
-        // --- DATASET ---
+        // --- UPDATED DATASET ---
         const projectsData = [
-            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "پلاژها و خدمات ساحلی موجود", "projectArea": 74000, "occupancyPercentage": null, "floors": null, "densityPercentage": null, "proposedBuiltUpArea": 0, "partnershipType": "بهره‌برداری توسط کارفرما" },
-            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "دهکده سلامت و مرکز تندرستی", "projectArea": 40000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 24000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
-            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "دهکده ویلایی اقامتی", "projectArea": 36000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 21600, "partnershipType": "مشارکت در ساخت" },
-            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "هتل آپارتمان 6 طبقه", "projectArea": 57000, "occupancyPercentage": 20, "floors": 6, "densityPercentage": 120, "proposedBuiltUpArea": 68400, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
-            { "area": "عرصه ساحلی", "landUse": "تفریحی و توریستی", "totalArea": 317315, "projectName": "هتل 5 ستاره 25 طبقه", "projectArea": 61000, "occupancyPercentage": 10, "floors": 25, "densityPercentage": 250, "proposedBuiltUpArea": 152500, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
-            { "area": "پروژه استراتژیک", "landUse": "اتصال بین عرصه یی", "totalArea": 20000, "projectName": "پل طبیعت (اسکای واک اتصال‌دهنده)", "projectArea": 20000, "occupancyPercentage": null, "floors": null, "densityPercentage": null, "proposedBuiltUpArea": 5000, "partnershipType": "DBOT (طراحی، ساخت، بهره‌برداری، انتقال)" },
-            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "پارک ماجراجویی (Adventure Park)", "projectArea": 800000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 80000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
-            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "سایت گلمپینگ و کلبه‌های چوبی اقامتی", "projectArea": 300000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 30000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
-            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "مسیرهای پیاده‌روی و دوچرخه‌سواری جنگلی", "projectArea": 237000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 23700, "partnershipType": "مشارکت در ساخت" },
-            { "area": "دامنه کوه مدوبن", "landUse": "تفریحی توریستی", "totalArea": 1588000, "projectName": "آکواریوم بزرگ و باغ پرندگان", "projectArea": 681000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 68100, "partnershipType": "DBOT (طراحی، ساخت، بهره‌برداری، انتقال)" },
-            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "مجموعه ورزشی چندمنظوره (گلف، استخر)", "projectArea": 150000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 90000, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
-            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "پیست کارتینگ و موتورسواری", "projectArea": 110000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 66000, "partnershipType": "اجاره بلندمدت زمین" },
-            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "شهر بازی سرپوشیده مدرن", "projectArea": 150000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 90000, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
-            { "area": "عرصه ورودی", "landUse": "تفریح و آموزش", "totalArea": 611334, "projectName": "آکادمی آموزش ورزش‌های آبی", "projectArea": 110000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 66000, "partnershipType": "مشارکت در ساخت" },
-            { "area": "عرصه مراکز محلات", "landUse": "فرهنگی و تفریحی", "totalArea": 171873, "projectName": "مجموعه تئاتر و هنرهای نمایشی", "projectArea": 80000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 32000, "partnershipType": "ساخت توسط کارفرما و بهره‌برداری مشارکتی" },
-            { "area": "عرصه مراکز محلات", "landUse": "فرهنگی و تفریحی", "totalArea": 171873, "projectName": "پردیس کافه کتاب و گالری‌های هنری", "projectArea": 91000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 36400, "partnershipType": "اجاره بلندمدت به بهره‌برداران متعدد" },
-            { "area": "عرصه میانی", "landUse": "خدمات عمومی", "totalArea": 170000, "projectName": "بلوار گردشگری غذا و بازارچه بومی", "projectArea": 170000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 68000, "partnershipType": "ساخت توسط کارفرما و اجاره غرفه‌ها" },
-            { "area": "عرصه میانی", "landUse": "خدمات عمومی", "totalArea": 260000, "projectName": "مجتمع خدمات عمومی و رفاهی", "projectArea": 260000, "occupancyPercentage": 20, "floors": 5, "densityPercentage": 100, "proposedBuiltUpArea": 260000, "partnershipType": "مشارکت در ساخت" },
-            { "area": "عرصه تله‌کابین", "landUse": "گردشگری مکمل", "totalArea": 68847, "projectName": "پارکینگ عمومی طبقاتی (3 طبقه)", "projectArea": 30000, "occupancyPercentage": 25, "floors": 6, "densityPercentage": 100, "proposedBuiltUpArea": 45000, "partnershipType": "BOT (ساخت، بهره‌برداری، انتقال)" },
-            { "area": "عرصه تله‌کابین", "landUse": "گردشگری مکمل", "totalArea": 68847, "projectName": "مرکز خرید و فودکورت (3 طبقه)", "projectArea": 38847, "occupancyPercentage": 25, "floors": 6, "densityPercentage": 100, "proposedBuiltUpArea": 58271, "partnershipType": "BOLT (ساخت، بهره‌برداری، اجاره، انتقال)" }
+            { "area": "عرصه ساحلی", "zoneCode": "G12", "landUse": "تفریحی و توریستی", "totalArea": 268000, "projectName": "تثبیت و بهره‌برداری از خدمات ساحلی", "projectComponents": "• پلاژهای موجود • خدمات پشتیبان ساحلی", "projectArea": 74000, "occupancyPercentage": null, "floors": null, "densityPercentage": null, "proposedBuiltUpArea": 0, "partnershipType": "بهره‌برداری توسط کارفرما" },
+            { "area": "عرصه ساحلی", "zoneCode": "G13", "landUse": "تفریحی و توریستی", "totalArea": 268000, "projectName": "اقامت موقت لوکس", "projectComponents": "• شهرک ویلایی لوکس (احداث ۷۶ ویلا)", "projectArea": 76000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 45600, "partnershipType": "فروش قطعات یا مشارکت در ساخت" },
+            { "area": "عرصه ساحلی", "zoneCode": "G14", "landUse": "تفریحی و توریستی", "totalArea": 268000, "projectName": "اقامت موقت", "projectComponents": "• مجتمع آپارتمانی ۶ طبقه", "projectArea": 57000, "occupancyPercentage": 20, "floors": 6, "densityPercentage": 120, "proposedBuiltUpArea": 68400, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "عرصه ساحلی", "zoneCode": "G15", "landUse": "تفریحی و توریستی", "totalArea": 268000, "projectName": "هتلینگ بلندمرتبه", "projectComponents": "• هتل ۵ ستاره ۲۵ طبقه", "projectArea": 61000, "occupancyPercentage": 10, "floors": 25, "densityPercentage": 250, "proposedBuiltUpArea": 152500, "partnershipType": "JV (سرمایه‌گذاری مشترک)" },
+            { "area": "پروژه استراتژیک", "zoneCode": "-", "landUse": "اتصال بین عرصه‌ای", "totalArea": 20000, "projectName": "پل طبیعت", "projectComponents": "• پل معلق (اسکای واک) • خدمات جانبی (ایستگاه دوچرخه، کافه، گیمینگ)", "projectArea": 20000, "occupancyPercentage": 10, "floors": 2, "densityPercentage": 20, "proposedBuiltUpArea": 4000, "partnershipType": "DBOT" },
+            { "area": "دامنه کوه مدوبن", "zoneCode": "G21", "landUse": "تفریحی توریستی", "totalArea": 2038000, "projectName": "گردشگری با رویکرد تفرج (بوستان بنفشه)", "projectComponents": "• آکواریوم و باغ پرندگان • رستوران‌های محلی و بازارچه صنایع دستی", "projectArea": 1501000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 150100, "partnershipType": "واگذاری یکپارچه به بهره‌بردار" },
+            { "area": "دامنه کوه مدوبن", "zoneCode": "G22", "landUse": "تفریحی توریستی", "totalArea": 2038000, "projectName": "گردشگری با رویکرد اکوتوریسم (بوستان شمشاد)", "projectComponents": "• پارک ماجراجویی (Adventure Park) • زیپ‌لاین، بانجی جامپینگ و... • سایت گلمپینگ و کلبه‌های چوبی • مسیرهای پیاده‌روی و دوچرخه‌سواری", "projectArea": 537000, "occupancyPercentage": 5, "floors": 2, "densityPercentage": 10, "proposedBuiltUpArea": 53700, "partnershipType": "BOT" },
+            { "area": "عرصه ورودی", "zoneCode": "S12", "landUse": "تفریح و آموزش", "totalArea": 520000, "projectName": "پکیج ورزشی و آموزشی شمال", "projectComponents": "• مجموعه ورزشی روباز (گلف، استخر) • پیست موتورسواری", "projectArea": 260000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 156000, "partnershipType": "JV / اجاره بلندمدت" },
+            { "area": "عرصه ورودی", "zoneCode": "S13", "landUse": "تفریح و آموزش", "totalArea": 520000, "projectName": "پکیج سرگرمی و آموزشی جنوب", "projectComponents": "• شهر بازی سرپوشیده مدرن • آکادمی آموزش غواصی و ورزش‌های آبی", "projectArea": 260000, "occupancyPercentage": 30, "floors": 2, "densityPercentage": 60, "proposedBuiltUpArea": 156000, "partnershipType": "JV / مشارکت در ساخت" },
+            { "area": "عرصه مراکز محلات", "zoneCode": "S22", "landUse": "فرهنگی و تفریحی", "totalArea": 171000, "projectName": "پکیج خدمات فرهنگی و تفریحی", "projectComponents": "• مجموعه تئاتر و هنرهای نمایشی • پردیس کافه کتاب و گالری‌های هنری", "projectArea": 171000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 68400, "partnershipType": "ساخت توسط کارفرما و اجاره" },
+            { "area": "عرصه میانی", "zoneCode": "G31", "landUse": "خدمات عمومی", "totalArea": 430000, "projectName": "پکیج گردشگری خوراک و محصولات بومی", "projectComponents": "• بلوار غذا (Food Street) • بازارچه فروش محصولات بومی و جنگلی", "projectArea": 170000, "occupancyPercentage": 20, "floors": 2, "densityPercentage": 40, "proposedBuiltUpArea": 68000, "partnershipType": "ساخت توسط کارفرما و اجاره" },
+            { "area": "عرصه میانی", "zoneCode": "-", "landUse": "خدمات عمومی", "totalArea": 430000, "projectName": "پکیج خدمات عمومی و رفاهی", "projectComponents": "• مجتمع خدمات عمومی، ورزشی و فرهنگی", "projectArea": 260000, "occupancyPercentage": 20, "floors": 5, "densityPercentage": 100, "proposedBuiltUpArea": 260000, "partnershipType": "مشارکت در ساخت" },
+            { "area": "عرصه تله‌کابین", "zoneCode": "S41", "landUse": "گردشگری مکمل", "totalArea": 68847, "projectName": "تجاری و پارکینگ تله‌کابین", "projectComponents": "• پارکینگ طبقاتی هوشمند (۳ طبقه) • مرکز خرید و فودکورت (۳ طبقه تجاری)", "projectArea": 68847, "occupancyPercentage": 25, "floors": 6, "densityPercentage": 100, "proposedBuiltUpArea": 103271, "partnershipType": "BOT / BOLT" }
         ];
 
         // --- CHART & DASHBOARD LOGIC ---
@@ -235,7 +228,7 @@
 
         // DOM Elements
         const areaFilter = document.getElementById('area-filter');
-        const landuseFilter = document.getElementById('landuse-filter');
+        const zoneFilter = document.getElementById('zone-filter');
         const partnershipFilter = document.getElementById('partnership-filter');
         const tableBody = document.getElementById('projects-table-body');
         
@@ -267,13 +260,13 @@
         ]);
 
         // Utility to format numbers with commas
-        const formatNumber = (num) => num ? num.toLocaleString('fa-IR') : '-';
+        const formatNumber = (num) => num || num === 0 ? num.toLocaleString('fa-IR') : '-';
         const formatPercentage = (num) => num ? `${num.toLocaleString('fa-IR')}%` : '-';
 
         // Function to populate filter dropdowns
         function populateFilters() {
             const areas = [...new Set(projectsData.map(p => p.area))];
-            const landuses = [...new Set(projectsData.map(p => p.landUse))];
+            const zoneCodes = [...new Set(projectsData.map(p => p.zoneCode))];
             const partnerships = [...new Set(projectsData.map(p => p.partnershipType))];
 
             areas.forEach(area => {
@@ -282,12 +275,12 @@
                 option.textContent = area;
                 areaFilter.appendChild(option);
             });
-            landuses.forEach(landuse => {
-                if(landuse) {
+            zoneCodes.forEach(zone => {
+                if(zone) {
                     const option = document.createElement('option');
-                    option.value = landuse;
-                    option.textContent = landuse;
-                    landuseFilter.appendChild(option);
+                    option.value = zone;
+                    option.textContent = zone;
+                    zoneFilter.appendChild(option);
                 }
             });
             partnerships.forEach(partnership => {
@@ -301,14 +294,14 @@
         // Main function to update all dashboard components
         function updateDashboard() {
             const selectedArea = areaFilter.value;
-            const selectedLanduse = landuseFilter.value;
+            const selectedZone = zoneFilter.value;
             const selectedPartnership = partnershipFilter.value;
 
             const filteredData = projectsData.filter(p => {
                 const areaMatch = selectedArea === 'all' || p.area === selectedArea;
-                const landuseMatch = selectedLanduse === 'all' || p.landUse === selectedLanduse;
+                const zoneMatch = selectedZone === 'all' || p.zoneCode === selectedZone;
                 const partnershipMatch = selectedPartnership === 'all' || p.partnershipType === selectedPartnership;
-                return areaMatch && landuseMatch && partnershipMatch;
+                return areaMatch && zoneMatch && partnershipMatch;
             });
 
             updateKPIs(filteredData);
@@ -333,7 +326,7 @@
             const totalBuiltArea = data.reduce((sum, p) => sum + (p.proposedBuiltUpArea || 0), 0);
             totalBuiltAreaEl.textContent = formatNumber(totalBuiltArea);
 
-            const densities = data.map(p => p.densityPercentage).filter(d => d !== null);
+            const densities = data.map(p => p.densityPercentage).filter(d => d !== null && d !== undefined);
             const avgDensity = densities.length > 0 ? (densities.reduce((a, b) => a + b, 0) / densities.length) : 0;
             avgDensityEl.textContent = formatNumber(Math.round(avgDensity));
         }
@@ -397,6 +390,9 @@
             const ctx = document.getElementById('builtAreaChart').getContext('2d');
             const labels = data.map(p => p.projectName);
             const chartData = data.map(p => p.proposedBuiltUpArea);
+            const backgroundColors = data.map(p => areaColorMap.get(p.area) || '#cccccc');
+            const borderColors = data.map(p => d3.color(areaColorMap.get(p.area) || '#cccccc').darker(0.5));
+
 
             if (builtAreaChart) {
                 builtAreaChart.destroy();
@@ -409,8 +405,8 @@
                     datasets: [{
                         label: 'زیربنای پیشنهادی (مترمربع)',
                         data: chartData,
-                        backgroundColor: '#93c5fd',
-                        borderColor: '#3b82f6',
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
                         borderWidth: 1,
                         borderRadius: 5,
                     }]
@@ -460,11 +456,14 @@
                     let cells = '';
                     if (index === 0) {
                         cells += `<td class="px-6 py-4 font-medium text-slate-900" rowspan="${rowCount}">${p.area}</td>`;
-                        cells += `<td class="px-6 py-4" rowspan="${rowCount}">${formatNumber(p.totalArea)}</td>`;
                     }
                     
                     cells += `
-                        <td class="px-6 py-4 font-medium text-slate-800">${p.projectName}</td>
+                        <td class="px-6 py-4">${p.zoneCode}</td>
+                        <td class="px-6 py-4 font-medium text-slate-800">
+                            ${p.projectName}
+                            <p class="text-xs text-slate-500 font-normal whitespace-pre-line">${p.projectComponents || ''}</p>
+                        </td>
                         <td class="px-6 py-4">${formatNumber(p.projectArea)}</td>
                         <td class="px-6 py-4">${formatNumber(p.proposedBuiltUpArea)}</td>
                         <td class="px-6 py-4">${formatNumber(p.occupancyPercentage)}</td>
@@ -558,7 +557,7 @@
         // --- INITIALIZATION ---
         
         areaFilter.addEventListener('change', updateDashboard);
-        landuseFilter.addEventListener('change', updateDashboard);
+        zoneFilter.addEventListener('change', updateDashboard);
         partnershipFilter.addEventListener('change', updateDashboard);
 
         document.addEventListener('DOMContentLoaded', () => {
