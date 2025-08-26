@@ -34,14 +34,24 @@
         .table-container::-webkit-scrollbar-thumb:hover {
             background: #78716c;
         }
-        .tooltip {
+        .tooltip-input {
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.2s;
         }
-        .has-tooltip:hover .tooltip {
+        .has-tooltip:hover .tooltip-input {
             visibility: visible;
             opacity: 1;
+        }
+        /* New styles for the detailed row tooltip */
+        #details-tooltip {
+            position: absolute;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+            transform: scale(0.95);
+            pointer-events: none; /* Important so it doesn't interfere with mouse events on the table */
+            z-index: 100;
         }
     </style>
 </head>
@@ -50,7 +60,7 @@
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <header class="mb-8">
-            <h1 class="text-3xl font-bold text-slate-800">داشبورد مدیریتی پروژه‌های پیشنهادی</h1>
+            <h1 class="text-3xl font-bold text-slate-800">داشبورد مدیریتی پکیج‌های سرمایه‌گذاری</h1>
             <p class="text-slate-500 mt-2">تحلیل، فیلتر و ویرایش پویای داده‌های پروژه</p>
         </header>
 
@@ -93,7 +103,7 @@
                     </svg>
                 </div>
                 <div>
-                    <span class="text-sm text-slate-500">مجموع مساحت پروژه‌ها</span>
+                    <span class="text-sm text-slate-500">مجموع مساحت پکیج‌ها</span>
                     <span id="total-area-card" class="block text-2xl font-bold text-slate-800 mt-1">0</span>
                 </div>
             </div>
@@ -117,7 +127,7 @@
                     </svg>
                 </div>
                 <div>
-                    <span class="text-sm text-slate-500">تعداد کل پروژه‌ها</span>
+                    <span class="text-sm text-slate-500">تعداد کل پکیج‌ها</span>
                     <span id="total-projects-card" class="block text-2xl font-bold text-slate-800 mt-1">0</span>
                 </div>
             </div>
@@ -154,18 +164,18 @@
         <!-- Data Table -->
         <div class="bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
-                 <h2 class="text-xl font-semibold text-slate-800">جدول کامل پروژه‌ها</h2>
+                 <h2 class="text-xl font-semibold text-slate-800">جدول کامل پکیج‌ها</h2>
                  <button id="reset-button" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition text-sm font-medium shadow-sm active:scale-95">
                     بازنشانی داده‌ها
                 </button>
             </div>
             <div class="overflow-x-auto table-container">
-                <table class="w-full text-sm text-left text-slate-500 whitespace-nowrap">
+                <table class="w-full text-sm text-slate-500 whitespace-nowrap">
                     <thead class="text-xs text-slate-700 uppercase bg-slate-100">
                         <tr>
-                            <th scope="col" class="px-6 py-3">نام پروژه پیشنهادی</th>
                             <th scope="col" class="px-6 py-3">نام عرصه</th>
-                            <th scope="col" class="px-6 py-3">مساحت پروژه (مترمربع)</th>
+                            <th scope="col" class="px-6 py-3">پکیج سرمایه‌گذاری</th>
+                            <th scope="col" class="px-6 py-3">مساحت (مترمربع)</th>
                             <th scope="col" class="px-6 py-3">تراکم پیشنهادی (%)</th>
                             <th scope="col" class="px-6 py-3">زیربنای پیشنهادی (مترمربع)</th>
                             <th scope="col" class="px-6 py-3">نوع مشارکت</th>
@@ -178,30 +188,26 @@
             </div>
         </div>
     </div>
+    
+    <!-- Detailed Tooltip Container -->
+    <div id="details-tooltip" class="w-80 bg-slate-800 text-white p-4 rounded-lg shadow-2xl border border-slate-600"></div>
+
 
     <script>
-        // Data from the user's table
         const initialProjectsData = [
-            { id: 1, areaName: 'عرصه ساحلی', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G12', projectName: 'پلاژها و خدمات ساحلی موجود', projectArea: 74000, proposedOccupancy: null, proposedFloors: null, proposedDensity: null, proposedBuiltArea: 0, partnershipType: 'بهره‌برداری توسط کارفرما' },
-            { id: 2, areaName: 'عرصه ساحلی', approvedUsage: 'اقامت موقت', zoneCode: 'G13', projectName: 'دهکده سلامت و مرکز تندرستی', projectArea: 40000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 24000, partnershipType: 'BOT' },
-            { id: 3, areaName: 'عرصه ساحلی', approvedUsage: 'اقامت موقت', zoneCode: 'G13', projectName: 'دهکده ویلایی اقامتی', projectArea: 36000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 21600, partnershipType: 'مشارکت در ساخت' },
-            { id: 4, areaName: 'عرصه ساحلی', approvedUsage: 'اقامت موقت', zoneCode: 'G14', projectName: 'هتل آپارتمان 6 طبقه', projectArea: 57000, proposedOccupancy: 20, proposedFloors: 6, proposedDensity: 120, proposedBuiltArea: 68400, partnershipType: 'JV (سرمایه‌گذاری مشترک)' },
-            { id: 5, areaName: 'عرصه ساحلی', approvedUsage: 'هتل', zoneCode: 'G15', projectName: 'هتل 5 ستاره 25 طبقه', projectArea: 61000, proposedOccupancy: 10, proposedFloors: 25, proposedDensity: 250, proposedBuiltArea: 152500, partnershipType: 'JV (سرمایه‌گذاری مشترک)' },
-            { id: 6, areaName: 'پروژه استراتژیک', approvedUsage: 'اتصال بین عرصه‌ای', zoneCode: '-', projectName: 'پل طبیعت (اسکای واک اتصال‌دهنده)', projectArea: 20000, proposedOccupancy: null, proposedFloors: null, proposedDensity: null, proposedBuiltArea: 5000, partnershipType: 'DBOT' },
-            { id: 7, areaName: 'دامنه کوه مدوبن', approvedUsage: 'تفریحی توریستی', zoneCode: 'G21', projectName: 'پارک ماجراجویی (Adventure Park)', projectArea: 800000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 80000, partnershipType: 'BOT' },
-            { id: 8, areaName: 'دامنه کوه مدوبن', approvedUsage: 'تفریحی توریستی', zoneCode: 'G22', projectName: 'سایت گلمپینگ و کلبه‌های چوبی اقامتی', projectArea: 300000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 30000, partnershipType: 'BOT' },
-            { id: 9, areaName: 'دامنه کوه مدوبن', approvedUsage: 'تفریحی توریستی', zoneCode: 'G22', projectName: 'مسیرهای پیاده‌روی و دوچرخه‌سواری', projectArea: 237000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 23700, partnershipType: 'مشارکت در ساخت' },
-            { id: 10, areaName: 'دامنه کوه مدوبن', approvedUsage: 'گردشگری با رویکرد تفرج', zoneCode: 'G21', projectName: 'آکواریوم بزرگ و باغ پرندگان', projectArea: 681000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 68100, partnershipType: 'DBOT' },
-            { id: 11, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S12', projectName: 'مجموعه ورزشی چندمنظوره (گلف، استخر)', projectArea: 150000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 90000, partnershipType: 'JV (سرمایه‌گذاری مشترک)' },
-            { id: 12, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S12', projectName: 'پیست کارتینگ و موتورسواری', projectArea: 110000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 66000, partnershipType: 'اجاره بلندمدت زمین' },
-            { id: 13, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S13', projectName: 'شهر بازی سرپوشیده مدرن', projectArea: 150000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 90000, partnershipType: 'JV (سرمایه‌گذاری مشترک)' },
-            { id: 14, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S13', projectName: 'آکادمی آموزش ورزش‌های آبی', projectArea: 110000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 66000, partnershipType: 'مشارکت در ساخت' },
-            { id: 15, areaName: 'عرصه مراکز محلات', approvedUsage: 'فرهنگی و تفریحی', zoneCode: 'S22', projectName: 'مجموعه تئاتر و هنرهای نمایشی', projectArea: 80000, proposedOccupancy: 20, proposedFloors: 2, proposedDensity: 40, proposedBuiltArea: 32000, partnershipType: 'ساخت توسط کارفرما' },
-            { id: 16, areaName: 'عرصه مراکز محلات', approvedUsage: 'فرهنگی و تفریحی', zoneCode: 'S22', projectName: 'پردیس کافه کتاب و گالری‌های هنری', projectArea: 91000, proposedOccupancy: 20, proposedFloors: 2, proposedDensity: 40, proposedBuiltArea: 36400, partnershipType: 'اجاره بلندمدت' },
-            { id: 17, areaName: 'عرصه میانی', approvedUsage: 'خدمات عمومی', zoneCode: 'G31', projectName: 'بلوار گردشگری غذا و بازارچه بومی', projectArea: 170000, proposedOccupancy: 20, proposedFloors: 2, proposedDensity: 40, proposedBuiltArea: 68000, partnershipType: 'ساخت توسط کارفرما' },
-            { id: 18, areaName: 'عرصه میانی', approvedUsage: 'خدمات عمومی', zoneCode: 'G32', projectName: 'مجتمع خدمات عمومی و رفاهی', projectArea: 260000, proposedOccupancy: 20, proposedFloors: 5, proposedDensity: 100, proposedBuiltArea: 260000, partnershipType: 'مشارکت در ساخت' },
-            { id: 19, areaName: 'عرصه تله‌کابین', approvedUsage: 'گردشگری مکمل', zoneCode: 'S41', projectName: 'پارکینگ عمومی طبقاتی (3 طبقه)', projectArea: 30000, proposedOccupancy: 25, proposedFloors: 6, proposedDensity: 100, proposedBuiltArea: 45000, partnershipType: 'BOT' },
-            { id: 20, areaName: 'عرصه تله‌کابین', approvedUsage: 'گردشگری مکمل', zoneCode: 'S41', projectName: 'مرکز خرید و فودکورت (3 طبقه)', projectArea: 38847, proposedOccupancy: 25, proposedFloors: 6, proposedDensity: 100, proposedBuiltArea: 58271, partnershipType: 'BOLT' },
+            { id: 1, areaName: 'عرصه ساحلی', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G12', projectName: 'تثبیت و بهره‌برداری از خدمات ساحلی', projectArea: 74000, proposedOccupancy: null, proposedFloors: null, proposedDensity: null, proposedBuiltArea: 0, partnershipType: 'بهره‌برداری توسط کارفرما', subProjects: ['پلاژهای موجود', 'خدمات پشتیبان ساحلی'] },
+            { id: 2, areaName: 'عرصه ساحلی', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G13', projectName: 'اقامت موقت لوکس', projectArea: 76000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 45600, partnershipType: 'فروش قطعات یا مشارکت در ساخت', subProjects: ['شهرک ویلایی لوکس (احداث ۷۶ ویلا)'] },
+            { id: 3, areaName: 'عرصه ساحلی', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G14', projectName: 'اقامت موقت', projectArea: 57000, proposedOccupancy: 20, proposedFloors: 6, proposedDensity: 120, proposedBuiltArea: 68400, partnershipType: 'JV (سرمایه‌گذاری مشترک)', subProjects: ['مجتمع آپارتمانی ۶ طبقه'] },
+            { id: 4, areaName: 'عرصه ساحلی', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G15', projectName: 'هتلینگ بلندمرتبه', projectArea: 61000, proposedOccupancy: 10, proposedFloors: 25, proposedDensity: 250, proposedBuiltArea: 152500, partnershipType: 'JV (سرمایه‌گذاری مشترک)', subProjects: ['هتل ۵ ستاره ۲۵ طبقه'] },
+            { id: 5, areaName: 'پروژه استراتژیک', approvedUsage: 'اتصال بین عرصه‌ای', zoneCode: '-', projectName: 'پکیج سرمایه‌گذاری پل طبیعت', projectArea: 20000, proposedOccupancy: 10, proposedFloors: 2, proposedDensity: 20, proposedBuiltArea: 4000, partnershipType: 'DBOT', subProjects: ['پل معلق (اسکای واک)', 'خدمات جانبی (ایستگاه دوچرخه، کافه، گیمینگ)'] },
+            { id: 6, areaName: 'دامنه کوه مدوبن', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G21', projectName: 'پکیج گردشگری تفرجی', projectArea: 1501000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 150100, partnershipType: 'واگذاری یکپارچه به بهره‌بردار', subProjects: ['آکواریوم و باغ پرندگان', 'رستوران‌های محلی و بازارچه صنایع دستی'] },
+            { id: 7, areaName: 'دامنه کوه مدوبن', approvedUsage: 'تفریحی و توریستی', zoneCode: 'G22', projectName: 'پکیج گردشگری ماجراجویی', projectArea: 537000, proposedOccupancy: 5, proposedFloors: 2, proposedDensity: 10, proposedBuiltArea: 53700, partnershipType: 'BOT', subProjects: ['پارک ماجراجویی (Adventure Park)', 'زیپ‌لاین، بانجی جامپینگ و...', 'سایت گلمپینگ و کلبه‌های چوبی', 'مسیرهای پیاده‌روی و دوچرخه‌سواری'] },
+            { id: 8, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S12', projectName: 'پکیج ورزشی و آموزشی شمال', projectArea: 260000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 156000, partnershipType: 'JV / اجاره بلندمدت', subProjects: ['مجموعه ورزشی روباز (گلف، استخر)', 'پیست موتورسواری'] },
+            { id: 9, areaName: 'عرصه ورودی', approvedUsage: 'تفریح و آموزش', zoneCode: 'S13', projectName: 'پکیج سرگرمی و آموزشی جنوب', projectArea: 260000, proposedOccupancy: 30, proposedFloors: 2, proposedDensity: 60, proposedBuiltArea: 156000, partnershipType: 'JV / مشارکت در ساخت', subProjects: ['شهر بازی سرپوشیده مدرن', 'آکادمی آموزش غواصی و ورزش‌های آبی'] },
+            { id: 10, areaName: 'عرصه مراکز محلات', approvedUsage: 'فرهنگی و تفریحی', zoneCode: 'S22', projectName: 'پکیج خدمات فرهنگی و تفریحی', projectArea: 171000, proposedOccupancy: 20, proposedFloors: 2, proposedDensity: 40, proposedBuiltArea: 68400, partnershipType: 'ساخت توسط کارفرما و اجاره', subProjects: ['مجموعه تئاتر و هنرهای نمایشی', 'پردیس کافه کتاب و گالری‌های هنری'] },
+            { id: 11, areaName: 'عرصه میانی', approvedUsage: 'خدمات عمومی', zoneCode: 'G31', projectName: 'پکیج گردشگری خوراک و محصولات بومی', projectArea: 170000, proposedOccupancy: 20, proposedFloors: 2, proposedDensity: 40, proposedBuiltArea: 68000, partnershipType: 'ساخت توسط کارفرما و اجاره', subProjects: ['بلوار غذا (Food Street)', 'بازارچه فروش محصولات بومی و جنگلی'] },
+            { id: 12, areaName: 'عرصه میانی', approvedUsage: 'خدمات عمومی', zoneCode: '-', projectName: 'پکیج خدمات عمومی و رفاهی', projectArea: 260000, proposedOccupancy: 20, proposedFloors: 5, proposedDensity: 100, proposedBuiltArea: 260000, partnershipType: 'مشارکت در ساخت', subProjects: ['مجتمع خدمات عمومی، ورزشی و فرهنگی'] },
+            { id: 13, areaName: 'عرصه تله‌کابین', approvedUsage: 'گردشگری مکمل', zoneCode: 'S41', projectName: 'پکیج تجاری و پارکینگ تله‌کابین', projectArea: 68847, proposedOccupancy: 25, proposedFloors: 6, proposedDensity: 100, proposedBuiltArea: 103271, partnershipType: 'BOT / BOLT', subProjects: ['پارکینگ طبقاتی هوشمند (۳ طبقه)', 'مرکز خرید و فودکورت (۳ طبقه تجاری)'] }
         ];
 
         let projects = JSON.parse(JSON.stringify(initialProjectsData));
@@ -218,30 +224,49 @@
         const totalBuiltAreaCard = document.getElementById('total-built-area-card');
         const totalProjectsCard = document.getElementById('total-projects-card');
         const avgDensityCard = document.getElementById('avg-density-card');
+        const detailsTooltip = document.getElementById('details-tooltip');
 
-        const formatNumber = (num) => new Intl.NumberFormat('fa-IR').format(num);
+        const formatNumber = (num) => num ? new Intl.NumberFormat('fa-IR').format(num) : 'N/A';
         
         function renderTable(data) {
             tableBody.innerHTML = '';
             if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500">هیچ پروژه‌ای با فیلترهای انتخابی یافت نشد.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500">هیچ پکیجی با فیلترهای انتخابی یافت نشد.</td></tr>`;
                 return;
             }
-            data.forEach(p => {
+
+            // Logic for merging cells
+            let lastAreaName = null;
+            const dataWithRowspan = data.map((item, index) => {
+                if (item.areaName !== lastAreaName) {
+                    const count = data.filter(d => d.areaName === item.areaName).length;
+                    lastAreaName = item.areaName;
+                    return { ...item, rowspan: count, isFirstOfGroup: true };
+                }
+                return { ...item, rowspan: 0, isFirstOfGroup: false };
+            });
+
+            dataWithRowspan.forEach(p => {
                 const row = document.createElement('tr');
-                row.className = 'bg-white border-b hover:bg-slate-50';
+                row.className = 'bg-white border-b hover:bg-slate-50 group';
+                // Store all data in the row for the tooltip
+                row.dataset.details = JSON.stringify(p);
+
+                let areaCell = '';
+                if (p.isFirstOfGroup) {
+                    areaCell = `<td class="px-6 py-4 align-middle text-center border-l" rowspan="${p.rowspan}">${p.areaName}</td>`;
+                }
+
                 row.innerHTML = `
+                    ${areaCell}
                     <td class="px-6 py-4 font-medium text-slate-900">${p.projectName}</td>
-                    <td class="px-6 py-4">${p.areaName}</td>
                     <td class="px-6 py-4">
                         <div class="relative has-tooltip">
                             <input type="number" value="${p.projectArea}" data-id="${p.id}" class="area-input w-32 p-1 border rounded-md text-center bg-slate-50 focus:bg-white focus:ring-1 focus:ring-sky-500 transition" />
-                            <div class="tooltip absolute bottom-full mb-2 w-max max-w-xs p-2 bg-slate-700 text-white text-xs rounded-md shadow-lg z-10">
-                                <!-- Tooltip content is set by JS -->
-                            </div>
+                            <div class="tooltip-input absolute bottom-full mb-2 w-max max-w-xs p-2 bg-slate-700 text-white text-xs rounded-md shadow-lg z-10"></div>
                         </div>
                     </td>
-                    <td class="px-6 py-4">${p.proposedDensity ? formatNumber(p.proposedDensity) : 'N/A'}</td>
+                    <td class="px-6 py-4">${formatNumber(p.proposedDensity)}</td>
                     <td class="px-6 py-4 font-semibold text-sky-700" id="built-area-${p.id}">${formatNumber(p.proposedBuiltArea)}</td>
                     <td class="px-6 py-4">${p.partnershipType}</td>
                 `;
@@ -250,8 +275,7 @@
 
             document.querySelectorAll('.area-input').forEach(input => {
                 input.addEventListener('input', handleAreaChange);
-                const tooltipContainer = input.parentElement;
-                tooltipContainer.addEventListener('mouseenter', updateTooltipInfo);
+                input.parentElement.addEventListener('mouseenter', updateInputTooltipInfo);
             });
         }
         
@@ -268,99 +292,44 @@
             if (builtAreaChart) builtAreaChart.destroy();
             builtAreaChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'زیربنای پیشنهادی',
-                        data: chartData,
-                        backgroundColor: 'rgba(56, 189, 248, 0.6)',
-                        borderColor: 'rgba(14, 165, 233, 1)',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, ticks: { font: { family: "'Vazirmatn', sans-serif" } } },
-                        x: { ticks: { font: { family: "'Vazirmatn', sans-serif" } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { bodyFont: { family: "'Vazirmatn', sans-serif" }, titleFont: { family: "'Vazirmatn', sans-serif" }, callbacks: { label: (c) => `${c.dataset.label}: ${formatNumber(c.raw)} مترمربع` } }
-                    }
-                }
+                data: { labels, datasets: [{ label: 'زیربنای پیشنهادی', data: chartData, backgroundColor: 'rgba(56, 189, 248, 0.6)', borderColor: 'rgba(14, 165, 233, 1)', borderWidth: 1, borderRadius: 5 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { font: { family: "'Vazirmatn', sans-serif" } } }, x: { ticks: { font: { family: "'Vazirmatn', sans-serif" } } } }, plugins: { legend: { display: false }, tooltip: { bodyFont: { family: "'Vazirmatn', sans-serif" }, titleFont: { family: "'Vazirmatn', sans-serif" }, callbacks: { label: (c) => `${c.dataset.label}: ${formatNumber(c.raw)} مترمربع` } } } }
             });
         }
         
         function renderAreaComparisonChart(data) {
             const ctx = document.getElementById('areaComparisonChart').getContext('2d');
-            const aggregatedData = data.reduce((acc, p) => {
-                acc[p.areaName] = (acc[p.areaName] || 0) + p.projectArea;
-                return acc;
-            }, {});
-
+            const aggregatedData = data.reduce((acc, p) => ({ ...acc, [p.areaName]: (acc[p.areaName] || 0) + p.projectArea }), {});
             const labels = Object.keys(aggregatedData);
             const chartData = Object.values(aggregatedData);
 
             if (areaComparisonChart) areaComparisonChart.destroy();
             areaComparisonChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'مساحت کل عرصه',
-                        data: chartData,
-                        backgroundColor: 'rgba(34, 197, 94, 0.6)',
-                        borderColor: 'rgba(22, 163, 74, 1)',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { beginAtZero: true, ticks: { font: { family: "'Vazirmatn', sans-serif" } } },
-                        y: { ticks: { font: { family: "'Vazirmatn', sans-serif" } } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { bodyFont: { family: "'Vazirmatn', sans-serif" }, titleFont: { family: "'Vazirmatn', sans-serif" }, callbacks: { label: (c) => `${c.dataset.label}: ${formatNumber(c.raw)} مترمربع` } }
-                    }
-                }
+                data: { labels, datasets: [{ label: 'مساحت کل عرصه', data: chartData, backgroundColor: 'rgba(34, 197, 94, 0.6)', borderColor: 'rgba(22, 163, 74, 1)', borderWidth: 1, borderRadius: 5 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { font: { family: "'Vazirmatn', sans-serif" } } }, y: { ticks: { font: { family: "'Vazirmatn', sans-serif" } } } }, plugins: { legend: { display: false }, tooltip: { bodyFont: { family: "'Vazirmatn', sans-serif" }, titleFont: { family: "'Vazirmatn', sans-serif" }, callbacks: { label: (c) => `${c.dataset.label}: ${formatNumber(c.raw)} مترمربع` } } } }
             });
         }
         
         function updateKpiCards(data) {
-            const totalArea = data.reduce((sum, p) => sum + p.projectArea, 0);
-            const totalBuiltArea = data.reduce((sum, p) => sum + p.proposedBuiltArea, 0);
+            const totalArea = data.reduce((s, p) => s + p.projectArea, 0);
+            const totalBuiltArea = data.reduce((s, p) => s + p.proposedBuiltArea, 0);
             const projectsWithDensity = data.filter(p => p.proposedDensity);
-            const avgDensity = projectsWithDensity.length > 0
-                ? projectsWithDensity.reduce((sum, p) => sum + p.proposedDensity, 0) / projectsWithDensity.length
-                : 0;
-
+            const avgDensity = projectsWithDensity.length > 0 ? projectsWithDensity.reduce((s, p) => s + p.proposedDensity, 0) / projectsWithDensity.length : 0;
             totalAreaCard.textContent = formatNumber(totalArea);
             totalBuiltAreaCard.textContent = formatNumber(totalBuiltArea);
             totalProjectsCard.textContent = formatNumber(data.length);
             avgDensityCard.textContent = `%${formatNumber(Math.round(avgDensity))}`;
         }
 
-        function updateTooltipInfo(e) {
+        function updateInputTooltipInfo(e) {
             const inputElement = e.currentTarget.querySelector('.area-input');
-            const tooltipElement = e.currentTarget.querySelector('.tooltip');
+            const tooltipElement = e.currentTarget.querySelector('.tooltip-input');
             const projectId = parseInt(inputElement.dataset.id);
             const project = projects.find(p => p.id === projectId);
             if (!project) return;
-
-            const currentTotalForArea = projects
-                .filter(p => p.areaName === project.areaName)
-                .reduce((sum, p) => sum + p.projectArea, 0);
-            
+            const currentTotalForArea = projects.filter(p => p.areaName === project.areaName).reduce((s, p) => s + p.projectArea, 0);
             const remainingArea = initialAreaTotals[project.areaName] - currentTotalForArea;
-
             tooltipElement.textContent = `مساحت باقی‌مانده از عرصه: ${formatNumber(remainingArea)} مترمربع`;
             tooltipElement.classList.remove('bg-red-600');
             tooltipElement.classList.add('bg-slate-700');
@@ -368,45 +337,30 @@
 
         function handleAreaChange(e) {
             const inputElement = e.target;
-            const tooltipElement = inputElement.parentElement.querySelector('.tooltip');
+            const tooltipElement = inputElement.parentElement.querySelector('.tooltip-input');
             const projectId = parseInt(inputElement.dataset.id);
             const newArea = parseInt(inputElement.value) || 0;
             const project = projects.find(p => p.id === projectId);
-
             if (!project) return;
-
             const oldArea = project.projectArea;
             const areaName = project.areaName;
             const initialTotalForArea = initialAreaTotals[areaName];
-            const otherProjectsInAreaTotal = projects
-                .filter(p => p.areaName === areaName && p.id !== projectId)
-                .reduce((sum, p) => sum + p.projectArea, 0);
+            const otherProjectsInAreaTotal = projects.filter(p => p.areaName === areaName && p.id !== projectId).reduce((s, p) => s + p.projectArea, 0);
 
             if (newArea < 0 || (newArea + otherProjectsInAreaTotal > initialTotalForArea)) {
                 inputElement.value = oldArea;
                 inputElement.classList.add('border-red-500', 'ring-1', 'ring-red-500');
-                
-                tooltipElement.textContent = `خطا: مجموع مساحت پروژه‌ها از مساحت کل عرصه (${formatNumber(initialTotalForArea)}) بیشتر است.`;
+                tooltipElement.textContent = `خطا: مجموع مساحت از کل عرصه (${formatNumber(initialTotalForArea)}) بیشتر است.`;
                 tooltipElement.classList.remove('bg-slate-700');
                 tooltipElement.classList.add('bg-red-600');
-                
                 setTimeout(() => {
                     inputElement.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
-                    updateTooltipInfo({ currentTarget: inputElement.parentElement }); // Reset tooltip on hover
+                    updateInputTooltipInfo({ currentTarget: inputElement.parentElement });
                 }, 2500);
                 return;
             }
-            
             project.projectArea = newArea;
-            
-            if (project.proposedDensity) {
-                project.proposedBuiltArea = Math.round(newArea * (project.proposedDensity / 100));
-            } else if (project.projectName.includes('پل طبیعت')) {
-                project.proposedBuiltArea = 5000;
-            } else if (project.projectName.includes('پلاژها')) {
-                project.proposedBuiltArea = 0;
-            }
-            
+            if (project.proposedDensity) project.proposedBuiltArea = Math.round(newArea * (project.proposedDensity / 100));
             applyFilters();
         }
         
@@ -415,26 +369,25 @@
             const zoneValue = filterZone.value;
             const partnershipValue = filterPartnership.value;
             const usageValue = filterUsage.value;
-
-            let filteredData = projects.filter(p => {
-                const areaMatch = areaValue === 'all' || p.areaName === areaValue;
-                const zoneMatch = zoneValue === 'all' || p.zoneCode === zoneValue;
-                const partnershipMatch = partnershipValue === 'all' || p.partnershipType === partnershipValue;
-                const usageMatch = usageValue === 'all' || p.approvedUsage === usageValue;
-                return areaMatch && zoneMatch && partnershipMatch && usageMatch;
-            });
-
+            let filteredData = projects.filter(p => 
+                (areaValue === 'all' || p.areaName === areaValue) &&
+                (zoneValue === 'all' || p.zoneCode === zoneValue) &&
+                (partnershipValue === 'all' || p.partnershipType === partnershipValue) &&
+                (usageValue === 'all' || p.approvedUsage === usageValue)
+            );
+            // Sort data to make cell merging work correctly
+            filteredData.sort((a, b) => a.areaName.localeCompare(b.areaName));
             renderTable(filteredData);
             renderCharts(filteredData);
             updateKpiCards(filteredData);
         }
 
         function populateFilters() {
+            ['filter-area', 'filter-zone', 'filter-partnership', 'filter-usage'].forEach(id => document.getElementById(id).innerHTML = '<option value="all">همه</option>');
             const areas = [...new Set(projects.map(p => p.areaName))];
             const zones = [...new Set(projects.map(p => p.zoneCode))];
             const partnerships = [...new Set(projects.map(p => p.partnershipType))];
             const usages = [...new Set(projects.map(p => p.approvedUsage))];
-
             areas.forEach(val => filterArea.innerHTML += `<option value="${val}">${val}</option>`);
             zones.forEach(val => filterZone.innerHTML += `<option value="${val}">${val}</option>`);
             partnerships.forEach(val => filterPartnership.innerHTML += `<option value="${val}">${val}</option>`);
@@ -442,21 +395,52 @@
         }
         
         function initializeDashboard() {
-            initialAreaTotals = initialProjectsData.reduce((acc, p) => {
-                acc[p.areaName] = (acc[p.areaName] || 0) + p.projectArea;
-                return acc;
-            }, {});
-
+            initialAreaTotals = initialProjectsData.reduce((acc, p) => ({ ...acc, [p.areaName]: (acc[p.areaName] || 0) + p.projectArea }), {});
             populateFilters();
             applyFilters();
-
-            [filterArea, filterZone, filterPartnership, filterUsage].forEach(filter => {
-                filter.addEventListener('change', applyFilters);
-            });
-
+            [filterArea, filterZone, filterPartnership, filterUsage].forEach(f => f.addEventListener('change', applyFilters));
             resetButton.addEventListener('click', () => {
                 projects = JSON.parse(JSON.stringify(initialProjectsData));
+                populateFilters();
                 applyFilters();
+            });
+
+            // Event listeners for the detailed row tooltip
+            tableBody.addEventListener('mouseover', e => {
+                const row = e.target.closest('tr');
+                if (!row || !row.dataset.details) return;
+                
+                const data = JSON.parse(row.dataset.details);
+                const subProjectsList = data.subProjects.map(sp => `<li class="py-1">${sp}</li>`).join('');
+
+                detailsTooltip.innerHTML = `
+                    <h3 class="text-lg font-bold border-b border-slate-600 pb-2 mb-3">${data.projectName}</h3>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        <span class="text-slate-400">سطح اشغال:</span> <span class="font-semibold">${formatNumber(data.proposedOccupancy)}%</span>
+                        <span class="text-slate-400">طبقات:</span> <span class="font-semibold">${formatNumber(data.proposedFloors)}</span>
+                        <span class="text-slate-400">تراکم:</span> <span class="font-semibold">${formatNumber(data.proposedDensity)}%</span>
+                        <span class="text-slate-400">کد پهنه:</span> <span class="font-semibold">${data.zoneCode}</span>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-600">
+                        <h4 class="font-semibold mb-2">اجزای پکیج:</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-300">${subProjectsList}</ul>
+                    </div>
+                `;
+                detailsTooltip.style.visibility = 'visible';
+                detailsTooltip.style.opacity = '1';
+                detailsTooltip.style.transform = 'scale(1)';
+            });
+
+            tableBody.addEventListener('mousemove', e => {
+                // Position tooltip slightly away from the cursor
+                detailsTooltip.style.left = `${e.pageX + 15}px`;
+                detailsTooltip.style.top = `${e.pageY + 15}px`;
+            });
+
+            tableBody.addEventListener('mouseout', e => {
+                detailsTooltip.style.visibility = 'hidden';
+                detailsTooltip.style.opacity = '0';
+                detailsTooltip.style.transform = 'scale(0.95)';
             });
         }
 
