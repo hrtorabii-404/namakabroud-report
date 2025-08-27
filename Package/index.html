@@ -13,12 +13,6 @@
             font-family: 'Vazirmatn', sans-serif;
             background: #f0f4f8;
         }
-        .header-container {
-            background: linear-gradient(135deg, #06b6d4, #3b82f6);
-            padding: 2rem;
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-        }
         .logo-container {
             display: flex;
             justify-content: space-between;
@@ -27,28 +21,74 @@
             margin: 0 auto;
         }
         .logo {
-            height: 80px;
+            height: 90px; /* Increased size */
             width: auto;
             object-fit: contain;
         }
         .logo.center {
-            height: 100px;
+            height: 130px; /* Increased size */
+        }
+        .logo.right {
+             height: 100px; /* Specifically increased */
         }
         .project-card {
             background-color: white;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             padding: 1.5rem;
-            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
         }
         .project-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            border-color: #3b82f6;
+        }
+        .project-card .tooltip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.9); /* Darker overlay */
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            text-align: center;
+            pointer-events: none; /* Allows clicks to go through to the link */
+        }
+        .project-card:hover .tooltip {
+            opacity: 1;
+        }
+        .tooltip-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 0.75rem;
+            width: 90%;
+        }
+        .tooltip-area {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .tooltip-desc {
+            font-size: 0.875rem;
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
         .project-number {
             background-color: #e0f2fe;
@@ -61,13 +101,18 @@
             justify-content: center;
             font-weight: 700;
             font-size: 1.125rem;
-            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+        .project-icon {
+            width: 40px;
+            height: 40px;
+            color: #3b82f6;
         }
         .project-title {
             font-size: 1.125rem;
             font-weight: 600;
             color: #1f2937;
-            flex-grow: 1;
+            margin-top: auto; /* Pushes title to the bottom */
         }
     </style>
 </head>
@@ -76,133 +121,273 @@
         <!-- Header -->
         <header class="mb-10 text-center">
             <div class="logo-container mb-6">
-                <img src="https://uploadkon.ir/uploads/68ce27_25لوگو2.png" alt="لوگو ایده پرداز محیط" class="logo">
-                <img src="https://uploadkon.ir/uploads/758e27_25LogoNA.png" alt="لوگو نمک آبرود" class="logo center">
-                <img src="https://uploadkon.ir/uploads/851927_25لوگو.png" alt="لوگو عمران مسکن شمال" class="logo">
+                <img src="https://uploadkon.ir/uploads/b8dc27_25IPM-LOGO-copy.png" alt="لوگو ایده پرداز محیط" class="logo">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
             </div>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800">بسته های پیشنهادی پروژه های بالقوه نمک آبرود</h1>
         </header>
 
         <!-- Projects Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Project 1 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Marina/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱</div>
-                    <h2 class="project-title">مارینا و پلاژ ساحلی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                </div>
+                <h2 class="project-title">مارینا و پلاژ ساحلی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مارینا و پلاژ ساحلی</h3>
+                    <div class="tooltip-area">مساحت: ۳۲۴,۶۹۱ متر مربع</div>
+                    <p class="tooltip-desc">تاکید بر فضاهای باز، محوطه‌سازی و سازه‌های سبک ساحلی.</p>
                 </div>
             </a>
+            <!-- Project 2 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Villa/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۲</div>
-                    <h2 class="project-title">ویلاهای لوکس ساحلی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                </div>
+                <h2 class="project-title">ویلاهای لوکس ساحلی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">ویلاهای لوکس ساحلی</h3>
+                    <div class="tooltip-area">مساحت: ۷۵,۶۸۰ متر مربع</div>
+                    <p class="tooltip-desc">مجموعه‌ای شامل ۴۵ واحد ویلای لوکس دو طبقه با مشاعات کامل.</p>
                 </div>
             </a>
+            <!-- Project 3 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Suite/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۳</div>
-                    <h2 class="project-title">سوئیت‌های ساحلی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <h2 class="project-title">سوئیت‌های ساحلی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">سوئیت‌های ساحلی</h3>
+                    <div class="tooltip-area">مساحت: ۵۶,۹۹۷ متر مربع</div>
+                    <p class="tooltip-desc">شامل ۶۸ بلوک سوئیت آپارتمان ۶ طبقه با خدمات رفاهی مرکزی.</p>
                 </div>
             </a>
+            <!-- Project 4 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/hotel/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۴</div>
-                    <h2 class="project-title">هتل ۵ ستاره ساحلی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                <h2 class="project-title">هتل ۵ ستاره ساحلی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">هتل ۵ ستاره ساحلی</h3>
+                    <div class="tooltip-area">مساحت: ۶۰,۷۷۹ متر مربع</div>
+                    <p class="tooltip-desc">برج ۲۵ طبقه با امکانات کامل اقامتی، پذیرایی، همایش و تندرستی.</p>
                 </div>
             </a>
+            <!-- Project 5 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Banafsheh/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۵</div>
-                    <h2 class="project-title">اکوکمپ لینورا (بوستان بنفشه)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.884 5.06l.542.493m7.53 0l-.542.493M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h2 class="project-title">اکوکمپ لینورا (بوستان بنفشه)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">اکوکمپ لینورا</h3>
+                    <div class="tooltip-area">مساحت: ۱۰۵ هکتار</div>
+                    <p class="tooltip-desc">اقامتگاه‌های دوستدار محیط زیست با محوریت طبیعت‌گردی و تجربه محلی.</p>
                 </div>
             </a>
+            <!-- Project 6 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Shemshad/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۶</div>
-                    <h2 class="project-title">اکواوایلد شمشاد (بوستان شمشاد)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h2 class="project-title">اکواوایلد شمشاد (بوستان شمشاد)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">اکواوایلد شمشاد</h3>
+                    <div class="tooltip-area">مساحت: ۵۴ هکتار</div>
+                    <p class="tooltip-desc">پارک حیات وحش و طبیعت شامل آکواریوم، باغ پرندگان و پارک ماجراجویی.</p>
                 </div>
             </a>
+            <!-- Project 7 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Golf/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۷</div>
-                    <h2 class="project-title">زمین پارتی گلف (Pitch & Putt)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 18.0556C11 18.0556 5.66667 15.1111 5.66667 10.5C5.66667 5.88889 11 2.94444 11 2.94444C11 2.94444 16.3333 5.88889 16.3333 10.5C16.3333 15.1111 11 18.0556 11 18.0556Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 18.0556V21.0001"></path></svg>
+                </div>
+                <h2 class="project-title">زمین پارتی گلف (Pitch & Putt)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">زمین پارتی گلف</h3>
+                    <div class="tooltip-area">مساحت: ۵۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">زمین گلف ۱۸ حفره‌ای به همراه کلوپ‌هاوس و آکادمی تخصصی.</p>
                 </div>
             </a>
+            <!-- Project 8 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Motor/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۸</div>
-                    <h2 class="project-title">پیست موتورسواری سوپرکراس</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+                </div>
+                <h2 class="project-title">پیست موتورسواری سوپرکراس</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">پیست موتورسواری</h3>
+                    <div class="tooltip-area">مساحت: ۴۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">پیست استاندارد سوپرکراس با جایگاه تماشاچیان و پیست کارتینگ سرپوشیده.</p>
                 </div>
             </a>
+            <!-- Project 9 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Shahrbazi/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۹</div>
-                    <h2 class="project-title">مجموعه ورزشی و شهربازی مدرن</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18M3 12h18"></path></svg>
+                </div>
+                <h2 class="project-title">مجموعه ورزشی و شهربازی مدرن</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">ورزش و شهربازی</h3>
+                    <div class="tooltip-area">مساحت: ۳۴۴,۲۸۹ متر مربع</div>
+                    <p class="tooltip-desc">ترکیبی از مجموعه‌های ورزشی آبی و راکتی با شهربازی سرپوشیده و روباز.</p>
                 </div>
             </a>
+            <!-- Project 10 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/MahalehFarhangi/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۰</div>
-                    <h2 class="project-title">مرکز محله ۱ (تم فرهنگی)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11m16-11v11"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز محله ۱ (تم فرهنگی)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز محله فرهنگی</h3>
+                    <div class="tooltip-area">مساحت: ۴۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">شامل فرهنگسرا، سالن تئاتر، گالری هنر و پارک هنری.</p>
                 </div>
             </a>
+            <!-- Project 11 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/MahalehFood/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۱</div>
-                    <h2 class="project-title">مرکز محله ۲ (فود پلازا)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0c-.454-.303-.977-.454-1.5-.454V5.73c0-1.268.53-2.4 1.382-3.236l.002-.002a3.424 3.424 0 014.116 0l.002.002C18.47 3.33 19 4.462 19 5.73v9.816zM21 15.546A2.704 2.704 0 0018 18.25a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0a2.704 2.704 0 00-3-2.704V5.73c0-1.268.53-2.4 1.382-3.236l.002-.002a3.424 3.424 0 014.116 0l.002.002C18.47 3.33 19 4.462 19 5.73v9.816z"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز محله ۲ (فود پلازا)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز محله فود پلازا</h3>
+                    <div class="tooltip-area">مساحت: ۱۵,۸۲۶ متر مربع</div>
+                    <p class="tooltip-desc">مجموعه رستوران‌ها، کافه‌ها و فود هال در یک حیاط مرکزی بزرگ.</p>
                 </div>
             </a>
+            <!-- Project 12 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/MahalehBozorgsal/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۲</div>
-                    <h2 class="project-title">مرکز محله ۳ (بازی بزرگسالان)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 15.879l-1.414 1.414M10 14l-1.414 1.414M14.121 8.121l-1.414-1.414M10 10l-1.414-1.414M3 12h.01M21 12h.01M12 3v.01M12 21v.01M4.929 4.929l.001.001M19.071 4.929l.001.001M4.929 19.071l.001.001M19.071 19.071l.001.001"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز محله ۳ (بازی بزرگسالان)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز بازی بزرگسالان</h3>
+                    <div class="tooltip-area">مساحت: ۲۵,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">شامل بولینگ، بیلیارد، اتاق فرار، VR و لیزر تگ.</p>
                 </div>
             </a>
+            <!-- Project 13 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/MahalehKoodak/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۳</div>
-                    <h2 class="project-title">مرکز محله ۴ (بازی کودکان)</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21v-2a6 6 0 00-12 0v2"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز محله ۴ (بازی کودکان)</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز بازی کودکان</h3>
+                    <div class="tooltip-area">مساحت: ۳۵,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">مجموعه بازی‌های آموزشی و دیجیتال با محوطه بازی ماجراجویانه.</p>
                 </div>
             </a>
+            <!-- Project 14 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Khorak/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۴</div>
-                    <h2 class="project-title">دهکده گردشگری خوراک</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <h2 class="project-title">دهکده گردشگری خوراک</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">دهکده گردشگری خوراک</h3>
+                    <div class="tooltip-area">مساحت: ۱۷۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">هاب گردشگری-خوراکی با تمرکز بر غذاهای ایرانی و بین‌المللی.</p>
                 </div>
             </a>
+            <!-- Project 15 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/SanayeDasti/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۵</div>
-                    <h2 class="project-title">دهکده هنر و صنایع دستی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.756 9.356-1.747 2.567-4.743 4.644-4.743 4.644M12 11c0 3.517 1.009 6.789 2.756 9.356 1.747 2.567 4.743 4.644 4.743 4.644M12 11V3M4.5 16.5h15"></path></svg>
+                </div>
+                <h2 class="project-title">دهکده هنر و صنایع دستی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">دهکده هنر و صنایع دستی</h3>
+                    <div class="tooltip-area">مساحت: ۲۷۹,۴۹۰ متر مربع</div>
+                    <p class="tooltip-desc">مرکز فرهنگی-اقتصادی با کارگاه‌های زنده، گالری و بازارچه.</p>
                 </div>
             </a>
+            <!-- Project 16 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Parking/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۶</div>
-                    <h2 class="project-title">تجاری و پارکینگ تله‌کابین</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 10h6"></path></svg>
+                </div>
+                <h2 class="project-title">تجاری و پارکینگ تله‌کابین</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">تجاری و پارکینگ تله‌کابین</h3>
+                    <div class="tooltip-area">مساحت: ۶۱,۵۱۲ متر مربع</div>
+                    <p class="tooltip-desc">دروازه ورودی مدرن به تله‌کابین با خدمات تجاری و پارکینگ.</p>
                 </div>
             </a>
+            <!-- Project 17 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Pol/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۷</div>
-                    <h2 class="project-title">پل سبزآبی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                </div>
+                <h2 class="project-title">پل سبزآبی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">پل سبزآبی</h3>
+                    <div class="tooltip-area">مساحت: ۲۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">مسیر تفریحی خطی به طول ۱۵۰۰ متر برای پیاده‌روی و دوچرخه‌سواری.</p>
                 </div>
             </a>
+            <!-- Project 18 -->
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/ParkAbr/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۸</div>
-                    <h2 class="project-title">پارک ماجراجویی ابرها</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+                <h2 class="project-title">پارک ماجراجویی ابرها</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">پارک ماجراجویی ابرها</h3>
+                    <div class="tooltip-area">مساحت: ۵۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">اکو پارک هیجان‌انگیز در بام تله‌کابین با حداقل دخالت در طبیعت.</p>
                 </div>
             </a>
+             <!-- Project 19 -->
              <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Darmani/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۱۹</div>
-                    <h2 class="project-title">مرکز سلامت و تندرستی</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز سلامت و تندرستی</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز سلامت و تندرستی</h3>
+                    <div class="tooltip-area">مساحت: ۱۱۴,۲۴۹ متر مربع</div>
+                    <p class="tooltip-desc">مقصد جامع گردشگری سلامت شامل خدمات پزشکی و امکانات آرامش‌بخش.</p>
                 </div>
             </a>
+             <!-- Project 20 -->
              <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Fanavari/" class="project-card">
-                <div>
+                <div class="project-header">
                     <div class="project-number">۲۰</div>
-                    <h2 class="project-title">مرکز نوآوری و فناوری گردشگری</h2>
+                    <svg class="project-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <h2 class="project-title">مرکز نوآوری و فناوری گردشگری</h2>
+                <div class="tooltip">
+                    <h3 class="tooltip-title">مرکز نوآوری و فناوری</h3>
+                    <div class="tooltip-area">مساحت: ۹۰,۰۰۰ متر مربع</div>
+                    <p class="tooltip-desc">هاب نوآوری برای رشد و توسعه استارتاپ‌ها و فناوری‌های گردشگری.</p>
                 </div>
             </a>
         </div>
