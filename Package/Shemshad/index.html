@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه اکواوایلد شمشاد</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: #0ea5e9;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px; /* For scrollable table */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #f0f9ff;
+            font-weight: bold;
+            color: #0369a1;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۶: اکواوایلد شمشاد (بوستان شمشاد)</h1>
+            <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۵۴ <span class="text-base font-normal">هکتار</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۵۳,۷۱۸ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۵٪</p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3.5a.75.75 0 01.75.75v2.5a.75.75 0 01-1.5 0V4.25A.75.75 0 0110 3.5zM10 8.5a.75.75 0 01.75.75v6.5a.75.75 0 01-1.5 0V9.25A.75.75 0 0110 8.5zM10 2a8 8 0 100 16 8 8 0 000-16zM2 10a8 8 0 1116 0 8 8 0 01-16 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">نوع مشارکت</h3>
+                    <p class="text-2xl font-bold text-gray-800">BOT</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">🦁 محور حیات وحش و طبیعت</td></tr>
+                            <tr class="tooltip-row"><td>آکواریوم بزرگ ساحلی<span class="tooltip-text">نمایش ماهیان دریای خزر و آبزیان کمیاب، همراه با تونل آبی برای بازدیدکنندگان.</span></td><td>15,000</td><td>18,000</td><td>9,000</td></tr>
+                            <tr class="tooltip-row"><td>باغ پرندگان<span class="tooltip-text">نمایش گونه‌های رنگارنگ مانند طوطی‌ها، پرندگان استوایی و شکاری.</span></td><td>20,000</td><td>7,000</td><td>4,000</td></tr>
+                            <tr class="tooltip-row"><td>باغ خزندگان و حیوانات کوچک<span class="tooltip-text">شامل لاک‌پشت، ایگوانا و حیوانات خاص و آموزشی.</span></td><td>10,000</td><td>4,231</td><td>2,500</td></tr>
+                            <tr class="tooltip-row"><td>باغ پروانه‌ها<span class="tooltip-text">محیط گلخانه‌ای سرپوشیده با گونه‌های زیبای پروانه و گیاهان معطر.</span></td><td>5,000</td><td>3,000</td><td>2,000</td></tr>
+                            
+                            <tr class="zone-header"><td colspan="4">🎢 محور سرگرمی و ماجراجویی</td></tr>
+                            <tr class="tooltip-row"><td>پارک ماجراجویی جنگلی<span class="tooltip-text">شامل زیپ‌لاین، پل معلق، برج پرش بانجی و ساختمان پذیرش.</span></td><td>100,000</td><td>1,500</td><td>1,000</td></tr>
+                            <tr class="tooltip-row"><td>پارک هیجان کودکان و نوجوانان<span class="tooltip-text">شامل سرسره‌های جنگلی، تونل ماجراجویی و ترامپولین.</span></td><td>15,000</td><td>1,000</td><td>500</td></tr>
+                            
+                            <tr class="zone-header"><td colspan="4">🎭 محور فرهنگی و آموزشی</td></tr>
+                            <tr class="tooltip-row"><td>موزه اکولوژی<span class="tooltip-text">یک موزه کوچک و تخصصی برای نمایش اهمیت اکولوژیک منطقه.</span></td><td>5,000</td><td>4,430</td><td>2,359</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🍴 محور خدمات و رفاه</td></tr>
+                            <tr class="tooltip-row"><td>رستوران‌ها و کافه‌های تماتیک<span class="tooltip-text">شامل رستوران زیر آب (با دید به آکواریوم) و رستوران جنگلی.</span></td><td>10,000</td><td>6,500</td><td>4,000</td></tr>
+                            <tr class="tooltip-row"><td>فروشگاه صنایع دستی و سوغات<span class="tooltip-text">فروش محصولات مرتبط با حیات وحش و فرهنگ منطقه.</span></td><td>1,000</td><td>1,057</td><td>500</td></tr>
+                            <tr class="tooltip-row"><td>ورودی، مدیریت و خدمات عمومی<span class="tooltip-text">ساختمان پذیرش اصلی، دفاتر اداری و خدمات پشتیبانی مجموعه.</span></td><td>10,000</td><td>7,000</td><td>1,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🌳 محور فضای باز و حفاظتی</td></tr>
+                            <tr class="tooltip-row"><td>محوطه حیوانات (بخش سافاری)<span class="tooltip-text">فضای باز وسیع برای حیواناتی مانند گوزن با رعایت استانداردهای رفاهی.</span></td><td>200,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>فضای سبز و محوطه‌سازی<span class="tooltip-text">باقی‌مانده فضا برای حفظ پوشش گیاهی، مسیرهای پیاده‌روی و زیباسازی.</span></td><td>146,176</td><td>0</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس محور (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['فضای باز و حفاظتی', 'سرگرمی و ماجراجویی', 'حیات وحش و طبیعت', 'خدمات و رفاه', 'فرهنگی و آموزشی'],
+                datasets: [{
+                    label: 'مساحت عرصه (مترمربع)',
+                    data: [346176, 115000, 50000, 21000, 5000],
+                    backgroundColor: [
+                        '#16a34a', '#0ea5e9', '#f97316', '#6b7280', '#8b5cf6'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('fa-IR').format(value);
+                                },
+                                font: { family: 'Vazirmatn' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Vazirmatn', size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: { family: 'Vazirmatn' },
+                            titleFont: { family: 'Vazirmatn' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
