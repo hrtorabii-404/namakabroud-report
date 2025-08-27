@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مجموعه ورزشی و شهربازی مدرن</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #eef2ff;
+            font-weight: bold;
+            color: #4338ca;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۹: مجموعه ورزشی و شهربازی مدرن</h1>
+            <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۳۴۴,۲۸۹ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۲۰۶,۵۷۳ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v6.5a.75.75 0 001.5 0v-6.5z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰۳,۲۸۷ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">نوع مشارکت</h3>
+                    <p class="text-2xl font-bold text-gray-800">JV</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">🏅 زون مجموعه ورزشی</td></tr>
+                            <tr class="tooltip-row"><td>مجموعه ورزش‌های آبی<span class="tooltip-text">شامل استخر قهرمانی، استخر تفریحی، و استخر عمیق ویژه آموزش غواصی.</span></td><td>20,000</td><td>30,000</td><td>15,000</td></tr>
+                            <tr class="tooltip-row"><td>سالن ورزش‌های راکتی<span class="tooltip-text">شامل زمین‌های استاندارد اسکواش، بدمینتون، تنیس و پدل.</span></td><td>10,000</td><td>20,000</td><td>10,000</td></tr>
+                            <tr class="tooltip-row"><td>سالن ورزشی چندمنظوره<span class="tooltip-text">شامل سالن بدنسازی پیشرفته، دیواره صخره‌نوردی، و زمین‌های فوتسال و بسکتبال.</span></td><td>10,000</td><td>20,000</td><td>10,000</td></tr>
+                            <tr class="tooltip-row"><td>زمین‌های ورزشی روباز<span class="tooltip-text">شامل چندین زمین والیبال ساحلی، زمین‌های تنیس و فوتبال.</span></td><td>40,000</td><td>1,573</td><td>1,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🎢 زون شهربازی مدرن</td></tr>
+                            <tr class="tooltip-row"><td>محوطه بازی‌های هیجانی<span class="tooltip-text">فضای باز وسیع برای استقرار ترن‌های هوایی، برج سقوط و سایر وسایل بازی بزرگ.</span></td><td>100,000</td><td>5,000</td><td>5,000</td></tr>
+                            <tr class="tooltip-row"><td>محوطه بازی‌های خانوادگی<span class="tooltip-text">شامل چرخ‌وفلک، ماشین‌برقی و وسایل بازی مناسب برای تمام سنین.</span></td><td>50,000</td><td>5,000</td><td>5,000</td></tr>
+                            <tr class="tooltip-row"><td>شهربازی سرپوشیده<span class="tooltip-text">ساختمان عظیم شامل بازی‌های تاریک (Dark Rides)، بازی‌های واقعیت مجازی (VR)، و بزرگترین مرکز سرگرمی کودکان.</span></td><td>30,000</td><td>80,000</td><td>30,000</td></tr>
+                            <tr class="tooltip-row"><td>سالن نمایش و رویدادها<span class="tooltip-text">شامل آمفی‌تئاتر برای نمایش‌های زنده و سینمای چهاربعدی.</span></td><td>10,000</td><td>20,000</td><td>10,000</td></tr>
+                            
+                            <tr class="zone-header"><td colspan="4">🏢 زون مرکزی و پشتیبانی</td></tr>
+                            <tr class="tooltip-row"><td>ساختمان ورودی اصلی و خدمات<span class="tooltip-text">ورودی باشکوه شامل بلیط‌فروشی، اطلاعات، فروشگاه‌های اصلی و رستوران‌ها.</span></td><td>10,000</td><td>10,000</td><td>5,000</td></tr>
+                            <tr class="tooltip-row"><td>رستوران‌ها، کافه‌ها و فودکورت<span class="tooltip-text">مجموعه‌های غذایی متنوع پراکنده در هر دو زون ورزشی و شهربازی.</span></td><td>10,000</td><td>15,000</td><td>7,000</td></tr>
+                            <tr class="tooltip-row"><td>پارکینگ، معابر و محوطه‌سازی<span class="tooltip-text">پارکینگ طبقاتی و روباز برای تأمین نیاز کل مجموعه.</span></td><td>44,289</td><td>0</td><td>5,287</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس زون (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['شهربازی مدرن', 'مجموعه ورزشی', 'مرکزی و پشتیبانی'],
+                datasets: [{
+                    label: 'مساحت عرصه (مترمربع)',
+                    data: [190000, 80000, 64289],
+                    backgroundColor: [
+                        '#ef4444', '#3b82f6', '#6b7280'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('fa-IR').format(value);
+                                },
+                                font: { family: 'Vazirmatn' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Vazirmatn', size: 12 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: { family: 'Vazirmatn' },
+                            titleFont: { family: 'Vazirmatn' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
