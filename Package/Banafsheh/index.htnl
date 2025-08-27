@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه اکوکمپ لینورا</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22C55E;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px; /* For scrollable table */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #f0fdf4;
+            font-weight: bold;
+            color: #15803d;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۵: اکوکمپ لینورا (بوستان بنفشه)</h1>
+            <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰۵ <span class="text-base font-normal">هکتار</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰۵,۱۳۲ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۵٪</p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">تراکم</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰٪</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">🌲 محور اقامت و استراحت</td></tr>
+                            <tr class="tooltip-row"><td>هتل بوتیک سبز<span class="tooltip-text">هتلی کوچک، لوکس و پایدار با تأمین انرژی از منابع خورشیدی.</span></td><td>10,000</td><td>10,000</td><td>5,000</td></tr>
+                            <tr class="tooltip-row"><td>کلبه‌های چوبی و بامبو<span class="tooltip-text">۱۰۰ واحد ویلای کوچک و دوستدار محیط زیست با معماری سازگار.</span></td><td>75,000</td><td>15,000</td><td>7,500</td></tr>
+                            <tr class="tooltip-row"><td>کمپینگ ساحلی و جنگلی<span class="tooltip-text">شامل سایت‌های برپایی چادر، کاروان‌سراهای مدرن و ساختمان‌های خدماتی.</span></td><td>100,000</td><td>2,000</td><td>1,500</td></tr>
+                            
+                            <tr class="zone-header"><td colspan="4">🍴 محور خوراک و تجربه محلی</td></tr>
+                            <tr class="tooltip-row"><td>رستوران‌های محلی و سنتی<span class="tooltip-text">مجموعه‌ای از رستوران‌ها با تمرکز بر غذاهای شمالی.</span></td><td>10,000</td><td>6,000</td><td>4,000</td></tr>
+                            <tr class="tooltip-row"><td>کافه‌های جنگلی و ساحلی<span class="tooltip-text">کافه‌هایی با طراحی باز و چشم‌انداز بی‌نظیر به دریا و جنگل.</span></td><td>8,000</td><td>4,000</td><td>3,000</td></tr>
+                            <tr class="tooltip-row"><td>بازارچه صنایع دستی<span class="tooltip-text">غرفه‌هایی برای فروش حصیربافی، چوب‌تراشی و سوغات خوراکی.</span></td><td>5,000</td><td>3,000</td><td>2,500</td></tr>
+                            <tr class="tooltip-row"><td>کارگاه‌های آموزش آشپزی<span class="tooltip-text">فضای آموزشی مجهز برای برگزاری ورکشاپ‌های آشپزی شمالی.</span></td><td>1,000</td><td>1,000</td><td>500</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🚴 محور سرگرمی و تفریح</td></tr>
+                            <tr class="tooltip-row"><td>اکوپارک ماجراجویانه<span class="tooltip-text">شامل زیپ‌لاین، پل معلق، دیوار صخره‌نوردی و ساختمان پذیرش.</span></td><td>50,000</td><td>1,500</td><td>1,000</td></tr>
+                            <tr class="tooltip-row"><td>مرکز ورزش‌های آبی و دریایی<span class="tooltip-text">مرکز اجاره و آموزش قایق‌سواری، کایاک و پاراسل در نوار ساحلی.</span></td><td>20,000</td><td>2,000</td><td>1,500</td></tr>
+                            <tr class="tooltip-row"><td>پارک آموزشی کودک و نوجوان<span class="tooltip-text">فضایی با محوریت طبیعت‌دوستی و آموزش مفاهیم محیط زیستی به کودکان.</span></td><td>15,000</td><td>3,000</td><td>2,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🌿 محور کشاورزی و اکوتوریسم</td></tr>
+                            <tr class="tooltip-row"><td>مزرعه گردشگری و باغ ارگانیک<span class="tooltip-text">شامل گلخانه، باغ میوه و سبزیجات با امکان برداشت توسط گردشگر.</span></td><td>50,000</td><td>3,000</td><td>2,500</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">📚 محور آموزش و فرهنگ</td></tr>
+                            <tr class="tooltip-row"><td>مرکز تفسیر طبیعت<span class="tooltip-text">ساختمان موزه‌مانند برای معرفی گونه‌های گیاهی و جانوری منطقه.</span></td><td>5,000</td><td>6,000</td><td>3,500</td></tr>
+                            <tr class="tooltip-row"><td>کتابخانه و سالن چندمنظوره<span class="tooltip-text">فضایی برای رویدادهای فرهنگی، هنری و آموزشی با موضوع محیط زیست.</span></td><td>3,000</td><td>4,000</td><td>2,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">⚡ محور زیرساخت و نوآوری</td></tr>
+                            <tr class="tooltip-row"><td>ورودی، پذیرش و مدیریت<span class="tooltip-text">ساختمان مرکزی برای مدیریت یکپارچه اکوکمپ.</span></td><td>10,000</td><td>8,000</td><td>4,000</td></tr>
+                            <tr class="tooltip-row"><td>تأسیسات و مدیریت پسماند<span class="tooltip-text">مرکز بازیافت و کمپوست کشاورزی.</span></td><td>5,000</td><td>2,500</td><td>2,000</td></tr>
+                             <tr class="tooltip-row"><td>حمل و نقل سبز و پارکینگ<span class="tooltip-text">شامل ایستگاه‌های دوچرخه، اسکوتر برقی و پارکینگ خودروهای ورودی.</span></td><td>50,000</td><td>2,500</td><td>2,000</td></tr>
+
+                             <tr class="zone-header"><td colspan="4">🏖️ محور رویداد و فضای باز</td></tr>
+                             <tr class="tooltip-row"><td>فضای برگزاری جشنواره‌ها<span class="tooltip-text">فضاهای باز طراحی شده برای جشنواره‌های فصلی، کمپ‌های یوگا و نمایشگاه‌ها.</span></td><td>150,000</td><td>1,632</td><td>1,066</td></tr>
+                             <tr class="tooltip-row"><td>فضای جنگلی و ساحلی بکر<span class="tooltip-text">بخش عمده زمین برای حفظ پوشش گیاهی و اکوسیستم طبیعی دست‌نخورده باقی می‌ماند.</span></td><td>464,323</td><td>0</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس محور (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['فضای بکر', 'اقامت', 'رویداد', 'سرگرمی', 'زیرساخت', 'کشاورزی', 'خوراک', 'آموزش'],
+                datasets: [{
+                    label: 'مساحت عرصه (مترمربع)',
+                    data: [464323, 185000, 150000, 85000, 65000, 50000, 24000, 8000],
+                    backgroundColor: [
+                        '#15803d', '#22c55e', '#84cc16', '#f59e0b', '#6b7280', '#0ea5e9', '#f43f5e', '#8b5cf6'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('fa-IR').format(value);
+                                },
+                                font: { family: 'Vazirmatn' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Vazirmatn', size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: { family: 'Vazirmatn' },
+                            titleFont: { family: 'Vazirmatn' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
