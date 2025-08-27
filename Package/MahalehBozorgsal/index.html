@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه مرکز محله ۳ (تم بازی بزرگسالان)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #eef2ff;
+            font-weight: bold;
+            color: #3730a3;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۱۲: مرکز محله ۳ (تم بازی بزرگسالان)</h1>
+            <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۲۵,۰۰۰ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰,۰۰۰ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v6.5a.75.75 0 001.5 0v-6.5z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۵,۰۰۰ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">نوع مشارکت</h3>
+                    <p class="text-2xl font-bold text-gray-800">مشارکت در ساخت</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">🏢 مجتمع مرکزی سرگرمی و فراغت</td></tr>
+                            <tr class="tooltip-row"><td>سالن بولینگ و بیلیارد<span class="tooltip-text">شامل چندین خط بولینگ و میزهای بیلیارد با طراحی و سبک مدرن.</span></td><td>(5,000)</td><td>2,000</td><td rowspan="7">(5,000)</td></tr>
+                            <tr class="tooltip-row"><td>آرنای واقعیت مجازی (VR)<span class="tooltip-text">فضایی مجهز برای برگزاری مسابقات و بازی‌های گروهی واقعیت مجازی.</span></td><td>-</td><td>1,500</td></tr>
+                            <tr class="tooltip-row"><td>مجموعه اتاق‌های فرار<span class="tooltip-text">شامل چندین اتاق با سناریوهای متنوع و هیجان‌انگیز برای گروه‌های مختلف.</span></td><td>-</td><td>1,000</td></tr>
+                            <tr class="tooltip-row"><td>کافه بازی و لانژ دیجیتال<span class="tooltip-text">ترکیبی از کافه بازی‌های رومیزی و لانژ بازی‌های دیجیتال برای مسابقات (eSports).</span></td><td>-</td><td>1,000</td></tr>
+                            <tr class="tooltip-row"><td>باشگاه سلامت (Wellness)<span class="tooltip-text">فضایی آرام برای یوگا، اتاق‌های ماساژ و خدمات آب‌درمانی.</span></td><td>-</td><td>500</td></tr>
+                            <tr class="tooltip-row"><td>رستوران و کافه‌های تماتیک<span class="tooltip-text">رستوران‌ها و کافه‌هایی با تم‌های خاص و هماهنگ با بازی‌ها.</span></td><td>-</td><td>2,000</td></tr>
+                            <tr class="tooltip-row"><td>لابی، مدیریت و پشتیبانی<span class="tooltip-text">شامل ورودی اصلی، دفاتر اداری، سرویس‌های بهداشتی و تأسیسات مرکزی.</span></td><td>-</td><td>2,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🌳 محوطه و بازی‌های روباز</td></tr>
+                            <tr class="tooltip-row"><td>میدان مرکزی (Plaza)<span class="tooltip-text">قلب اجتماعی پروژه؛ میدانگاهی باز با فضاهای نشستن و کافه‌های روباز.</span></td><td>3,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>آرنای لیزر تگ شبانه<span class="tooltip-text">محوطه‌ای با موانع و نورپردازی حرفه‌ای برای تجربه بازی لیزر تگ در فضای باز.</span></td><td>5,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>مسیر بازی‌های چالشی<span class="tooltip-text">مسیری ایمن‌سازی شده با موانع فیزیکی شبیه به مسابقات نینجا واریور.</span></td><td>2,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>مینی گلف ماجراجویانه<span class="tooltip-text">یک زمین مینی گلف با طراحی خلاقانه و چالش‌برانگیز.</span></td><td>2,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>آمفی‌تئاتر روباز<span class="tooltip-text">فضایی کوچک و صمیمی برای اجرای استندآپ کمدی و نمایش‌های خیابانی.</span></td><td>1,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>پارکینگ و فضای سبز<span class="tooltip-text">تأمین پارکینگ مورد نیاز و محوطه‌سازی غنی برای اتصال به طبیعت اطراف.</span></td><td>7,000</td><td>0</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس زون (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['محوطه و بازی‌های روباز', 'مجتمع مرکزی سرگرمی'],
+                datasets: [{
+                    label: 'مساحت عرصه (مترمربع)',
+                    data: [20000, 5000],
+                    backgroundColor: [
+                        '#22c55e', '#3b82f6'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('fa-IR').format(value);
+                                },
+                                font: { family: 'Vazirmatn' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Vazirmatn', size: 12 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: { family: 'Vazirmatn' },
+                            titleFont: { family: 'Vazirmatn' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
