@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه دهکده هنر و صنایع دستی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(132, 204, 22, 0.1);
+            color: #84cc16;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #f7fee7;
+            font-weight: bold;
+            color: #4d7c0f;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۱۵: دهکده هنر و صنایع دستی</h1>
+            <p class="text-md text-gray-600 mt-4 max-w-4xl mx-auto bg-gray-100 p-4 rounded-lg border-r-4 border-lime-500">
+                <b>کانسپت پروژه:</b> این مجموعه یک مرکز فرهنگی-اقتصادی زنده و پویاست که بازدیدکنندگان می‌توانند به طور همزمان فرآیند تولید صنایع دستی را تماشا کنند، در کارگاه‌ها شرکت کنند، از گالری‌ها بازدید نمایند و محصولات هنری ایران و جهان را خریداری کنند. معماری مجموعه با الهام از کاروانسراها و بازارهای سنتی ایران، فضایی خاطره‌انگیز و مدرن ایجاد می‌کند.
+            </p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۲۷۹,۴۹۰ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۳۳,۸۹۸ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v6.5a.75.75 0 001.5 0v-6.5z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۲۰٪</p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">نوع مشارکت</h3>
+                    <p class="text-2xl font-bold text-gray-800">مشارکت در ساخت</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">🕌 مرکز هنر و گالری</td></tr>
+                            <tr class="tooltip-row"><td>میدان صنایع‌دستی<span class="tooltip-text">میدان مرکزی مجموعه با معماری الهام‌گرفته از کاروانسرا، به عنوان قلب تپنده و محل رویدادها.</span></td><td>20,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>ساختمان گالری و موزه<span class="tooltip-text">ساختمان شاخص شامل گالری اصلی، موزه ابزارآلات و بخش بین‌الملل برای نمایش آثار جهانی.</span></td><td>15,000</td><td>20,000</td><td>6,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🇮🇷 بازارچه و کارگاه‌های ایران</td></tr>
+                            <tr class="tooltip-row"><td>غرفه‌های دائمی فروش<span class="tooltip-text">راسته‌های بازار مسقف و روباز برای فروش سفال، فرش، گلیم، چوب و صنایع دستی شمال.</span></td><td>40,000</td><td>24,000</td><td>12,000</td></tr>
+                            <tr class="tooltip-row"><td>کارگاه‌های زنده<span class="tooltip-text">مجموعه‌ای از حیاط‌ها که کارگاه‌های تولید زنده (سفال‌گری، منبت و گلیم‌بافی) در اطراف آن قرار دارند.</span></td><td>30,000</td><td>16,000</td><td>8,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🌍 بازارچه بین‌المللی</td></tr>
+                            <tr class="tooltip-row"><td>پاویون‌های صنایع دستی جهان<span class="tooltip-text">غرفه‌هایی با معماری خاص کشورهای مختلف (ترکیه، هند، چین و...) برای فروش محصولات سنتی آنها.</span></td><td>40,000</td><td>24,000</td><td>12,000</td></tr>
+                            
+                            <tr class="zone-header"><td colspan="4">🎉 آموزش و رویدادها</td></tr>
+                            <tr class="tooltip-row"><td>آکادمی هنر و ورکشاپ‌ها<span class="tooltip-text">ساختمانی مجزا و مجهز برای برگزاری کلاس‌ها و ورکشاپ‌های آموزشی.</span></td><td>10,000</td><td>12,000</td><td>4,000</td></tr>
+                            <tr class="tooltip-row"><td>آمفی‌تئاتر روباز<span class="tooltip-text">فضایی باز برای اجرای موسیقی محلی و نمایش‌های آیینی.</span></td><td>20,000</td><td>898</td><td>898</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">☕ خدمات و پذیرایی</td></tr>
+                            <tr class="tooltip-row"><td>کافه فرهنگ و رستوران<span class="tooltip-text">ساختمان‌هایی با دکوراسیون سنتی برای ارائه غذاها و نوشیدنی‌های محلی.</span></td><td>15,000</td><td>6,000</td><td>3,000</td></tr>
+                            <tr class="tooltip-row"><td>فروشگاه محصولات بسته‌بندی<span class="tooltip-text">فروشگاه بزرگ برای عرضه سوغات ایرانی مانند زعفران، عسل و صنایع دستی کوچک.</span></td><td>10,000</td><td>4,000</td><td>2,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🚗 خدمات و پشتیبانی</td></tr>
+                            <tr class="tooltip-row"><td>ورودی، مدیریت و انبارها<span class="tooltip-text">ورودی اصلی، دفاتر اداری و انبارهای مرکزی برای پشتیبانی از غرفه‌ها.</span></td><td>9,490</td><td>15,000</td><td>8,000</td></tr>
+                            <tr class="tooltip-row"><td>پارکینگ و فضای سبز<span class="tooltip-text">پارکینگ وسیع در حاشیه مجموعه و محوطه‌سازی غنی با درختان بومی.</span></td><td>70,000</td><td>0</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس زون (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['خدمات و پشتیبانی', 'بازارچه ایران', 'بازارچه بین‌المللی', 'مرکز هنر', 'آموزش و رویدادها', 'خدمات و پذیرایی'],
+                datasets: [{
+                    label: 'مساحت عرصه (مترمربع)',
+                    data: [79490, 70000, 40000, 35000, 30000, 25000],
+                    backgroundColor: [
+                        '#6b7280', '#22c55e', '#3b82f6', '#a855f7', '#f97316', '#ec4899'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('fa-IR').format(value);
+                                },
+                                font: { family: 'Vazirmatn' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Vazirmatn', size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: { family: 'Vazirmatn' },
+                            titleFont: { family: 'Vazirmatn' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
