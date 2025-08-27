@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه هتل ۵ ستاره ساحلی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937; /* Gray 800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۴: هتل ۵ ستاره ساحلی</h1>
+            <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۶۰,۷۷۹ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۵۱,۹۴۸ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۰٪</p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">تعداد طبقات</h3>
+                    <p class="text-2xl font-bold text-gray-800">۲۵ <span class="text-base font-normal">طبقه</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Building GFA Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+            <div class="lg:col-span-3 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">۱. برنامه فیزیکی ساختمان هتل (تفکیک زیربنا)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>زون اصلی (کاربری)</th>
+                                <th>زیربنا (مترمربع)</th>
+                                <th>درصد از کل زیربنا</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tooltip-row">
+                                <td>زون اقامتی<span class="tooltip-text">شامل انواع اتاق‌های استاندارد، لوکس، سوئیت‌های ویژه و سوئیت رویال (عمدتاً طبقات ۶ الی ۲۵)</span></td>
+                                <td>۹۱,۱۶۸</td><td>۶۰٪</td>
+                            </tr>
+                            <tr class="tooltip-row">
+                                <td>زون فضاهای عمومی و لابی<span class="tooltip-text">لابی اصلی باشکوه، پذیرش، لانژ، فروشگاه‌های لوکس و فضای نشیمن (عمدتاً طبقات همکف و اول)</span></td>
+                                <td>۱۵,۲۰۰</td><td>۱۰٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>زون پذیرایی (رستوران و کافه)<span class="tooltip-text">رستوران اصلی، رستوران‌های تخصصی، کافه‌ها و رستوران پانوراما در طبقه آخر</span></td>
+                                <td>۱۵,۲۰۰</td><td>۱۰٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>زون همایش و رویدادها<span class="tooltip-text">سالن اصلی چندمنظوره، اتاق‌های جلسات متنوع، مرکز تجاری و فضاهای نمایشگاهی (عمدتاً طبقات ۱ و ۲)</span></td>
+                                <td>۱۵,۲۰۰</td><td>۱۰٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>زون سلامت و تندرستی<span class="tooltip-text">مجموعه اسپا، ماساژ، استخر سرپوشیده، سالن بدنسازی و حمام ترکی</span></td>
+                                <td>۷,۵۸۰</td><td>۵٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>زون پشتیبانی و خدمات<span class="tooltip-text">آشپزخانه‌های مرکزی، لاندری، دفاتر اداری، انبارها و تأسیسات مرکزی (عمدتاً در طبقات منفی)</span></td>
+                                <td>۷,۶۰۰</td><td>۵٪</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">درصد زیربنا بر اساس زون</h2>
+                <div class="chart-container">
+                    <canvas id="gfaChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2: Site Land Use -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+             <div class="lg:col-span-3 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">۲. برنامه کاربری محوطه (تفکیک عرصه)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>درصد از کل عرصه</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tooltip-row">
+                                <td>سطح اشغال برج اصلی هتل<span class="tooltip-text">موقعیت‌گیری برج برای حداکثر دید به دریا و جنگل</span></td>
+                                <td>۶,۰۷۸</td><td>۱۰٪</td>
+                            </tr>
+                            <tr class="tooltip-row">
+                                <td>مسیر دسترسی و ورودی اصلی<span class="tooltip-text">طراحی مسیر ورودی مجلل برای خودروها و فضای Drop-off مسافران در مقابل لابی</span></td>
+                                <td>۷,۵۰۰</td><td>۱۲.۳٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>استخر روباز و فضاهای آفتاب‌گیر<span class="tooltip-text">شامل استخر بزرگسالان، کودکان و کافه کنار استخر (Pool Bar)</span></td>
+                                <td>۵,۰۰۰</td><td>۸.۲٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>فضای سبز، باغ و محوطه‌سازی<span class="tooltip-text">طراحی باغ‌های موضوعی (باغ ایرانی، ژاپنی)، آب‌نماها، آلاچیق‌ها و مسیرهای پیاده‌روی</span></td>
+                                <td>۳۷,۲۰۱</td><td>۶۱.۲٪</td>
+                            </tr>
+                             <tr class="tooltip-row">
+                                <td>زمین‌های ورزشی روباز<span class="tooltip-text">شامل زمین تنیس و پدل</span></td>
+                                <td>۵,۰۰۰</td><td>۸.۲٪</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">مساحت عرصه بر اساس کاربری</h2>
+                <div class="chart-container">
+                    <canvas id="landUseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: GFA Breakdown (Doughnut)
+            const gfaCtx = document.getElementById('gfaChart').getContext('2d');
+            new Chart(gfaCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['اقامتی', 'عمومی و لابی', 'پذیرایی', 'همایش', 'سلامت', 'پشتیبانی'],
+                    datasets: [{
+                        label: 'درصد از کل زیربنا',
+                        data: [60, 10, 10, 10, 5, 5],
+                        backgroundColor: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#6366F1', '#6B7280'],
+                        borderColor: '#f0f4f8',
+                        borderWidth: 4,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', rtl: true, labels: { usePointStyle: true, pointStyle: 'circle', padding: 15, font: { family: 'Vazirmatn', size: 12 }}},
+                        tooltip: { rtl: true, bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' }, callbacks: { label: (c) => `${c.label}: ${c.raw}%` }}
+                    }
+                }
+            });
+
+            // Chart 2: Land Use Breakdown (Bar)
+            const landUseCtx = document.getElementById('landUseChart').getContext('2d');
+            new Chart(landUseCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['فضای سبز', 'دسترسی', 'برج هتل', 'استخر', 'ورزشی'],
+                    datasets: [{
+                        label: 'مساحت عرصه (مترمربع)',
+                        data: [37201, 7500, 6078, 5000, 5000],
+                        backgroundColor: ['#10B981', '#6B7280', '#EF4444', '#3B82F6', '#F59E0B'],
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, ticks: { callback: (v) => new Intl.NumberFormat('fa-IR').format(v), font: { family: 'Vazirmatn' }}},
+                        y: { ticks: { font: { family: 'Vazirmatn', size: 12 }}}
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            rtl: true, bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' },
+                            callbacks: { label: (c) => `${c.dataset.label}: ${new Intl.NumberFormat('fa-IR').format(c.parsed.x)} مترمربع` }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
