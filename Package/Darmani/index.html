@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد پروژه مرکز سلامت و تندرستی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-bg {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        thead th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .zone-header {
+            background-color: #f0fdf4;
+            font-weight: bold;
+            color: #15803d;
+        }
+        /* Tooltip styles */
+        .tooltip-row {
+            position: relative;
+            cursor: help;
+        }
+        .tooltip-row .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-row .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip-row:hover {
+            background-color: #f3f4f6;
+        }
+        .tooltip-row:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۱۹: مرکز سلامت و تندرستی</h1>
+            <p class="text-md text-gray-600 mt-4 max-w-4xl mx-auto bg-gray-100 p-4 rounded-lg border-r-4 border-green-500">
+                <b>کانسپت پروژه:</b> ایجاد یک "مقصد جامع گردشگری سلامت و تندرستی" (Wellness Destination) در سطح منطقه‌ای که شامل خدمات پزشکی پیشگیرانه، اقامتگاه‌های سلامت‌محور، و طیف وسیعی از امکانات آرامش‌بخش و ورزشی برای بازیابی کامل جسمی و ذهنی در یک محیط لوکس و آرام است.
+            </p>
+        </header>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">مساحت کل عرصه</h3>
+                    <p class="text-2xl font-bold text-gray-800">۱۱۴,۲۴۹ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">زیربنای کل</h3>
+                    <p class="text-2xl font-bold text-gray-800">۹۱,۳۹۹ <span class="text-base font-normal">مترمربع</span></p>
+                </div>
+            </div>
+            <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v6.5a.75.75 0 001.5 0v-6.5z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">سطح اشغال</h3>
+                    <p class="text-2xl font-bold text-gray-800">۴۰٪</p>
+                </div>
+            </div>
+             <div class="card p-5 flex items-center">
+                <div class="icon-bg p-3 rounded-full mr-4">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm">نوع مشارکت</h3>
+                    <p class="text-2xl font-bold text-gray-800">BOT</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content: Table and Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Table -->
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">برنامه فیزیکی جامع پروژه</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کاربری پیشنهادی</th>
+                                <th>مساحت عرصه (مترمربع)</th>
+                                <th>مساحت زیربنا (مترمربع)</th>
+                                <th>سطح اشغال (مترمربع)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="zone-header"><td colspan="4">💧 زون آب‌درمانی (Hydrotherapy)</td></tr>
+                            <tr class="tooltip-row"><td>مجموعه استخرهای درمانی<span class="tooltip-text">شامل استخر آب شور، استخرهای آب گرم و سرد، مسیرهای آبی و جکوزی‌های متنوع.</span></td><td rowspan="2">(۴۵,۷۰۰)</td><td>15,000</td><td rowspan="8">(۴۵,۷۰۰)</td></tr>
+                            <tr class="tooltip-row"><td>دنیای سونا، بخار و نمک<span class="tooltip-text">شامل انواع سونا، اتاق‌های بخار گیاهی، اتاق برف و غارهای تخصصی سونای نمک.</span></td><td>10,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">💆‍♀️ زون اسپا و خدمات درمانی</td></tr>
+                            <tr class="tooltip-row"><td>مرکز ماساژدرمانی و زیبایی<span class="tooltip-text">مجموعه‌ای وسیع از اتاق‌های خصوصی برای انواع ماساژ تخصصی، خدمات مراقبت از پوست و بدن.</span></td><td>-</td><td>25,000</td></tr>
+                            <tr class="tooltip-row"><td>سالن‌های ریلکسیشن و استراحت<span class="tooltip-text">فضاهای آرام با طراحی ویژه، چایخانه و اتاق‌های استراحت پس از درمان.</span></td><td>-</td><td>5,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🩺 زون کلینیک پزشکی و توانبخشی</td></tr>
+                            <tr class="tooltip-row"><td>کلینیک پزشکی ورزشی<span class="tooltip-text">مرکز تخصصی تشخیص، درمان و پیشگیری از آسیب‌های ورزشی برای ورزشکاران.</span></td><td>-</td><td>10,000</td></tr>
+                            <tr class="tooltip-row"><td>مرکز فیزیوتراپی و توانبخشی<span class="tooltip-text">مجهز به پیشرفته‌ترین تجهیزات فیزیوتراپی، کاردرمانی و آب‌درمانی توانبخشی.</span></td><td>-</td><td>7,399</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🥗 زون آرامش ذهن و تغذیه</td></tr>
+                            <tr class="tooltip-row"><td>استودیوهای آرامش ذهن<span class="tooltip-text">استودیوهای تخصصی برای یوگا، مدیتیشن و تمرینات تمرکز و ذهن‌آگاهی.</span></td><td>-</td><td>5,000</td></tr>
+                            <tr class="tooltip-row"><td>رستوران ارگانیک و مشاوره تغذیه<span class="tooltip-text">رستوران بزرگ با منوی سلامت‌محور، کافه آبمیوه‌های طبیعی و اتاق‌های مشاوره تغذیه.</span></td><td>-</td><td>8,000</td></tr>
+
+                            <tr class="zone-header"><td colspan="4">🌳 محوطه و خدمات</td></tr>
+                            <tr class="tooltip-row"><td>باغ‌های درمانی و مسیر تندرستی<span class="tooltip-text">محوطه‌سازی با گیاهان دارویی، فضاهای مدیتیشن در فضای باز و مسیر پیاده‌روی.</span></td><td>40,000</td><td>0</td><td>0</td></tr>
+                            <tr class="tooltip-row"><td>پارکینگ و پشتیبانی<span class="tooltip-text">پارکینگ اختصاصی مراجعین، ورودی اصلی و فضاهای خدماتی و تأسیسات مجموعه.</span></td><td>28,549</td><td>0</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">تفکیک زیربنای ساختمان اصلی (مترمربع)</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('areaChart').getContext('2d');
+            const data = {
+                labels: ['اسپا و خدمات درمانی', 'آب‌درمانی', 'کلینیک پزشکی', 'آرامش ذهن و تغذیه'],
+                datasets: [{
+                    label: 'مساحت زیربنا (مترمربع)',
+                    data: [30000, 25000, 17399, 13000],
+                    backgroundColor: [
+                        '#0ea5e9', '#06b6d4', '#14b8a6', '#22c55e'
+                    ],
+                    borderColor: '#f0f4f8',
+                    borderWidth: 4,
+                    hoverOffset: 10
+                }]
+            };
+
+            const config = {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            rtl: true,
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 15,
+                                font: {
+                                    family: 'Vazirmatn',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            rtl: true,
+                            bodyFont: {
+                                family: 'Vazirmatn'
+                            },
+                            titleFont: {
+                                family: 'Vazirmatn'
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed) + ' مترمربع';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
