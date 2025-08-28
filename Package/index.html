@@ -143,6 +143,46 @@
         .dashboard-card .tooltip p {
             font-size: 1.125rem;
         }
+        /* Footer Styles */
+        .footer-container {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .author-tooltip {
+            position: relative;
+            display: inline-block;
+            font-weight: 600;
+            color: #374151;
+            cursor: help;
+        }
+        .author-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background-color: #fdfbf7; /* Nude color */
+            color: #7d7a75; /* Faint text color */
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            white-space: pre; /* To handle line breaks */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            pointer-events: none;
+            z-index: 10;
+        }
+        .author-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8">
@@ -438,6 +478,13 @@
                 </div>
             </a>
         </div>
+        
+        <!-- Footer -->
+        <footer class="footer-container">
+            تهیه شده در مهندسین مشاور 
+            <span class="author-tooltip" data-tooltip="حمیدرضا ترابی&#xa;hr.torabii@gmail.com">ایده پرداز محیط</span>
+            - شهریورماه 1404
+        </footer>
     </div>
 </body>
 </html>
