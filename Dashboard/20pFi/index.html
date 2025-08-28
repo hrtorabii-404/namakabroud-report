@@ -86,120 +86,152 @@
             width: 100%;
             height: 100%;
         }
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .logo {
+            height: 110px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo.center {
+            height: 230px;
+        }
+        .logo.right {
+             height: 130px;
+        }
     </style>
 </head>
 <body class="bg-slate-100 p-4 lg:p-8">
-
-    <div class="container mx-auto">
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl lg:text-4xl font-bold text-slate-800">داشبورد تحلیلی پروژه‌های سرمایه‌گذاری نمک‌آبرود</h1>
-            <p class="text-slate-500 mt-2">نمایش اطلاعات کلیدی و نمودارهای پویا بر اساس داده‌های جدید</p>
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-10 text-center">
+            <div class="logo-container mb-6">
+                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
+            </div>
         </header>
 
-        <!-- Filters -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div class="card p-4">
-                <label for="area-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس عرصه</label>
-                <select id="area-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
-                    <option value="all">همه عرصه‌ها</option>
-                </select>
+        <div class="container mx-auto">
+            <!-- Header -->
+            <header class="text-center mb-8">
+                <h1 class="text-3xl lg:text-4xl font-bold text-slate-800">داشبورد تحلیلی پروژه‌های سرمایه‌گذاری نمک‌آبرود</h1>
+                <p class="text-slate-500 mt-2">نمایش اطلاعات کلیدی و نمودارهای پویا بر اساس داده‌های جدید</p>
+            </header>
+
+            <!-- Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="card p-4">
+                    <label for="area-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس عرصه</label>
+                    <select id="area-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                        <option value="all">همه عرصه‌ها</option>
+                    </select>
+                </div>
+                <div class="card p-4">
+                    <label for="zone-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس کد پهنه</label>
+                    <select id="zone-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                        <option value="all">همه پهنه‌ها</option>
+                    </select>
+                </div>
+                <div class="card p-4">
+                    <label for="partnership-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس نوع مشارکت</label>
+                    <select id="partnership-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+                        <option value="all">همه مشارکت‌ها</option>
+                    </select>
+                </div>
             </div>
-            <div class="card p-4">
-                <label for="zone-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس کد پهنه</label>
-                <select id="zone-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
-                    <option value="all">همه پهنه‌ها</option>
-                </select>
+
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Card 1: Total Projects -->
+                <div class="card bg-stone-100 p-6 flex flex-col items-center justify-center text-center">
+                    <div class="bg-stone-200 text-stone-600 p-3 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                    </div>
+                    <p id="total-projects" class="text-4xl font-bold text-stone-800">0</p>
+                    <h3 class="text-base font-medium text-stone-500 mt-1">تعداد پروژه‌ها</h3>
+                </div>
+                <!-- Card 2: Total Area -->
+                <div class="card bg-teal-50 p-6 flex flex-col items-center justify-center text-center">
+                    <div class="bg-teal-100 text-teal-600 p-3 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
+                    </div>
+                    <p id="total-area" class="text-4xl font-bold text-teal-800">0</p>
+                    <h3 class="text-base font-medium text-teal-500 mt-1">مساحت کل عرصه‌ها (مترمربع)</h3>
+                </div>
+                <!-- Card 3: Total Built Area -->
+                <div class="card bg-amber-50 p-6 flex flex-col items-center justify-center text-center">
+                    <div class="bg-amber-100 text-amber-600 p-3 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                    </div>
+                    <p id="total-built-area" class="text-4xl font-bold text-amber-800">0</p>
+                    <h3 class="text-base font-medium text-amber-500 mt-1">مجموع زیربنا (مترمربع)</h3>
+                </div>
+                <!-- Card 4: Average Density -->
+                <div class="card bg-indigo-50 p-6 flex flex-col items-center justify-center text-center">
+                    <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m12.76-1.857L17 15V9c0-1.355-.446-2.62-1.214-3.624M7.24 16.143L7 15V9c0-1.355.446-2.62 1.214-3.624M12 15V9c0-1.355-.446-2.62-1.214-3.624M12 15c0 2.21 1.79 4 4 4h1m-1-4c0 2.21-1.79 4-4 4H7m5-12c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z" /></svg>
+                    </div>
+                    <p id="avg-density" class="text-4xl font-bold text-indigo-800">0</p>
+                    <h3 class="text-base font-medium text-indigo-500 mt-1">متوسط تراکم پیشنهادی (%)</h3>
+                </div>
             </div>
-            <div class="card p-4">
-                <label for="partnership-filter" class="block text-sm font-medium text-slate-600 mb-2">فیلتر بر اساس نوع مشارکت</label>
-                <select id="partnership-filter" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
-                    <option value="all">همه مشارکت‌ها</option>
-                </select>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="card p-6 lg:col-span-1">
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه مساحت عرصه‌ها</h3>
+                    <div class="chart-container">
+                        <canvas id="areaComparisonChart"></canvas>
+                    </div>
+                </div>
+                <div class="card p-6 lg:col-span-2">
+                    <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه زیربنای پیشنهادی پروژه‌ها</h3>
+                    <div class="chart-container">
+                        <canvas id="builtAreaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Treemap Chart -->
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نمودار درختی: مساحت پروژه‌ها در هر عرصه</h3>
+                <div id="treemap-chart" style="min-height: 500px;"></div>
+            </div>
+
+            <!-- Table -->
+            <div class="card overflow-x-auto">
+                <h3 class="text-xl font-semibold text-slate-700 p-6">لیست کامل پروژه‌ها</h3>
+                <table class="w-full text-sm text-right text-slate-500 table-v-align">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-200">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">عرصه</th>
+                            <th scope="col" class="px-6 py-3">کد پهنه</th>
+                            <th scope="col" class="px-6 py-3">نام پروژه</th>
+                            <th scope="col" class="px-6 py-3">مساحت پروژه (مترمربع)</th>
+                            <th scope="col" class="px-6 py-3">زیربنا (مترمربع)</th>
+                            <th scope="col" class="px-6 py-3">سطح اشغال (%)</th>
+                            <th scope="col" class="px-6 py-3">طبقات</th>
+                            <th scope="col" class="px-6 py-3">تراکم (%)</th>
+                            <th scope="col" class="px-6 py-3">نوع مشارکت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projects-table-body">
+                        <!-- Rows will be injected by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- KPIs -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Card 1: Total Projects -->
-            <div class="card bg-stone-100 p-6 flex flex-col items-center justify-center text-center">
-                <div class="bg-stone-200 text-stone-600 p-3 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                </div>
-                <p id="total-projects" class="text-4xl font-bold text-stone-800">0</p>
-                <h3 class="text-base font-medium text-stone-500 mt-1">تعداد پروژه‌ها</h3>
-            </div>
-            <!-- Card 2: Total Area -->
-            <div class="card bg-teal-50 p-6 flex flex-col items-center justify-center text-center">
-                <div class="bg-teal-100 text-teal-600 p-3 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 1v4m0 0h-4m4 0l-5-5" /></svg>
-                </div>
-                <p id="total-area" class="text-4xl font-bold text-teal-800">0</p>
-                <h3 class="text-base font-medium text-teal-500 mt-1">مساحت کل عرصه‌ها (مترمربع)</h3>
-            </div>
-            <!-- Card 3: Total Built Area -->
-            <div class="card bg-amber-50 p-6 flex flex-col items-center justify-center text-center">
-                <div class="bg-amber-100 text-amber-600 p-3 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                </div>
-                <p id="total-built-area" class="text-4xl font-bold text-amber-800">0</p>
-                <h3 class="text-base font-medium text-amber-500 mt-1">مجموع زیربنا (مترمربع)</h3>
-            </div>
-            <!-- Card 4: Average Density -->
-            <div class="card bg-indigo-50 p-6 flex flex-col items-center justify-center text-center">
-                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.084-1.28-.24-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.084-1.28.24-1.857m12.76-1.857L17 15V9c0-1.355-.446-2.62-1.214-3.624M7.24 16.143L7 15V9c0-1.355.446-2.62 1.214-3.624M12 15V9c0-1.355-.446-2.62-1.214-3.624M12 15c0 2.21 1.79 4 4 4h1m-1-4c0 2.21-1.79 4-4 4H7m5-12c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z" /></svg>
-                </div>
-                <p id="avg-density" class="text-4xl font-bold text-indigo-800">0</p>
-                <h3 class="text-base font-medium text-indigo-500 mt-1">متوسط تراکم پیشنهادی (%)</h3>
-            </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            <div class="card p-6 lg:col-span-1">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه مساحت عرصه‌ها</h3>
-                <div class="chart-container">
-                    <canvas id="areaComparisonChart"></canvas>
-                </div>
-            </div>
-            <div class="card p-6 lg:col-span-2">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4">مقایسه زیربنای پیشنهادی پروژه‌ها</h3>
-                <div class="chart-container">
-                    <canvas id="builtAreaChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Treemap Chart -->
-        <div class="card p-6 mb-8">
-            <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نمودار درختی: مساحت پروژه‌ها در هر عرصه</h3>
-            <div id="treemap-chart" style="min-height: 500px;"></div>
-        </div>
-
-        <!-- Table -->
-        <div class="card overflow-x-auto">
-            <h3 class="text-xl font-semibold text-slate-700 p-6">لیست کامل پروژه‌ها</h3>
-            <table class="w-full text-sm text-right text-slate-500 table-v-align">
-                <thead class="text-xs text-slate-700 uppercase bg-slate-200">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">عرصه</th>
-                        <th scope="col" class="px-6 py-3">کد پهنه</th>
-                        <th scope="col" class="px-6 py-3">نام پروژه</th>
-                        <th scope="col" class="px-6 py-3">مساحت پروژه (مترمربع)</th>
-                        <th scope="col" class="px-6 py-3">زیربنا (مترمربع)</th>
-                        <th scope="col" class="px-6 py-3">سطح اشغال (%)</th>
-                        <th scope="col" class="px-6 py-3">طبقات</th>
-                        <th scope="col" class="px-6 py-3">تراکم (%)</th>
-                        <th scope="col" class="px-6 py-3">نوع مشارکت</th>
-                    </tr>
-                </thead>
-                <tbody id="projects-table-body">
-                    <!-- Rows will be injected by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
+        <footer class="text-center mt-12 py-6 border-t border-slate-200">
+            <p class="text-slate-600">
+                تهیه شده در <span id="company-name" class="font-semibold text-sky-700 cursor-pointer">مهندسین مشاور ایده پرداز محیط</span> - شهریورماه 1404
+            </p>
+        </footer>
     </div>
     
     <div class="tooltip"></div>
@@ -592,8 +624,22 @@
             new ResizeObserver(() => {
                  updateDashboard();
             }).observe(chartContainer);
+
+            const companyNameEl = document.getElementById('company-name');
+            const footerTooltip = d3.select(".tooltip"); 
+
+            companyNameEl.addEventListener('mouseover', (event) => {
+                footerTooltip.transition().duration(200).style("opacity", .95);
+                footerTooltip.html(`حمیدرضا ترابی<br>hr.torabii@gmail.com`)
+                    .style("left", (event.pageX - 150) + "px") 
+                    .style("top", (event.pageY - 70) + "px"); 
+            });
+
+            companyNameEl.addEventListener('mouseout', () => {
+                footerTooltip.transition().duration(500).style("opacity", 0);
+            });
         });
     </script>
 
 </body>
-</html>
+</ht
