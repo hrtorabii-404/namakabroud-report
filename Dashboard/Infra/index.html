@@ -166,6 +166,59 @@
         .main-card:hover .breakdown-card-overlay {
             opacity: 1;
         }
+
+        /* New Logo Styles based on user feedback */
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+        .logo {
+            height: 110px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo.center {
+            height: 220px;
+        }
+        .logo.right {
+            height: 120px;
+        }
+
+        /* Footer Hover Tooltip */
+        .author-hover {
+            position: relative;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 4px;
+        }
+        .author-hover .tooltip {
+            position: absolute;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+            width: max-content;
+            z-index: 10;
+        }
+        .author-hover:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-700">
@@ -174,10 +227,10 @@
 
         <!-- Logos Section -->
         <header class="mb-8">
-            <div class="flex justify-center items-center gap-x-6 md:gap-x-12">
-                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی پیمانکار" class="h-14 md:h-20 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/150x75/94a3b8/FFFFFF?text=پیمانکار';">
-                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-20 md:h-28 object-contain transform scale-110" onerror="this.onerror=null;this.src='https://placehold.co/180x90/1e293b/FFFFFF?text=نمک‌آبرود';">
-                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی مشاور" class="h-14 md:h-20 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/150x75/94a3b8/FFFFFF?text=مشاور';">
+            <div class="logo-container">
+                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right"> 
             </div>
         </header>
 
@@ -390,7 +443,8 @@
     </div>
     
     <footer class="text-center py-8 text-slate-500 text-sm">
-        <p>تهیه شده در مهندسین مشاور ایده پرداز محیط - شهریورماه ۱۴۰۴</p>
+        <p>تهیه شده در مهندسین مشاور <span class="author-hover">ایده پرداز محیط<span class="tooltip">حمیدرضا ترابی
+hr.torabii@gmail.com</span></span> - شهریورماه ۱۴۰۴</p>
     </footer>
 
     <!-- The Javascript for charts is unchanged -->
