@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریتی اولویت‌بندی پروژه‌های نمک‌آبرود</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            direction: rtl;
+            background-color: #f1f5f9;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+        .logo { height: 90px; width: auto; object-fit: contain; }
+        .logo.center { height: 180px; }
+        .logo.right { height: 100px; }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip { position: relative; display: inline-block; }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 340px;
+            background-color: #f8fafc;
+            color: #334155;
+            text-align: right;
+            border-radius: 8px;
+            padding: 1rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 115%;
+            left: 50%;
+            margin-left: -170px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 4px; background-color: #e2e8f0; outline: none; }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%;
+            cursor: pointer; background-color: var(--thumb-color); border: 4px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .slider::-moz-range-thumb {
+            width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+            background-color: var(--thumb-color); border: 4px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .reset-btn {
+            background-color: #475569; color: white; font-weight: bold; padding: 0.5rem 1rem;
+            border-radius: 0.5rem; transition: background-color 0.2s;
+        }
+        .reset-btn:hover { background-color: #334155; }
+        .priority-matrix-cell {
+            display: flex; justify-content: center; align-items: center; width: 100%; height: 60px;
+            color: white; font-weight: 800; font-size: 1.25rem; border-radius: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .priority-matrix-cell:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 5; }
+        .matrix-tooltip .tooltiptext { width: 300px; margin-left: -150px; background-color: #1e293b; color: #fff; text-align: center; }
+        .timeline-item { position: relative; padding-bottom: 2rem; padding-right: 2.5rem; border-right: 2px solid #cbd5e1; }
+        .timeline-item:last-child { border-right: 2px solid transparent; }
+        .timeline-icon {
+            position: absolute; right: -21px; top: 0; display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 2px solid #cbd5e1;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-sm">
+        <div class="logo-container">
+            <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+            <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+            <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6">
+        <div class="card mb-6">
+            <h1 class="text-2xl font-bold text-center text-slate-700 mb-2">داشبورد راهبردی اولویت‌بندی پروژه‌های زیرساختی</h1>
+            <p class="text-center text-slate-600 max-w-4xl mx-auto">این داشبورد یک ابزار تصمیم‌گیری تعاملی است که با استفاده از روش‌شناسی علمی <strong>تحلیل تصمیم‌گیری چندمعیاره (AHP-TOPSIS)</strong>، پروژه‌های زیرساختی شهرک نمک‌آبرود را اولویت‌بندی می‌کند. با ترکیب <strong>فرآیند تحلیل سلسله‌مراتبی (AHP)</strong> برای وزن‌دهی به معیارها و <strong>روش TOPSIS</strong> برای رتبه‌بندی نهایی، یک نقشه راه داده‌محور برای سرمایه‌گذاری‌های آتی ارائه می‌شود. شما می‌توانید با تغییر وزن ابعاد اصلی، تأثیر سناریوهای مختلف راهبردی را بر رتبه‌بندی پروژه‌ها مشاهده نمایید.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+             <div class="card text-center tooltip">
+                <h3 class="text-lg font-bold" style="color:#7a5195;">ضرورت و تأثیر اجتماعی</h3>
+                <p id="social-card-value" class="text-4xl font-extrabold my-2" style="color:#7a5195;"></p>
+                <p class="text-xs text-slate-500">پاسخگویی به نیازهای اساسی</p>
+                <div class="tooltiptext">
+                    <p class="mb-3">این بُعد، پروژه‌هایی را در اولویت قرار می‌دهد که <strong style="color:#7a5195;">نیازهای حیاتی</strong> ساکنان را برطرف کرده، <strong style="color:#7a5195;">کمبودهای زیرساختی</strong> را جبران می‌کنند و به بیشترین جمعیت ممکن خدمت‌رسانی می‌نمایند. این اصل مستقیماً به <strong style="color:#7a5195;">رفع نابرابری</strong> و ارتقای <strong style="color:#7a5195;">بهداشت و ایمنی عمومی</strong> می‌پردازد.</p>
+                    <h4 class="font-bold text-sm mb-2 border-t border-slate-300 pt-2">زیرشاخص‌های کلیدی:</h4>
+                    <ul class="text-sm list-none p-0">
+                        <li class="flex items-center mb-1"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #7a5195;"></span>رفع کمبودهای حیاتی</li>
+                        <li class="flex items-center mb-1"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #7a5195;"></span>جمعیت تحت پوشش</li>
+                        <li class="flex items-center"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #7a5195;"></span>ارتقای بهداشت و ایمنی</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="card text-center tooltip">
+                <h3 class="text-lg font-bold" style="color:#ef5675;">توجیه اقتصادی و مالی</h3>
+                <p id="economic-card-value" class="text-4xl font-extrabold my-2" style="color:#ef5675;"></p>
+                <p class="text-xs text-slate-500">کارایی هزینه و بهینه‌سازی منابع</p>
+                <div class="tooltiptext">
+                    <p class="mb-3">این بُعد، کارایی تخصیص منابع محدود مالی را می‌سنجد. پروژه‌هایی که <strong style="color:#ef5675;">هزینه کمتری به ازای هر خانوار</strong> بهره‌مند دارند (کارایی بالاتر) و <strong style="color:#ef5675;">هزینه کل کمتری</strong> دارند، در اولویت قرار می‌گیرند تا بازده سرمایه‌گذاری حداکثر شود.</p>
+                     <h4 class="font-bold text-sm mb-2 border-t border-slate-300 pt-2">زیرشاخص‌های کلیدی:</h4>
+                    <ul class="text-sm list-none p-0">
+                        <li class="flex items-center mb-1"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #ef5675;"></span>هزینه به ازای هر خانوار</li>
+                        <li class="flex items-center"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #ef5675;"></span>هزینه کل پروژه</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="card text-center tooltip">
+                <h3 class="text-lg font-bold" style="color:#bc5090;">امکان‌سنجی فنی و توالی اجرا</h3>
+                <p id="technical-card-value" class="text-4xl font-extrabold my-2" style="color:#bc5090;"></p>
+                <p class="text-xs text-slate-500">رعایت اصول مهندسی و پیش‌نیازی</p>
+                <div class="tooltiptext">
+                     <p class="mb-3">حیاتی‌ترین بُعد فنی که پروژه‌ها را بر اساس <strong style="color:#bc5090;">ترتیب صحیح مهندسی (پیش‌نیازی)</strong> اولویت‌بندی می‌کند. اجرای تأسیسات زیرزمینی (آب، برق) باید پیش از عملیات روسازی (راه‌سازی) انجام شود تا از <strong style="color:#bc5090;">تخریب، دوباره‌کاری و اتلاف هزینه</strong> جلوگیری شود.</p>
+                      <h4 class="font-bold text-sm mb-2 border-t border-slate-300 pt-2">زیرشاخص کلیدی:</h4>
+                    <ul class="text-sm list-none p-0">
+                        <li class="flex items-center"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #bc5090;"></span>توالی منطقی و پیش‌نیازی</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="card text-center tooltip">
+                <h3 class="text-lg font-bold" style="color:#ffa600;">پایداری و ملاحظات محیطی</h3>
+                <p id="environmental-card-value" class="text-4xl font-extrabold my-2" style="color:#ffa600;"></p>
+                <p class="text-xs text-slate-500">حفاظت از منابع و کاهش آلودگی</p>
+                 <div class="tooltiptext">
+                    <p class="mb-3">این بُعد، همسویی پروژه با <strong style="color:#ffa600;">اصول توسعه پایدار</strong> را ارزیابی می‌کند. پروژه‌هایی مانند شبکه فاضلاب که به <strong style="color:#ffa600;">حفاظت از منابع آبی و خاکی</strong> منطقه کمک کرده و از <strong style="color:#ffa600;">آلودگی‌های زیست‌محیطی</strong> جلوگیری می‌کنند، امتیاز ویژه‌ای کسب می‌کنند.</p>
+                    <h4 class="font-bold text-sm mb-2 border-t border-slate-300 pt-2">زیرشاخص کلیدی:</h4>
+                    <ul class="text-sm list-none p-0">
+                        <li class="flex items-center"><span class="w-3 h-3 rounded-full ml-2" style="background-color: #ffa600;"></span>کاهش اثرات منفی زیست‌محیطی</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-6">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 class="text-xl font-bold text-slate-800">کنترل پنل وزن‌دهی ابعاد اصلی</h2>
+                <button id="reset-weights" class="reset-btn">بازگشت به وزن‌های اولیه</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 pt-2">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="social-weight" class="font-bold text-slate-700">ضرورت و تأثیر اجتماعی</label>
+                        <span id="social-weight-value" class="font-bold text-lg" style="color:#7a5195;"></span>
+                    </div>
+                    <input type="range" id="social-weight" min="0" max="100" class="slider" style="--thumb-color:#7a5195;">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="economic-weight" class="font-bold text-slate-700">توجیه اقتصادی و مالی</label>
+                        <span id="economic-weight-value" class="font-bold text-lg" style="color:#ef5675;"></span>
+                    </div>
+                    <input type="range" id="economic-weight" min="0" max="100" class="slider" style="--thumb-color:#ef5675;">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="technical-weight" class="font-bold text-slate-700">امکان‌سنجی فنی و توالی اجرا</label>
+                        <span id="technical-weight-value" class="font-bold text-lg" style="color:#bc5090;"></span>
+                    </div>
+                    <input type="range" id="technical-weight" min="0" max="100" class="slider" style="--thumb-color:#bc5090;">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="environmental-weight" class="font-bold text-slate-700">پایداری و ملاحظات محیطی</label>
+                        <span id="environmental-weight-value" class="font-bold text-lg" style="color:#ffa600;"></span>
+                    </div>
+                    <input type="range" id="environmental-weight" min="0" max="100" class="slider" style="--thumb-color:#ffa600;">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-5 card">
+                <h3 class="text-xl font-bold text-center mb-4 text-slate-700">رتبه‌بندی تجمیعی بر اساس نوع زیرساخت</h3>
+                <div class="relative h-[300px]">
+                     <canvas id="projectTypeChart"></canvas>
+                 </div>
+            </div>
+            <div class="lg:col-span-2 card">
+                 <h3 class="text-xl font-bold text-center mb-4 text-slate-700">۱۰ پروژه با بالاترین اولویت</h3>
+                 <div class="relative h-[450px]">
+                     <canvas id="topProjectsChart"></canvas>
+                 </div>
+            </div>
+            <div class="lg:col-span-3 card">
+                <h3 class="text-xl font-bold text-center mb-2 text-slate-700">ماتریس اولویت پروژه‌ها</h3>
+                <p class="text-center text-slate-500 text-sm mb-4">این ماتریس رتبه هر پروژه را در تقاطع نوع زیرساخت و محله نمایش می‌دهد. رنگ آبی نمایانگر بالاترین اولویت (رتبه ۱) و رنگ قرمز نمایانگر پایین‌ترین اولویت (رتبه ۴۰) است. برای مشاهده جزئیات و توجیه رتبه، ماوس را روی هر سلول نگه دارید.</p>
+                <div id="priority-matrix" class="grid grid-cols-6 gap-2 text-xs text-center p-2 bg-slate-50 rounded-lg">
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-6">
+            <h2 class="text-2xl font-bold text-center text-slate-700 mb-6">تحلیل، پیامدهای راهبردی و نقشه راه اجرایی فازی</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-50 p-4 rounded-lg border-r-4 border-blue-500">
+                    <h3 class="font-bold text-lg text-blue-800">اولویت مطلق پروژه‌های آبرسانی و برق‌رسانی</h3>
+                    <p class="text-slate-600 mt-2">نتایج به وضوح نشان می‌دهد که پروژه‌های <strong>آبرسانی و برق‌رسانی</strong> به دلیل وزن بالای شاخص "توالی فنی"، در صدر لیست اولویت‌ها قرار دارند. این امر از دوباره‌کاری‌های پرهزینه جلوگیری کرده و بستر لازم برای توسعه‌های آتی را فراهم می‌کند.</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-lg border-r-4 border-green-500">
+                    <h3 class="font-bold text-lg text-green-800">محلات کارآمد: کانون دستاوردهای سریع</h3>
+                    <p class="text-slate-600 mt-2">محلات <strong>۵، ۳ و ۲</strong> به دلیل جمعیت بالا و هزینه پایین‌تر به ازای هر خانوار، بالاترین اولویت را برای سرمایه‌گذاری دارند. تکمیل پروژه‌ها در این محلات با هزینه کمتر، بیشترین تعداد خانوار را بهره‌مند می‌سازد.</p>
+                </div>
+            </div>
+
+            <div>
+                <div class="timeline-item">
+                     <div class="timeline-icon bg-red-100 border-red-500">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-red-700 mb-1">فاز ۱ (سال ۱-۲): تأمین آب و برق با بازدهی بالا</h3>
+                    <p class="text-slate-600"><strong>تمرکز:</strong> اجرای پروژه‌های آبرسانی و برق‌رسانی با بالاترین رتبه در محلات کارآمد ۲، ۳، ۵ و ۶ (پروژه‌های P51, P31, P21, P22, P52, P32). این پروژه‌ها دستاوردهای سریع هستند.</p>
+                    <p class="text-slate-600 mt-1"><strong>پروژه سیستمی:</strong> آغاز پروژه ارتقای شبکه برق و نیروگاه به عنوان پیش‌نیاز.</p>
+                    <p class="text-slate-600 mt-1"><strong>هدف:</strong> تکمیل شبکه‌های حیاتی در مناطق پرجمعیت و تثبیت خدمات برای بخش بزرگی از ساکنان فعلی.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon bg-orange-100 border-orange-500">
+                       <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.657 7.343A8 8 0 0117.657 18.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1014.12 11.88"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-orange-700 mb-1">فاز ۲ (سال ۳-۴): رفع محرومیت و گسترش شبکه گاز</h3>
+                    <p class="text-slate-600"><strong>تمرکز:</strong> اجرای پروژه‌های آب و برق در محلات کمتر توسعه‌یافته ۷ و ۸. همزمان، آغاز پروژه‌های گازرسانی با اولویت بالا در محلات توسعه‌یافته (P53, P33, P23).</p>
+                    <p class="text-slate-600 mt-1"><strong>پروژه سیستمی:</strong> اجرای بخش‌های اصلی سیستم زهکشی و مدیریت آب‌های سطحی.</p>
+                    <p class="text-slate-600 mt-1"><strong>هدف:</strong> رساندن خدمات اولیه به مناطق محروم و شروع لایه دوم زیرساخت‌ها.</p>
+                </div>
+                 <div class="timeline-item">
+                    <div class="timeline-icon bg-sky-100 border-sky-500">
+                        <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl text-sky-700 mb-1">فاز ۳ (سال ۵ به بعد): تکمیل شبکه‌های فاضلاب و راه‌سازی نهایی</h3>
+                    <p class="text-slate-600"><strong>تمرکز:</strong> اجرای پروژه‌های فاضلاب بر اساس رتبه‌بندی (با اولویت محلات ۵، ۳ و ۲) و سپس آغاز پروژه‌های راه‌سازی.</p>
+                    <p class="text-slate-600 mt-1"><strong>پروژه سیستمی:</strong> تکمیل پروژه‌های بهبود دسترسی مانند راه دسترسی غربی.</p>
+                    <p class="text-slate-600 mt-1"><strong>هدف:</strong> نهایی‌سازی شبکه زیرساخت، بهبود کیفیت بهداشت و محیط زیست و تکمیل چشم‌انداز کالبدی شهرک.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white text-center p-4 mt-8 border-t">
+        <p class="text-slate-600">تهیه شده توسط 
+            <span class="tooltip font-bold text-slate-700">مهندسین مشاور ایده پرداز محیط
+                <span class="tooltiptext !w-48 !ml-[-96px] !bg-[#1e293b] !text-white">
+                    تحلیل و طراحی: حمیدرضا ترابی
+                </span>
+            </span>
+             - بر اساس تحلیل شهریور ۱۴۰۳
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Global Chart Font Settings ---
+            Chart.defaults.font.family = "'Vazirmatn', sans-serif";
+
+            // --- Updated Data Setup ---
+            const decisionMatrix = [
+                {id: 'P11', project: 'آبرسانی', neighborhood: 1, c1: 0.14, c2: 175, c3: 1264.2, c4: 67634, c5: 6, c6: 4, c7: 4},
+                {id: 'P12', project: 'برق‌رسانی', neighborhood: 1, c1: 0.08, c2: 175, c3: 1018.9, c4: 54534, c5: 5, c6: 3, c7: 4},
+                {id: 'P13', project: 'گازرسانی', neighborhood: 1, c1: 0.17, c2: 175, c3: 2094.3, c4: 111433, c5: 4, c6: 3, c7: 3},
+                {id: 'P14', project: 'فاضلاب', neighborhood: 1, c1: 1.00, c2: 175, c3: 18603.8, c4: 986000, c5: 3, c6: 5, c7: 5},
+                {id: 'P15', project: 'راه‌سازی', neighborhood: 1, c1: 0.20, c2: 175, c3: 10245.3, c4: 543000, c5: 1, c6: 2, c7: 2},
+                {id: 'P21', project: 'آبرسانی', neighborhood: 2, c1: 0.07, c2: 4679, c3: 925.4, c4: 1312000, c5: 6, c6: 3, c7: 4},
+                {id: 'P22', project: 'برق‌رسانی', neighborhood: 2, c1: 0.02, c2: 4679, c3: 99.2, c4: 140000, c5: 5, c6: 3, c7: 4},
+                {id: 'P23', project: 'گازرسانی', neighborhood: 2, c1: 0.10, c2: 4679, c3: 956.4, c4: 1356000, c5: 4, c6: 3, c7: 3},
+                {id: 'P24', project: 'فاضلاب', neighborhood: 2, c1: 1.00, c2: 4679, c3: 810.3, c4: 1149000, c5: 3, c6: 5, c7: 5},
+                {id: 'P25', project: 'راه‌سازی', neighborhood: 2, c1: 0.10, c2: 4679, c3: 9226.4, c4: 13080000, c5: 1, c6: 2, c7: 2},
+                {id: 'P31', project: 'آبرسانی', neighborhood: 3, c1: 0.07, c2: 3231, c3: 124.5, c4: 121900, c5: 6, c6: 3, c7: 4},
+                {id: 'P32', project: 'برق‌رسانی', neighborhood: 3, c1: 0.09, c2: 3231, c3: 143.9, c4: 140900, c5: 5, c6: 3, c7: 4},
+                {id: 'P33', project: 'گازرسانی', neighborhood: 3, c1: 0.06, c2: 3231, c3: 129.6, c4: 126900, c5: 4, c6: 3, c7: 3},
+                {id: 'P34', project: 'فاضلاب', neighborhood: 3, c1: 1.00, c2: 3231, c3: 715.0, c4: 700000, c5: 3, c6: 5, c7: 5},
+                {id: 'P35', project: 'راه‌سازی', neighborhood: 3, c1: 0.10, c2: 3231, c3: 1199.2, c4: 1174000, c5: 1, c6: 2, c7: 2},
+                {id: 'P41', project: 'آبرسانی', neighborhood: 4, c1: 0.28, c2: 350, c3: 1500.0, c4: 159000, c5: 6, c6: 3, c7: 4},
+                {id: 'P42', project: 'برق‌رسانی', neighborhood: 4, c1: 0.27, c2: 350, c3: 1971.7, c4: 209000, c5: 5, c6: 3, c7: 4},
+                {id: 'P43', project: 'گازرسانی', neighborhood: 4, c1: 0.17, c2: 350, c3: 1264.2, c4: 134000, c5: 4, c6: 3, c7: 3},
+                {id: 'P44', project: 'فاضلاب', neighborhood: 4, c1: 1.00, c2: 350, c3: 11169.8, c4: 1184000, c5: 3, c6: 5, c7: 5},
+                {id: 'P45', project: 'راه‌سازی', neighborhood: 4, c1: 0.26, c2: 350, c3: 7717.0, c4: 818000, c5: 1, c6: 2, c7: 2},
+                {id: 'P51', project: 'آبرسانی', neighborhood: 5, c1: 0.01, c2: 2798, c3: 83.5, c4: 70800, c5: 6, c6: 3, c7: 4},
+                {id: 'P52', project: 'برق‌رسانی', neighborhood: 5, c1: 0.01, c2: 2798, c3: 84.7, c4: 71900, c5: 5, c6: 3, c7: 4},
+                {id: 'P53', project: 'گازرسانی', neighborhood: 5, c1: 0.01, c2: 2798, c3: 84.7, c4: 71900, c5: 4, c6: 3, c7: 3},
+                {id: 'P54', project: 'فاضلاب', neighborhood: 5, c1: 1.00, c2: 2798, c3: 537.7, c4: 456000, c5: 3, c6: 5, c7: 5},
+                {id: 'P55', project: 'راه‌سازی', neighborhood: 5, c1: 0.03, c2: 2798, c3: 846.0, c4: 718000, c5: 1, c6: 2, c7: 2},
+                {id: 'P61', project: 'آبرسانی', neighborhood: 6, c1: 0.15, c2: 1086, c3: 610.3, c4: 200800, c5: 6, c6: 3, c7: 4},
+                {id: 'P62', project: 'برق‌رسانی', neighborhood: 6, c1: 0.11, c2: 1086, c3: 610.9, c4: 201000, c5: 5, c6: 3, c7: 4},
+                {id: 'P63', project: 'گازرسانی', neighborhood: 6, c1: 0.11, c2: 1086, c3: 611.5, c4: 201200, c5: 4, c6: 3, c7: 3},
+                {id: 'P64', project: 'فاضلاب', neighborhood: 6, c1: 1.00, c2: 1086, c3: 1519.8, c4: 500000, c5: 3, c6: 5, c7: 5},
+                {id: 'P65', project: 'راه‌سازی', neighborhood: 6, c1: 0.22, c2: 1086, c3: 887.5, c4: 292000, c5: 1, c6: 2, c7: 2},
+                {id: 'P71', project: 'آبرسانی', neighborhood: 7, c1: 0.47, c2: 86, c3: 423.1, c4: 11000, c5: 6, c6: 3, c7: 4},
+                {id: 'P72', project: 'برق‌رسانی', neighborhood: 7, c1: 0.51, c2: 86, c3: 9769.2, c4: 254000, c5: 5, c6: 3, c7: 4},
+                {id: 'P73', project: 'گازرسانی', neighborhood: 7, c1: 0.57, c2: 86, c3: 10846.2, c4: 282000, c5: 4, c6: 3, c7: 3},
+                {id: 'P74', project: 'فاضلاب', neighborhood: 7, c1: 1.00, c2: 86, c3: 28961.5, c4: 753000, c5: 3, c6: 5, c7: 5},
+                {id: 'P75', project: 'راه‌سازی', neighborhood: 7, c1: 0.43, c2: 86, c3: 33269.2, c4: 865000, c5: 1, c6: 2, c7: 2},
+                {id: 'P81', project: 'آبرسانی', neighborhood: 8, c1: 0.36, c2: 360, c3: 1743.1, c4: 190000, c5: 6, c6: 3, c7: 4},
+                {id: 'P82', project: 'برق‌رسانی', neighborhood: 8, c1: 0.56, c2: 360, c3: 3834.9, c4: 418000, c5: 5, c6: 3, c7: 4},
+                {id: 'P83', project: 'گازرسانی', neighborhood: 8, c1: 0.56, c2: 360, c3: 3834.9, c4: 418000, c5: 4, c6: 3, c7: 3},
+                {id: 'P84', project: 'فاضلاب', neighborhood: 8, c1: 1.00, c2: 360, c3: 10385.3, c4: 1132000, c5: 3, c6: 5, c7: 5},
+                {id: 'P85', project: 'راه‌سازی', neighborhood: 8, c1: 0.54, c2: 360, c3: 14972.5, c4: 1632000, c5: 1, c6: 2, c7: 2},
+            ];
+            
+            // ش۱: رفع کمبود, ش۲: جمعیت, ش۳: هزینه/خانوار, ش۴: هزینه کل, ش۵: توالی فنی, ش۶: محیط زیست, ش۷: بهداشت/ایمنی
+            const criteriaInfo = {
+                c1: { weight: 0.125, positive: true, name: 'رفع کمبود' },
+                c2: { weight: 0.094, positive: true, name: 'جمعیت' },
+                c3: { weight: 0.175, positive: false, name: 'هزینه/خانوار' },
+                c4: { weight: 0.125, positive: false, name: 'هزینه کل' },
+                c5: { weight: 0.350, positive: true, name: 'توالی فنی' },
+                c6: { weight: 0.100, positive: true, name: 'محیط زیست' },
+                c7: { weight: 0.031, positive: true, name: 'بهداشت/ایمنی' }
+            };
+
+            const initialWeights = { social: 25, economic: 30, technical: 35, environmental: 10 };
+            let currentWeights = { ...initialWeights };
+            let topProjectsChart, projectTypeChart;
+            let finalRankings = [];
+            let typeAveragesWithCost = [];
+
+            function normalizeMatrix(matrix, criteria) {
+                let normalized = JSON.parse(JSON.stringify(matrix));
+                for (const key in criteria) {
+                    const values = matrix.map(p => p[key]);
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    const isPositive = criteria[key].positive;
+
+                    normalized.forEach(p => {
+                        if (max === min) {
+                            p[key] = 1;
+                        } else {
+                            if (isPositive) {
+                                p[key] = (p[key] - min) / (max - min);
+                            } else {
+                                p[key] = (max - p[key]) / (max - min);
+                            }
+                        }
+                    });
+                }
+                return normalized;
+            }
+
+            function topsis(normalizedMatrix, weights) {
+                const weightedMatrix = normalizedMatrix.map(p => {
+                    let newP = { id: p.id };
+                    for (const key in criteriaInfo) {
+                        newP[key] = p[key] * weights[key];
+                    }
+                    return newP;
+                });
+
+                const idealBest = {};
+                const idealWorst = {};
+                for (const key in criteriaInfo) {
+                    const values = weightedMatrix.map(p => p[key]);
+                    idealBest[key] = Math.max(...values);
+                    idealWorst[key] = Math.min(...values);
+                }
+
+                const distances = weightedMatrix.map(p => {
+                    let distBest = 0;
+                    let distWorst = 0;
+                    for (const key in criteriaInfo) {
+                        distBest += Math.pow(p[key] - idealBest[key], 2);
+                        distWorst += Math.pow(p[key] - idealWorst[key], 2);
+                    }
+                    return {
+                        id: p.id,
+                        distBest: Math.sqrt(distBest),
+                        distWorst: Math.sqrt(distWorst)
+                    };
+                });
+                
+                return distances.map(d => {
+                    const closeness = d.distWorst / (d.distBest + d.distWorst);
+                    const originalData = decisionMatrix.find(p => p.id === d.id);
+                    return {
+                        id: d.id,
+                        name: originalData.project,
+                        neighborhood: originalData.neighborhood,
+                        finalScore: isNaN(closeness) ? 0 : closeness
+                    };
+                }).sort((a, b) => b.finalScore - a.finalScore);
+            }
+
+            function calculateFinalScores(weights) {
+                 const subIndicatorWeights = {
+                    c1: (weights.social / 100) * 0.125, c2: (weights.social / 100) * 0.094, c7: (weights.social / 100) * 0.031,
+                    c3: (weights.economic / 100) * 0.175, c4: (weights.economic / 100) * 0.125,
+                    c5: (weights.technical / 100) * 0.350,
+                    c6: (weights.environmental / 100) * 0.100,
+                };
+
+                const totalWeight = Object.values(subIndicatorWeights).reduce((a,b)=>a+b,0);
+                for (const key in subIndicatorWeights) {
+                    subIndicatorWeights[key] = subIndicatorWeights[key] / totalWeight;
+                }
+                
+                const normalizedData = normalizeMatrix(decisionMatrix, criteriaInfo);
+                finalRankings = topsis(normalizedData, subIndicatorWeights);
+                return finalRankings;
+            }
+           
+            function getGradientColor(rank, total) {
+                const p = (rank - 1) / (total - 1); // p goes from 0 for rank 1 to 1 for rank 40
+                // HSL color wheel: 240 is blue, 120 is green, 60 is yellow, 0 is red.
+                // This creates a gradient from Blue (high rank) to Red (low rank).
+                const hue = 240 - (p * 240); 
+                return `hsl(${hue}, 85%, 55%)`; 
+            }
+
+             function getTypeChartColor(score, minScore, maxScore) {
+                if (maxScore === minScore) return `hsl(210, 85%, 55%)`; 
+                const p = (score - minScore) / (maxScore - minScore);
+                const hue = 30 + p * (210); 
+                return `hsl(${hue}, 85%, 55%)`; 
+            }
+
+            function getRankJustification(rank, project) {
+                const { neighborhood, name, id } = project;
+                const originalData = decisionMatrix.find(p => p.id === id);
+
+                if (rank <= 3 && name === 'آبرسانی') return `<strong>توجیه:</strong> این پروژه ترکیبی از <strong>حیاتی‌ترین نوع زیرساخت (آبرسانی)</strong> با یکی از <strong>کارآمدترین محلات (${neighborhood})</strong> است. با هزینه بهینه، نیاز اساسی تعداد زیادی خانوار را برطرف می‌کند.`;
+                if (rank >= 4 && rank <= 6 && name === 'برق‌رسانی') return `<strong>توجیه:</strong> این پروژه <strong>دومین زیرساخت حیاتی (برق)</strong> را در یکی از محلات کارآمد و پرجمعیت تکمیل می‌کند و بلافاصله پس از پروژه‌های آبرسانی قرار می‌گیرد.`;
+                if (name === 'راه‌سازی') return `<strong>توجیه:</strong> رتبه پایین به دلیل قرارگیری در <strong>انتهای توالی فنی</strong> است. این پروژه باید پس از اتمام تمامی زیرساخت‌های زیرزمینی اجرا شود تا از تخریب و دوباره‌کاری جلوگیری شود.`;
+                if (name === 'فاضلاب') return `<strong>توجیه:</strong> رتبه متوسط به دلیل <strong>اهمیت بالای زیست‌محیطی</strong> است، هرچند در توالی فنی پس از آب و برق قرار می‌گیرد.`;
+                 if ((name === 'آبرسانی' || name === 'برق‌رسانی') && (neighborhood === 7 || neighborhood === 8)) return `<strong>توجیه:</strong> اولویت بالا به دلیل <strong>اهمیت فنی حیاتی</strong> و راهبرد <strong>رفع محرومیت</strong> در محله کمتر توسعه‌یافته ${neighborhood} است.`;
+
+                return "<strong>توجیه:</strong> رتبه این پروژه حاصل توازن بین اهمیت فنی، کارایی اقتصادی و تأثیر اجتماعی آن است.";
+            }
+
+            function updateUI() {
+                const rankedProjects = calculateFinalScores(currentWeights);
+                updateTopProjectsChart(rankedProjects);
+                updateTypeChart(rankedProjects);
+                updatePriorityMatrix(rankedProjects);
+            }
+            function updateTopProjectsChart(rankedProjects) {
+                const top10 = rankedProjects.slice(0, 10);
+                topProjectsChart.data.labels = top10.map(p => `${p.name} - محله ${p.neighborhood}`);
+                topProjectsChart.data.datasets[0].data = top10.map(p => p.finalScore);
+                topProjectsChart.data.datasets[0].backgroundColor = top10.map((p, i) => getGradientColor(i + 1, 40));
+                topProjectsChart.update();
+            }
+            function updateTypeChart(rankedProjects) {
+                const projectTypeTotalCosts = { // in Billion Rials
+                    'آبرسانی': 680,
+                    'برق‌رسانی': 1031,
+                    'گازرسانی': 1096,
+                    'فاضلاب': 6860,
+                    'راه‌سازی': 4704,
+                    'زهکشی': 1473,
+                    'خدمات روبنایی': 149.2,
+                    'پروژه‌های گردشگری': 50000 
+                };
+
+                const types = ['آبرسانی', 'برق‌رسانی', 'گازرسانی', 'فاضلاب', 'راه‌سازی'];
+                typeAveragesWithCost = types.map(type => {
+                    const rankedProjectsOfType = rankedProjects.filter(p => p.name === type);
+                    const avgScore = rankedProjectsOfType.length ? rankedProjectsOfType.reduce((acc, p) => acc + p.finalScore, 0) / rankedProjectsOfType.length : 0;
+                    const totalCost = projectTypeTotalCosts[type] || 0;
+                    return { type, avgScore, totalCost };
+                });
+
+                const interDistrictProjects = [
+                    { type: 'خدمات روبنایی', avgScore: 0.20, totalCost: projectTypeTotalCosts['خدمات روبنایی'] },
+                    { type: 'زهکشی', avgScore: 0.15, totalCost: projectTypeTotalCosts['زهکشی'] },
+                    { type: 'پروژه‌های گردشگری', avgScore: 0.13, totalCost: projectTypeTotalCosts['پروژه‌های گردشگری'] }
+                ];
+
+                typeAveragesWithCost.push(...interDistrictProjects);
+                
+                typeAveragesWithCost.sort((a,b) => b.avgScore - a.avgScore);
+
+                const scores = typeAveragesWithCost.map(t => t.avgScore);
+                const minScore = Math.min(...scores);
+                const maxScore = Math.max(...scores);
+
+                projectTypeChart.data.labels = typeAveragesWithCost.map(t => t.type);
+                projectTypeChart.data.datasets[0].data = scores;
+                projectTypeChart.data.datasets[0].backgroundColor = scores.map(s => getTypeChartColor(s, minScore, maxScore));
+                projectTypeChart.update();
+            }
+            function updatePriorityMatrix(rankedProjects) {
+                const matrix = document.getElementById('priority-matrix');
+                matrix.innerHTML = '';
+                const headers = ['', 'آبرسانی', 'برق‌', 'گاز', 'فاضلاب', 'راه‌سازی'];
+                headers.forEach(h => {
+                    const headerCell = document.createElement('div');
+                    headerCell.className = 'font-bold text-slate-500 flex items-end justify-center pb-1';
+                    headerCell.textContent = h;
+                    matrix.appendChild(headerCell);
+                });
+                
+                const projectRanks = {};
+                rankedProjects.forEach((p, i) => { projectRanks[p.id] = i + 1; });
+                const projectTypes = ['آبرسانی', 'برق‌رسانی', 'گازرسانی', 'فاضلاب', 'راه‌سازی'];
+                for (let i = 1; i <= 8; i++) {
+                    const rowHeader = document.createElement('div');
+                    rowHeader.className = 'font-bold text-slate-500 flex items-center justify-center';
+                    rowHeader.textContent = `محله ${i}`;
+                    matrix.appendChild(rowHeader);
+                    projectTypes.forEach(type => {
+                        const project = decisionMatrix.find(p => p.neighborhood === i && p.project === type);
+                        if (!project) return;
+
+                        const rank = projectRanks[project.id];
+                        const cell = document.createElement('div');
+                        cell.className = 'tooltip matrix-tooltip';
+                        const cellContent = document.createElement('div');
+                        cellContent.className = 'priority-matrix-cell';
+                        cellContent.style.backgroundColor = getGradientColor(rank, 40);
+                        cellContent.textContent = rank;
+                        
+                        const tooltipText = document.createElement('span');
+                        tooltipText.className = 'tooltiptext';
+                        const justification = getRankJustification(rank, project);
+                        const costInBillionToman = (project.c4 / 10000).toLocaleString('fa-IR', { maximumFractionDigits: 1 });
+                        tooltipText.innerHTML = `
+                            <strong class="block">${project.project} - محله ${project.neighborhood}</strong>
+                            <hr class="my-1 border-slate-600">
+                            <p class="text-xs text-right leading-relaxed px-1 py-1">${justification}</p>
+                            <hr class="my-1 border-slate-600">
+                             رتبه: <span class="font-bold">${rank}</span> | هزینه: <span class="font-bold">${costInBillionToman}</span> میلیارد تومان`;
+                        cell.appendChild(cellContent);
+                        cell.appendChild(tooltipText);
+                        matrix.appendChild(cell);
+                    });
+                }
+            }
+
+            function setupControls() {
+                const sliders = { social: document.getElementById('social-weight'), economic: document.getElementById('economic-weight'), technical: document.getElementById('technical-weight'), environmental: document.getElementById('environmental-weight') };
+                const valueDisplays = { social: document.getElementById('social-weight-value'), economic: document.getElementById('economic-weight-value'), technical: document.getElementById('technical-weight-value'), environmental: document.getElementById('environmental-weight-value') };
+                const cardValueDisplays = { social: document.getElementById('social-card-value'), economic: document.getElementById('economic-card-value'), technical: document.getElementById('technical-card-value'), environmental: document.getElementById('environmental-card-value') };
+
+                function updateAllSliderUI() {
+                    Object.keys(currentWeights).forEach(key => {
+                        const val = Math.round(currentWeights[key]);
+                        sliders[key].value = val;
+                        const displayVal = `${val}%`;
+                        valueDisplays[key].textContent = displayVal;
+                        cardValueDisplays[key].textContent = displayVal;
+                        const thumbColor = sliders[key].style.getPropertyValue('--thumb-color');
+                        sliders[key].style.background = `linear-gradient(to left, ${thumbColor} ${val}%, #e2e8f0 ${val}%)`;
+                    });
+                }
+                
+                function syncAndNormalize(changedKey, newValue) {
+                    const oldValue = currentWeights[changedKey];
+                    let otherKeys = Object.keys(currentWeights).filter(k => k !== changedKey);
+                    let sumOfOthersBeforeChange = otherKeys.reduce((acc, key) => currentWeights[key] + acc, 0);
+                    let tempWeights = JSON.parse(JSON.stringify(currentWeights));
+                    if (sumOfOthersBeforeChange < 1) { 
+                        const remainingValue = 100 - newValue;
+                        const valuePerKey = remainingValue / otherKeys.length;
+                        otherKeys.forEach(key => { tempWeights[key] = valuePerKey; });
+                    } else {
+                        const remainingPercentage = 100 - newValue;
+                        otherKeys.forEach(key => {
+                            const ratio = currentWeights[key] / sumOfOthersBeforeChange;
+                            tempWeights[key] = remainingPercentage * ratio;
+                        });
+                    }
+                    tempWeights[changedKey] = newValue;
+                    let total = Object.values(tempWeights).reduce((a, b) => a + b, 0);
+                    tempWeights[changedKey] += (100 - total); 
+                    currentWeights = tempWeights;
+                    updateAllSliderUI();
+                    updateUI();
+                }
+                
+                Object.keys(sliders).forEach(key => {
+                    sliders[key].addEventListener('input', (e) => syncAndNormalize(key, parseInt(e.target.value, 10)) );
+                });
+
+                document.getElementById('reset-weights').addEventListener('click', () => {
+                    currentWeights = { ...initialWeights };
+                    updateAllSliderUI();
+                    updateUI();
+                });
+
+                const ctxTop = document.getElementById('topProjectsChart').getContext('2d');
+                topProjectsChart = new Chart(ctxTop, {
+                    type: 'bar', data: { labels: [], datasets: [{ label: 'امتیاز نهایی', data: [], borderRadius: 4 }] },
+                    options: { 
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false, 
+                        scales: { x: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#475569', font: { weight: 'bold' } } }, y: { grid: { display: false }, ticks: { color: '#475569', font: { weight: 'bold', size: 11 } } } }, 
+                        plugins: { 
+                            legend: { display: false }, 
+                            tooltip: { 
+                                rtl: true, titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' },
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const project = finalRankings[context.dataIndex];
+                                        if (project) {
+                                            const originalData = decisionMatrix.find(p => p.id === project.id);
+                                            if (originalData) {
+                                                 const cost = (originalData.c4 / 10000).toLocaleString('fa-IR', { maximumFractionDigits: 1 });
+                                                 return `هزینه: ${cost} میلیارد تومان`;
+                                            }
+                                        }
+                                        return '';
+                                    }
+                                }
+                            } 
+                        } 
+                    }
+                });
+
+                const ctxType = document.getElementById('projectTypeChart').getContext('2d');
+                projectTypeChart = new Chart(ctxType, {
+                    type: 'bar', data: { labels: [], datasets: [{ label: 'میانگین امتیاز', data: [], borderRadius: 4 }] },
+                     options: { 
+                        responsive: true, maintainAspectRatio: false, 
+                        scales: { 
+                            y: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#475569', font: { weight: 'bold' } } }, 
+                            x: { grid: { color: '#e2e8f0' }, ticks: { color: '#334155', font: { weight: 'bold', size: 12 } } } 
+                        }, 
+                        plugins: { 
+                            legend: { display: false }, 
+                            tooltip: { 
+                                rtl: true, titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' },
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const typeInfo = typeAveragesWithCost[context.dataIndex];
+                                        if (typeInfo) {
+                                            const cost = (typeInfo.totalCost / 10).toLocaleString('fa-IR', { maximumFractionDigits: 1 });
+                                            let tooltipString = `هزینه کل: ${cost} میلیارد تومان`;
+                                            if (typeInfo.type === 'برق‌رسانی') {
+                                                tooltipString += '\n(بدون هزینه تجهیزات پست)';
+                                            }
+                                            return tooltipString;
+                                        }
+                                        return '';
+                                    }
+                                }
+                            } 
+                        } 
+                    }
+                });
+                updateAllSliderUI();
+                updateUI();
+            }
+
+            setupControls();
+        });
+    </script>
+</body>
+</html>
+
