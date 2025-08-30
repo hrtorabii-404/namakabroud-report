@@ -74,12 +74,16 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .priority-matrix-cell:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 5; }
-        .matrix-tooltip .tooltiptext { width: 300px; margin-left: -150px; background-color: #1e293b; color: #fff; text-align: center; }
+        .matrix-tooltip .tooltiptext { width: 300px; margin-left: -150px; background-color: #1e2b3b; color: #fff; text-align: center; }
         .timeline-item { position: relative; padding-bottom: 2rem; padding-right: 2.5rem; border-right: 2px solid #cbd5e1; }
         .timeline-item:last-child { border-right: 2px solid transparent; }
         .timeline-icon {
             position: absolute; right: -21px; top: 0; display: flex; align-items: center; justify-content: center;
             width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 2px solid #cbd5e1;
+        }
+        #scenario-card {
+            border-right: 5px solid;
+            transition: border-color 0.5s ease;
         }
     </style>
 </head>
@@ -187,6 +191,16 @@
                     </div>
                     <input type="range" id="environmental-weight" min="0" max="100" class="slider" style="--thumb-color:#ffa600;">
                 </div>
+            </div>
+        </div>
+
+        <div id="scenario-card" class="card mb-6">
+            <div class="flex items-center mb-3">
+                <span id="scenario-icon" class="text-3xl ml-3"></span>
+                <h2 id="scenario-title" class="text-xl font-bold"></h2>
+            </div>
+            <div id="scenario-content">
+                <!-- Dynamic content will go here -->
             </div>
         </div>
 
@@ -333,6 +347,136 @@
             let finalRankings = [];
             let typeAveragesWithCost = [];
 
+            const scenarios = {
+                SMART_GROWTH: {
+                    name: 'سناریوی «رشد هوشمند و دستاوردهای سریع»',
+                    icon: '🧠',
+                    color: '#475569', // Slate
+                    content: `
+                        <p class="text-slate-600 mb-4">با این ترکیب از وزن‌ها، اولویت‌بندی به سمت پروژه‌هایی گرایش پیدا می‌کند که ترکیبی بهینه از <strong>ضرورت فنی بالا</strong> و <strong>کارایی اقتصادی عالی</strong> را ارائه می‌دهند.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <h4 class="font-bold mb-2 text-green-600">در اولویت بالا:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li><strong>پروژه‌های آبرسانی و برق‌رسانی:</strong> به دلیل اهمیت حیاتی در شاخص «توالی فنی».</li>
+                                    <li><strong>در محله‌های ۵، ۳ و ۲:</strong> به دلیل عملکرد عالی در شاخص «توجیه اقتصادی» و هزینه پایین به ازای هر خانوار.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2 text-red-600">در اولویت پایین:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li><strong>پروژه‌های راه‌سازی و آسفالت:</strong> به دلیل کسب کمترین امتیاز در شاخص کلیدی «توالی فنی».</li>
+                                    <li><strong>پروژه‌های فاضلاب:</strong> با وجود اهمیت زیست‌محیطی، پس از آب، برق و گاز قرار می‌گیرند.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-200 text-center font-bold text-slate-800">
+                            <p>"ابتدا خدمات حیاتی (آب و برق) را با کمترین هزینه به بیشترین تعداد افراد برسان، سپس به سراغ مناطق محروم‌تر برو و در نهایت شبکه‌ها را تکمیل کن."</p>
+                        </div>
+                    `
+                },
+                JUSTICE: {
+                    name: 'سناریوی «عدالت‌محور»',
+                    icon: '⚖️',
+                    color: '#7a5195', // Social color
+                    content: `
+                        <p class="text-slate-600 mb-4">در این سناریو، هدف اصلی اصلاح سریع نابرابری‌ها و رساندن خدمات به <strong>محروم‌ترین مناطق</strong> است، حتی اگر از نظر اقتصادی کاملاً بهینه نباشد.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <h4 class="font-bold mb-2 text-green-600">در اولویت بالا:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li>پروژه‌ها در <strong>محله‌های ۷ و ۸</strong> (محروم‌ترین مناطق) به صدر لیست صعود می‌کنند.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2 text-red-600">در اولویت پایین:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                     <li>پروژه‌های کارآمد اقتصادی در <strong>محله‌های ۲ و ۵</strong> به رتبه‌های پایین‌تر منتقل می‌شوند.</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <div class="mt-4 pt-3 border-t border-slate-200 text-center font-bold text-slate-800">
+                            <p>اولویت‌بندی نهایی بر اساس <strong>موقعیت جغرافیایی و میزان محرومیت</strong> مرتب می‌شود.</p>
+                        </div>
+                    `
+                },
+                EFFICIENCY: {
+                    name: 'سناریوی «کارایی‌محور»',
+                    icon: '💰',
+                    color: '#ef5675', // Economic color
+                    content: `
+                        <p class="text-slate-600 mb-4">در این سناریو، هدف اصلی استفاده بهینه از بودجه محدود و کسب <strong>بیشترین بازدهی اجتماعی</strong> در کوتاه‌ترین زمان ممکن است.</p>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <h4 class="font-bold mb-2 text-green-600">در اولویت بالا:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                     <li>پروژه‌های آبرسانی و برق‌رسانی در <strong>محله‌های ۲، ۳ و ۵</strong> (مناطق پرجمعیت و کارآمد) در اولویت مطلق قرار می‌گیرند.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2 text-red-600">در اولویت پایین:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                     <li>پروژه‌های حیاتی در <strong>محله‌های ۷ و ۸</strong> به دلیل هزینه بالاتر به ازای هر خانوار، به تعویق می‌افتند.</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <div class="mt-4 pt-3 border-t border-slate-200 text-center font-bold text-slate-800">
+                            <p>این مدل یک <strong>تحلیل هزینه-فایده کلاسیک</strong> است که سرمایه‌گذاری‌های زودبازده را در اولویت قرار می‌دهد.</p>
+                        </div>
+                    `
+                },
+                TECHNICAL: {
+                    name: 'سناریوی «فنی‌محور»',
+                    icon: '⚙️',
+                    color: '#bc5090', // Technical color
+                    content: `
+                        <p class="text-slate-600 mb-4">در این سناریو، هیچ‌چیز به جز <strong>ترتیب صحیح اجرای پروژه‌ها</strong> بر اساس اصول مهندسی اهمیت ندارد و عوامل اجتماعی و اقتصادی در درجه دوم اهمیت قرار دارند.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <h4 class="font-bold mb-2 text-green-600">در اولویت بالا:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                     <li>ابتدا <strong>تمام پروژه‌های آبرسانی</strong> از همه محلات، سپس تمام پروژه‌های برق‌رسانی و به همین ترتیب.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2 text-red-600">در اولویت پایین:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li>مفهوم <strong>اولویت‌بندی بین محلات</strong> تقریباً از بین می‌رود و فقط نوع پروژه تعیین‌کننده است.</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <div class="mt-4 pt-3 border-t border-slate-200 text-center font-bold text-slate-800">
+                            <p>رتبه‌بندی نهایی یک <strong>نقشه راه فنی خالص</strong> برای اجرای لایه‌های زیرساختی از پایین به بالا خواهد بود.</p>
+                        </div>
+                    `
+                },
+                ENVIRONMENT: {
+                    name: 'سناریوی «محیط‌زیست‌محور»',
+                    icon: '🌿',
+                    color: '#ffa600', // Environmental color
+                    content: `
+                        <p class="text-slate-600 mb-4">در این سناریو، <strong>حفاظت از منابع طبیعی</strong> منحصربه‌فرد منطقه و جلوگیری از آلودگی‌های زیست‌محیطی به اولویت اصلی تبدیل می‌شود.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <h4 class="font-bold mb-2 text-green-600">در اولویت بالا:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li>پروژه‌های <strong>شبکه جمع‌آوری فاضلاب</strong> جهش قابل توجهی در لیست خواهند داشت و ممکن است بلافاصله پس از پروژه‌های حیاتی آب و برق قرار گیرند.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-2 text-red-600">در اولویت پایین:</h4>
+                                <ul class="list-disc pr-4 space-y-1 text-slate-700">
+                                    <li>پروژه‌هایی که تأثیر زیست‌محیطی خاصی ندارند (مانند گازرسانی) ممکن است در رتبه‌بندی افت کنند.</li>
+                                </ul>
+                            </div>
+                        </div>
+                         <div class="mt-4 pt-3 border-t border-slate-200 text-center font-bold text-slate-800">
+                            <p>لیست اولویت‌ها به سمت پروژه‌هایی که به <strong>سلامت بلندمدت اکوسیستم</strong> منطقه کمک می‌کنند، متمایل می‌شود.</p>
+                        </div>
+                    `
+                }
+            };
+            
             function normalizeMatrix(matrix, criteria) {
                 let normalized = JSON.parse(JSON.stringify(matrix));
                 for (const key in criteria) {
@@ -447,6 +591,7 @@
 
             function updateUI() {
                 const rankedProjects = calculateFinalScores(currentWeights);
+                updateScenarioCard();
                 updateTopProjectsChart(rankedProjects);
                 updateTypeChart(rankedProjects);
                 updatePriorityMatrix(rankedProjects);
@@ -543,6 +688,33 @@
                         matrix.appendChild(cell);
                     });
                 }
+            }
+
+            function updateScenarioCard() {
+                const weights = currentWeights;
+                let activeScenario = scenarios.SMART_GROWTH; // Default
+
+                const maxWeight = Math.max(weights.social, weights.economic, weights.technical, weights.environmental);
+
+                if (maxWeight > 45) { // A dimension is dominant
+                    if (maxWeight === weights.social) activeScenario = scenarios.JUSTICE;
+                    else if (maxWeight === weights.economic) activeScenario = scenarios.EFFICIENCY;
+                    else if (maxWeight === weights.technical) activeScenario = scenarios.TECHNICAL;
+                    else if (maxWeight === weights.environmental) activeScenario = scenarios.ENVIRONMENT;
+                }
+                
+                // Update the card
+                const card = document.getElementById('scenario-card');
+                const iconEl = document.getElementById('scenario-icon');
+                const titleEl = document.getElementById('scenario-title');
+                const contentEl = document.getElementById('scenario-content');
+
+                card.style.borderColor = activeScenario.color;
+                iconEl.textContent = activeScenario.icon;
+                iconEl.style.color = activeScenario.color;
+                titleEl.textContent = activeScenario.name;
+                titleEl.style.color = activeScenario.color;
+                contentEl.innerHTML = activeScenario.content;
             }
 
             function setupControls() {
