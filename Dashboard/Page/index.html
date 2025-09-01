@@ -139,13 +139,13 @@
             opacity: 1;
         }
 
-        /* Responsive typography for cover title - Adjusted for smaller screens */
+        /* FIX: Adjusted clamp values for better responsiveness on small screens */
         .responsive-h1 {
-            font-size: clamp(1.75rem, 5vw, 3rem);
+            font-size: clamp(1.5rem, 5vw, 3rem); /* Starts smaller */
             line-height: 1.2;
         }
         .responsive-h2 {
-            font-size: clamp(1.1rem, 3.5vw, 1.875rem);
+            font-size: clamp(1rem, 3.5vw, 1.875rem); /* Starts smaller */
             line-height: 1.4;
         }
     </style>
@@ -156,8 +156,9 @@
         
         <!-- Page 1: Cover -->
         <div id="coverPage" class="page active">
+            <!-- FIX: Made header logo responsive -->
             <header class="flex justify-center pt-2 md:pt-4">
-                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28 md:h-32 max-h-[20vh]"
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-24 sm:h-28 md:h-32 max-h-[20vh]"
                      onerror="this.onerror=null; this.src='https://placehold.co/400x200/e2e8f0/334155?text=Logo+NA';">
             </header>
             <main class="text-center cover-clickable-area">
@@ -167,14 +168,15 @@
                     <p class="text-gray-500 mt-4 text-xs">برای مشاهده فهرست، روی عنوان بالا کلیک کنید</p>
                 </div>
             </main>
-            <footer class="flex flex-col items-center pt-2 pb-6 md:pb-8">
-                <div class="flex items-center justify-center gap-x-8 mb-4">
-                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-16 md:h-20"
+            <!-- FIX: Adjusted footer padding and element sizes for mobile -->
+            <footer class="flex flex-col items-center pt-2 pb-2 sm:pb-4 md:pb-8">
+                <div class="flex items-center justify-center gap-x-8 mb-2 sm:mb-4">
+                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-12 sm:h-16 md:h-20"
                          onerror="this.onerror=null; this.src='https://placehold.co/100x64/e2e8f0/334155?text=Logo+OMS';">
-                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی IMPco" class="h-16 md:h-20"
+                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی IMPco" class="h-12 sm:h-16 md:h-20"
                          onerror="this.onerror=null; this.src='https://placehold.co/100x64/e2e8f0/334155?text=Logo+IMPco';">
                 </div>
-                <div class="text-sm text-gray-600 text-center">
+                <div class="text-xs sm:text-sm text-gray-600 text-center">
                     <p>
                         تهیه شده توسط 
                         <span class="relative inline-block tooltip-container font-semibold cursor-pointer">
