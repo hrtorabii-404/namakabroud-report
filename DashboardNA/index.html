@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شناسنامه مدیریتی پروژه‌های عمرانی نمک‌آبرود</title>
+    <title>گزارش مدیریتی و تحلیلی شهرک نمک‌آبرود</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,17 +33,22 @@
             width: 100%;
         }
         
+        /* --- Header Styles --- */
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+        .logo { height: 100px; width: auto; object-fit: contain; }
+        .logo.center { height: 180px; }
+        .logo.right { height: 100px; }
+
         /* --- PDF & Print Styling --- */
         .pdf-page {
             page-break-inside: avoid !important; 
-        }
-        .cover-page {
-            page-break-after: always !important;
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
 
         @media print {
@@ -55,7 +60,7 @@
             .no-print {
                 display: none !important;
             }
-            .pdf-page:not(.cover-page) {
+            .pdf-page {
                 page-break-before: always !important;
             }
         }
@@ -65,16 +70,14 @@
 
     <div id="report-content" class="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-4 md:p-10">
         
-        <header class="text-center pdf-page cover-page">
-            <div class="w-full flex justify-between items-center px-4 md:px-8 lg:px-16 mb-8">
-                <img src="https://uploadkon.ir/uploads/15da18_25لوگو.png" alt="لوگوی شرکت عمران و مسکن شمال" class="h-24 md:h-32 object-contain">
-                <img src="https://uploadkon.ir/uploads/15da18_25لوگو2.png" alt="لوگوی مهندسین مشاور ایده پرداز محیط" class="h-20 md:h-28 object-contain">
+        <!-- Header -->
+        <header class="bg-white shadow-sm pb-2 mb-8">
+            <div class="logo-container">
+                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
             </div>
-            <div class="border-y-4 border-indigo-700 py-10 px-6 md:py-12 md:px-8 w-full">
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-900">شناسنامه پروژه‌های بالقوه</h1>
-                <p class="text-lg md:text-xl text-slate-600 mt-4">گزارش مدیریتی و تحلیلی شهرک نمک‌آبرود</p>
-                <p class="text-sm text-slate-400 mt-12">بر اساس طرح بهنگام - ویرایش ششم - تابستان ۱۴۰۴</p>
-            </div>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 text-center mt-2">گزارش مدیریتی و تحلیلی شهرک نمک‌آبرود</h1>
         </header>
 
         <!-- Overall Town Summary Page -->
@@ -133,10 +136,14 @@
             </section>
         </div>
 
-        <footer class="text-center mt-20 pt-10 border-t-2 border-slate-200 no-print">
+        <div class="text-center text-sm text-slate-500 pt-8 mt-12 border-t">
+            <p>تهیه شده توسط مهندسین مشاور ایده پرداز محیط - شهریورماه 1404</p>
+        </div>
+
+        <footer class="text-center mt-12 pt-8 border-t-2 border-slate-200 no-print">
             <button id="download-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                دانلود شناسنامه به صورت PDF
+                دانلود گزارش به صورت PDF
             </button>
              <div id="loading-spinner" class="hidden mt-4 flex items-center justify-center">
                 <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -712,7 +719,7 @@
 
                 const opt = {
                     margin: [0.4, 0.2, 0.4, 0.2],
-                    filename: 'شناسنامه-مدیریتی-پروژه-ها.pdf',
+                    filename: 'گزارش-مدیریتی-نمک-آبرود.pdf',
                     image: { type: 'jpeg', quality: 1.0 },
                     html2canvas: { scale: 3, useCORS: true, logging: false },
                     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
