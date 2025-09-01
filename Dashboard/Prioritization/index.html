@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مدیریتی اولویت‌بندی پروژه‌های نمک‌آبرود</title>
+    <title>داشبورد راهبری و اولویت بندی تکمیل پروژه های زیرساختی نمک‌آبرود</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,7 @@
             font-family: 'Vazirmatn', sans-serif;
             direction: rtl;
             background-color: #f1f5f9;
+            overflow-x: hidden; /* اضافه شده برای جلوگیری از اسکرول افقی */
         }
         .logo-container {
             display: flex;
@@ -21,7 +22,7 @@
             align-items: center;
             max-width: 800px;
             margin: 0 auto;
-            padding: 1rem 0;
+            padding: 1rem 1rem; /* اصلاح شده برای ایجاد فاصله از کنار */
         }
         .logo { height: 90px; width: auto; object-fit: contain; }
         .logo.center { height: 180px; }
@@ -98,6 +99,16 @@
             border: 1px solid #e2e8f0;
             border-radius: 1rem;
         }
+        #control-panel-card {
+            transition: background-color 0.3s ease, padding 0.3s ease;
+        }
+        #control-panel-card.closed {
+            background-color: #e2e8f0;
+            padding: 1rem;
+        }
+        #control-panel-card.closed:hover {
+            background-color: #f1f5f9; /* Lighter grey on hover when closed */
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -113,17 +124,17 @@
     <main class="container mx-auto p-4 md:p-6">
         <div class="card intro-card mb-6">
             <div class="text-center">
-                 <h1 class="text-2xl font-bold text-slate-800 mb-3">داشبورد راهبری سرمایه‌گذاری‌های زیرساختی نمک‌آبرود: از اصلاح گذشته تا تحقق چشم‌انداز</h1>
+                 <h1 class="text-2xl font-bold text-slate-800 mb-3">داشبورد راهبری و اولویت بندی تکمیل پروژه های زیرساختی نمک‌آبرود</h1>
                  <p class="text-slate-600 max-w-4xl mx-auto mb-6 text-sm">هدف این داشبورد، تبدیل اولویت‌های راهبردی به یک نقشه راه اجرایی مدون و داده‌محور است. این ابزار بر اساس یک روش‌شناسی تحلیلی دو مرحله‌ای عمل می‌نماید که فرآیند تصمیم‌گیری را ساختارمند و شفاف می‌سازد:</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="p-4 rounded-lg bg-slate-50">
                     <h3 class="font-bold text-slate-700 mb-2">مرحله اول: وزن‌دهی به معیارهای راهبردی (روش AHP)</h3>
-                    <p class="text-sm text-slate-600">در گام نخست، با به‌کارگیری فرآیند تحلیل سلسله‌مراتبی (AHP)، اهمیت نسبی هر یک از معیارهای کلان مدیریتی تعیین می‌گردد. این وزن‌ها که منعکس‌کننده دیدگاه و جهت‌گیری‌های راهبردی سازمان هستند، مبنای اصلی تحلیل را تشکیل می‌دهند.</p>
+                    <p class="text-sm text-slate-600">در گام نخست، با به‌کارگیری <strong class="text-indigo-600">فرآیند تحلیل سلسله‌مراتبی (AHP)</strong>، اهمیت نسبی هر یک از معیارهای کلان مدیریتی تعیین می‌گردد. این وزن‌ها که منعکس‌کننده <strong class="text-indigo-600">دیدگاه و جهت‌گیری‌های راهبردی</strong> سازمان هستند، مبنای اصلی تحلیل را تشکیل می‌دهند.</p>
                 </div>
                 <div class="p-4 rounded-lg bg-slate-50">
                     <h3 class="font-bold text-slate-700 mb-2">مرحله دوم: رتبه‌بندی گزینه‌ها (روش TOPSIS)</h3>
-                    <p class="text-sm text-slate-600">در گام دوم، ماتریس تصمیم (شامل داده‌های ۴۰ پروژه) با استفاده از الگوریتم TOPSIS پردازش می‌شود. این روش، هر گزینه را بر اساس میزان شباهت به «راه‌حل ایده‌آل مثبت» و فاصله از «راه‌حل ایده‌آل منفی» ارزیابی و رتبه‌بندی می‌نماید.</p>
+                    <p class="text-sm text-slate-600">در گام دوم، ماتریس تصمیم (شامل داده‌های ۴۰ پروژه) با استفاده از <strong class="text-teal-600">الگوریتم TOPSIS</strong> پردازش می‌شود. این روش، هر گزینه را بر اساس میزان شباهت به <strong class="text-teal-600">«راه‌حل ایده‌آل مثبت»</strong> و فاصله از <strong class="text-teal-600">«راه‌حل ایده‌آل منفی»</strong> ارزیابی و رتبه‌بندی می‌نماید.</p>
                 </div>
             </div>
              <div class="border-t border-slate-200 mt-6 pt-4">
@@ -189,39 +200,48 @@
             </div>
         </div>
 
-        <div class="card mb-6">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 class="text-xl font-bold text-slate-800">کنترل پنل وزن‌دهی ابعاد اصلی</h2>
-                <button id="reset-weights" class="reset-btn">بازگشت به وزن‌های اولیه</button>
+        <div class="card mb-6" id="control-panel-card">
+            <div id="control-panel-header" class="flex justify-between items-center cursor-pointer">
+                <div class="flex items-center">
+                    <h2 class="text-xl font-bold text-slate-800">کنترل پنل وزن‌دهی شاخص های اصلی</h2>
+                    <svg id="control-panel-arrow" class="w-6 h-6 mr-3 text-slate-500 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                       <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+                <button id="reset-weights" class="reset-btn">بازنشانی</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 pt-2">
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="social-weight" class="font-bold text-slate-700">ضرورت و تأثیر اجتماعی</label>
-                        <span id="social-weight-value" class="font-bold text-lg" style="color:#7a5195;"></span>
+            <div id="control-panel-body" class="overflow-hidden transition-all duration-500 ease-in-out">
+                <div class="border-t pt-4 mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 pt-2">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="social-weight" class="font-bold text-slate-700">ضرورت و تأثیر اجتماعی</label>
+                                <span id="social-weight-value" class="font-bold text-lg" style="color:#7a5195;"></span>
+                            </div>
+                            <input type="range" id="social-weight" min="0" max="100" class="slider" style="--thumb-color:#7a5195;">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="economic-weight" class="font-bold text-slate-700">توجیه اقتصادی و مالی</label>
+                                <span id="economic-weight-value" class="font-bold text-lg" style="color:#ef5675;"></span>
+                            </div>
+                            <input type="range" id="economic-weight" min="0" max="100" class="slider" style="--thumb-color:#ef5675;">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="technical-weight" class="font-bold text-slate-700">امکان‌سنجی فنی و توالی اجرا</label>
+                                <span id="technical-weight-value" class="font-bold text-lg" style="color:#bc5090;"></span>
+                            </div>
+                            <input type="range" id="technical-weight" min="0" max="100" class="slider" style="--thumb-color:#bc5090;">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="environmental-weight" class="font-bold text-slate-700">پایداری و ملاحظات محیطی</label>
+                                <span id="environmental-weight-value" class="font-bold text-lg" style="color:#ffa600;"></span>
+                            </div>
+                            <input type="range" id="environmental-weight" min="0" max="100" class="slider" style="--thumb-color:#ffa600;">
+                        </div>
                     </div>
-                    <input type="range" id="social-weight" min="0" max="100" class="slider" style="--thumb-color:#7a5195;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="economic-weight" class="font-bold text-slate-700">توجیه اقتصادی و مالی</label>
-                        <span id="economic-weight-value" class="font-bold text-lg" style="color:#ef5675;"></span>
-                    </div>
-                    <input type="range" id="economic-weight" min="0" max="100" class="slider" style="--thumb-color:#ef5675;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="technical-weight" class="font-bold text-slate-700">امکان‌سنجی فنی و توالی اجرا</label>
-                        <span id="technical-weight-value" class="font-bold text-lg" style="color:#bc5090;"></span>
-                    </div>
-                    <input type="range" id="technical-weight" min="0" max="100" class="slider" style="--thumb-color:#bc5090;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="environmental-weight" class="font-bold text-slate-700">پایداری و ملاحظات محیطی</label>
-                        <span id="environmental-weight-value" class="font-bold text-lg" style="color:#ffa600;"></span>
-                    </div>
-                    <input type="range" id="environmental-weight" min="0" max="100" class="slider" style="--thumb-color:#ffa600;">
                 </div>
             </div>
         </div>
@@ -432,7 +452,7 @@
                 30: { level: '🌱 سطح ۴: پایداری زیست‌محیطی', detail: '<strong>رتبه ۳۰: فاضلاب محله ۷:</strong> 💡 تعهد به توسعه پایدار: این پروژه با وجود اینکه گران‌ترین سرمایه‌گذاری به ازای هر خانوار در بخش فاضلاب است (هزینه/خانوار: ۲۸۹۶۱.۵)، تعهد کامل شهرک به توسعه ۱۰۰٪ پایدار و حفظ محیط زیست حتی در کم‌جمعیت‌ترین مناطق را نشان می‌دهد.' },
                 31: { level: '🌱 سطح ۴: پایداری زیست‌محیطی', detail: '<strong>رتبه ۳۱: فاضلاب محله ۴:</strong> 💡 اقدام پیشگیرانه: اجرای شبکه فاضلاب در این محله، یک اقدام پیشگیرانه برای جلوگیری از مشکلات زیست‌محیطی آتی است که با رشد جمعیت در این منطقه ممکن است به وجود آید.' },
                 32: { level: '🌱 سطح ۴: پایداری زیست‌محیطی', detail: '<strong>رتبه ۳۲: فاضلاب محله ۱:</strong> 💡 تکمیل پازل زیست‌محیطی: این پروژه به عنوان آخرین قطعه از پازل فاضلاب، پوشش کامل بهداشتی و زیست‌محیطی را برای تمام شهرک تضمین کرده و پرونده تأسیسات زیرزمینی را می‌بندد.' },
-                33: { level: '🛣️ سطح ۵: تکمیل نهایی', detail: '<strong>رتبه ۳۳: راه‌سازی محله ۵:</strong> 💡 کارآمدترین زیباسازی: این پروژه با کمترین هزینه به ازای هر خانوار (۴۶.۰ واحد) در بخش راه‌سازی، منطقی‌ترین نقطه برای شروع فاز نهایی و ایجاد یک نتیجه ملموس و سریع است.' },
+                33: { level: '🛣️ سطح ۵: تکمیل نهایی', detail: '<strong>رتبه ۳۳: راه‌سازی محله ۵:</strong> 💡 کارآمدترین زیباسازی: این پروژه با کمترین هزینه به ازای هر خانوار (۴۶.۰ واحد) در بخش راه‌سازی، منطقی‌ترین نقطه برای شروع این فاز نهایی و ایجاد یک نتیجه ملموس و سریع است.' },
                 34: { level: '🛣️ سطح ۵: تکمیل نهایی', detail: '<strong>رتبه ۳۴: راه‌سازی محله ۳:</strong> 💡 ارتقای کیفیت زندگی: تکمیل معابر در یکی از پرجمعیت‌ترین محلات، تأثیر مستقیم و گسترده‌ای بر کیفیت زندگی روزمره ساکنان خواهد داشت.' },
                 35: { level: '🛣️ سطح ۵: تکمیل نهایی', detail: '<strong>رتبه ۳۵: راه‌سازی محله ۲:</strong> 💡 نهایی‌سازی بزرگترین محله: اجرای این پروژه، چهره نهایی بزرگترین مرکز جمعیتی شهرک را شکل داده و به سرمایه‌گذاری‌های انجام شده در آن جلوه‌ای کامل می‌بخشد.' },
                 36: { level: '🛣️ سطح ۵: تکمیل نهایی', detail: '<strong>رتبه ۳۶: راه‌سازی محله ۶:</strong> 💡 تکمیل متوازن: آخرین پروژه راه‌سازی در بخش توسعه‌یافته شهرک که با اجرای آن، تمام محلات اصلی دارای معابر کامل و استاندارد می‌شوند.' },
@@ -1029,10 +1049,46 @@
                 updateScenarioCard();
             }
 
+            function setupAccordion() {
+                const card = document.getElementById('control-panel-card');
+                const header = document.getElementById('control-panel-header');
+                const body = document.getElementById('control-panel-body');
+                const arrow = document.getElementById('control-panel-arrow');
+                const resetButton = document.getElementById('reset-weights');
+
+                // --- Initial Collapsed State ---
+                card.classList.add('closed');
+                body.style.maxHeight = '0';
+                resetButton.classList.add('hidden');
+
+                header.addEventListener('click', () => {
+                    const isOpen = body.style.maxHeight !== '0px';
+                    if (isOpen) {
+                        // Close it
+                        body.style.maxHeight = '0px';
+                        arrow.classList.remove('rotate-180');
+                        resetButton.classList.add('hidden');
+                        card.classList.add('closed');
+                    } else {
+                        // Open it
+                        body.style.maxHeight = body.scrollHeight + 'px';
+                        arrow.classList.add('rotate-180');
+                        resetButton.classList.remove('hidden');
+                        card.classList.remove('closed');
+                    }
+                });
+
+                 window.addEventListener('resize', () => {
+                    if (body.style.maxHeight !== '0px') {
+                        body.style.maxHeight = body.scrollHeight + 'px';
+                    }
+                });
+            }
+
             setupControls();
+            setupAccordion();
         });
     </script>
 </body>
 </html>
-"
 
