@@ -87,7 +87,6 @@
             visibility: visible;
             opacity: 1;
         }
-        /* New Table Tooltip Style */
         #table-tooltip-popup {
             position: fixed;
             background-color: #1e293b;
@@ -105,7 +104,8 @@
         }
         .reset-btn {
             background-color: #475569; color: white; font-weight: bold; padding: 0.5rem 1rem;
-            border-radius: 0.5rem; transition: background-color 0.2s; cursor: pointer; border: none;
+            border-radius: 0.5rem; transition: background-color 0.2s, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
+            cursor: pointer; border: none;
         }
         .reset-btn:hover { background-color: #334155; }
         
@@ -127,6 +127,17 @@
         .kpi-card.has-overlay:hover .kpi-overlay {
             opacity: 1;
             pointer-events: auto;
+        }
+        
+        /* Accordion Styles */
+        #control-panel-body {
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out, border 0.5s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            border-top: 0;
         }
     </style>
 </head>
@@ -165,69 +176,77 @@
 
 
         <!-- Control Panel Card -->
-        <div class="card mb-6">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                 <h2 class="text-xl font-bold text-slate-800">کنترل پنل سناریوسازی مالی</h2>
-                 <button id="reset-button" class="reset-btn">بازنشانی</button>
+        <div id="control-panel" class="card mb-6 transition-colors duration-300">
+            <div id="control-panel-header" class="flex justify-between items-center cursor-pointer">
+                <div class="flex items-center">
+                    <h2 class="text-xl font-bold text-slate-800">کنترل پنل سناریوسازی مالی</h2>
+                    <span id="panel-hint-text" class="text-xs text-slate-400 font-normal mr-2 transition-opacity duration-300">(برای باز کردن کلیک کنید)</span>
+                     <svg id="control-panel-arrow" class="w-6 h-6 mr-3 text-slate-500 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+                <button id="reset-button" class="reset-btn">بازنشانی</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 pt-2">
-                
-                <!-- Ticket Count Sliders -->
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="telecabin1-tickets" class="font-bold text-slate-700">تعداد بلیط تله‌کابین خط ۱</label>
-                        <span id="telecabin1-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+            <div id="control-panel-body">
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+                    <!-- Ticket Count Sliders -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="telecabin1-tickets" class="font-bold text-slate-700">تعداد بلیط تله‌کابین خط ۱</label>
+                            <span id="telecabin1-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+                        </div>
+                        <input type="range" id="telecabin1-tickets" min="200000" max="2000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
                     </div>
-                    <input type="range" id="telecabin1-tickets" min="200000" max="2000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="telecabin2-tickets" class="font-bold text-slate-700">تعداد بلیط تله‌کابین خط ۲</label>
-                        <span id="telecabin2-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="telecabin2-tickets" class="font-bold text-slate-700">تعداد بلیط تله‌کابین خط ۲</label>
+                            <span id="telecabin2-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+                        </div>
+                        <input type="range" id="telecabin2-tickets" min="200000" max="2000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
                     </div>
-                    <input type="range" id="telecabin2-tickets" min="200000" max="2000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="sleigh-tickets" class="font-bold text-slate-700">تعداد بلیط سورتمه</label>
-                        <span id="sleigh-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="sleigh-tickets" class="font-bold text-slate-700">تعداد بلیط سورتمه</label>
+                            <span id="sleigh-tickets-value" class="font-bold text-lg bg-sky-100 text-sky-700 px-2 rounded"></span>
+                        </div>
+                        <input type="range" id="sleigh-tickets" min="100000" max="1000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
                     </div>
-                    <input type="range" id="sleigh-tickets" min="100000" max="1000000" step="10000" class="slider" style="--thumb-color:#0ea5e9;">
-                </div>
-
-                <!-- Price Sliders -->
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="telecabin-price" class="font-bold text-slate-700">قیمت بلیط تله‌کابین (هزار تومان)</label>
-                        <span id="telecabin-price-value" class="font-bold text-lg text-indigo-700"></span>
+    
+                    <!-- Price Sliders -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="telecabin-price" class="font-bold text-slate-700">قیمت بلیط تله‌کابین (هزار تومان)</label>
+                            <span id="telecabin-price-value" class="font-bold text-lg text-indigo-700"></span>
+                        </div>
+                        <input type="range" id="telecabin-price" min="250" max="1000" step="10" class="slider" style="--thumb-color:#4f46e5;">
                     </div>
-                    <input type="range" id="telecabin-price" min="250" max="1000" step="10" class="slider" style="--thumb-color:#4f46e5;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="sleigh-price" class="font-bold text-slate-700">قیمت بلیط سورتمه (هزار تومان)</label>
-                        <span id="sleigh-price-value" class="font-bold text-lg text-purple-700"></span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="sleigh-price" class="font-bold text-slate-700">قیمت بلیط سورتمه (هزار تومان)</label>
+                            <span id="sleigh-price-value" class="font-bold text-lg text-purple-700"></span>
+                        </div>
+                        <input type="range" id="sleigh-price" min="250" max="1000" step="10" class="slider" style="--thumb-color:#7e22ce;">
                     </div>
-                    <input type="range" id="sleigh-price" min="250" max="1000" step="10" class="slider" style="--thumb-color:#7e22ce;">
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="entrance-fee" class="font-bold text-slate-700">هزینه درب ورودی (هزار تومان)</label>
-                        <span id="entrance-fee-value" class="font-bold text-lg text-pink-700"></span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="entrance-fee" class="font-bold text-slate-700">هزینه درب ورودی (هزار تومان)</label>
+                            <span id="entrance-fee-value" class="font-bold text-lg text-pink-700"></span>
+                        </div>
+                        <input type="range" id="entrance-fee" min="200" max="1000" step="10" class="slider" style="--thumb-color:#be185d;">
                     </div>
-                    <input type="range" id="entrance-fee" min="200" max="1000" step="10" class="slider" style="--thumb-color:#be185d;">
-                </div>
-                
-                <!-- Inflation Rate Slider -->
-                <div class="lg:col-span-3">
-                    <div class="flex justify-between items-center mb-1">
-                        <label for="inflation-rate" class="font-bold text-slate-700">ضریب افزایش سالانه درآمد و هزینه (تورم)</label>
-                        <span id="inflation-rate-value" class="font-bold text-lg bg-amber-100 text-amber-700 px-2 rounded"></span>
+                    
+                    <!-- Inflation Rate Slider -->
+                    <div class="lg:col-span-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="inflation-rate" class="font-bold text-slate-700">ضریب افزایش سالانه درآمد و هزینه (تورم)</label>
+                            <span id="inflation-rate-value" class="font-bold text-lg bg-amber-100 text-amber-700 px-2 rounded"></span>
+                        </div>
+                        <input type="range" id="inflation-rate" min="0" max="100" step="1" class="slider" style="--thumb-color:#d97706;">
                     </div>
-                    <input type="range" id="inflation-rate" min="0" max="100" step="1" class="slider" style="--thumb-color:#d97706;">
-                </div>
+                 </div>
             </div>
         </div>
+
 
         <!-- Results Section -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -588,7 +607,7 @@
                     });
                     row.addEventListener('mousemove', (event) => {
                         tableTooltipPopup.style.top = `${event.clientY + 15}px`;
-                        tableTooltipPopup.style.left = `${event.clientX + 15}px`;
+                        tableTooltipPopup.style.left = `${event.clientX - tableTooltipPopup.offsetWidth - 15}px`;
                     });
                     row.addEventListener('mouseleave', () => {
                          tableTooltipPopup.style.opacity = '0';
@@ -681,6 +700,62 @@
                 });
             }
 
+            // --- Collapsible Control Panel Logic ---
+            const controlPanel = document.getElementById('control-panel');
+            const controlPanelHeader = document.getElementById('control-panel-header');
+            const controlPanelBody = document.getElementById('control-panel-body');
+            const controlPanelArrow = document.getElementById('control-panel-arrow');
+            const panelHintText = document.getElementById('panel-hint-text');
+
+            function setPanelOpen(isOpen, isInstant = false) {
+                 if (isInstant) {
+                    controlPanelBody.style.transition = 'none';
+                    resetButton.style.transition = 'none';
+                } else {
+                    controlPanelBody.style.transition = 'max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out, border 0.5s ease-in-out';
+                    resetButton.style.transition = 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out';
+                }
+
+                if (isOpen) {
+                    controlPanel.classList.add('is-open');
+                    controlPanel.style.backgroundColor = '#ffffff'; // white
+                    controlPanelArrow.style.transform = 'rotate(180deg)';
+                    controlPanelBody.style.maxHeight = controlPanelBody.scrollHeight + "px";
+                    controlPanelBody.style.paddingTop = '1.5rem';
+                    controlPanelBody.style.marginTop = '1rem';
+                    controlPanelBody.style.borderTop = '1px solid #e2e8f0';
+                    resetButton.style.opacity = '1';
+                    resetButton.style.visibility = 'visible';
+                    panelHintText.style.opacity = '0';
+
+                } else {
+                    controlPanel.classList.remove('is-open');
+                    controlPanel.style.backgroundColor = '#f8fafc'; // slate-50
+                    controlPanelArrow.style.transform = 'rotate(0deg)';
+                    controlPanelBody.style.maxHeight = '0';
+                    controlPanelBody.style.paddingTop = '0';
+                    controlPanelBody.style.marginTop = '0';
+                    controlPanelBody.style.borderTop = '0';
+                    resetButton.style.opacity = '0';
+                    resetButton.style.visibility = 'hidden';
+                    panelHintText.style.opacity = '1';
+                }
+                
+                if (isInstant) {
+                     setTimeout(() => {
+                       controlPanelBody.style.transition = 'max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out, border 0.5s ease-in-out';
+                       resetButton.style.transition = 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out';
+                    }, 50);
+                }
+            }
+
+            controlPanelHeader.addEventListener('click', (e) => {
+                if (!resetButton.contains(e.target)) {
+                    setPanelOpen(!controlPanel.classList.contains('is-open'));
+                }
+            });
+
+
             // --- Initial Setup ---
             function initialize() {
                 sliders.telecabin1Tickets.value = BASE_VALUES.baseTelecabin1Tickets;
@@ -696,6 +771,7 @@
                 sliders.inflationRate.value = 0;
                 
                 calculateFinance();
+                setTimeout(() => setPanelOpen(false, true), 100); // Start collapsed
             }
 
             // --- Event Listeners ---
