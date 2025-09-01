@@ -290,7 +290,8 @@
                  <div class="kpi-card bg-slate-50 rounded-lg has-overlay">
                     <h3 class="font-bold text-slate-600 text-sm mb-2">هزینه ناشی از تورم</h3>
                     <p id="kpi-inflation-cost" class="text-4xl font-extrabold text-amber-600 my-2"></p>
-                    <p class="text-xs text-slate-500">افزایش هزینه عملیاتی به دلیل تورم</p>
+                    <p class="text-xs text-slate-400">میلیارد تومان</p>
+                    <p class="text-xs text-slate-500 mt-1">افزایش هزینه عملیاتی به دلیل تورم</p>
                     <div class="kpi-overlay">
                          <p class="text-xs text-center leading-relaxed">
                             <strong>فرمول: </strong> (کل هزینه‌های پایه * نرخ تورم)
@@ -633,11 +634,21 @@
                 revenueMixChart.update();
 
                 // Update KPIs
+                const kpiMarginEl = displays.kpiMargin;
                 const avgProjectCost = PROJECT_COSTS.reduce((a, b) => a + b, 0) / PROJECT_COSTS.length;
                 displays.kpiCoverage.textContent = `${((netProfit / avgProjectCost) * 100).toFixed(0)}%`;
                 displays.kpiInflation.textContent = `${(BASE_VALUES.totalCosts * inflation).toLocaleString('fa-IR', {maximumFractionDigits:0})}`;
                 const operationalMargin = dynamicTourismRevenue > 0 ? ((dynamicTourismRevenue - (BASE_VALUES.operationalCosts * (1+inflation))) / dynamicTourismRevenue) * 100 : 0;
-                displays.kpiMargin.textContent = `${operationalMargin.toFixed(1)}%`;
+                kpiMarginEl.textContent = `${operationalMargin.toFixed(1)}%`;
+                
+                if (operationalMargin < 0) {
+                    kpiMarginEl.classList.remove('text-green-600');
+                    kpiMarginEl.classList.add('text-red-600');
+                } else {
+                    kpiMarginEl.classList.remove('text-red-600');
+                    kpiMarginEl.classList.add('text-green-600');
+                }
+
 
                 // Update analysis card
                 if (cumulativeSurplus > 1000) {
@@ -720,7 +731,7 @@
                     controlPanel.classList.add('is-open');
                     controlPanel.style.backgroundColor = '#ffffff'; // white
                     controlPanelArrow.style.transform = 'rotate(180deg)';
-                    controlPanelBody.style.maxHeight = controlPanelBody.scrollHeight + "px";
+                    controlPanelBody.style.maxHeight = "500px"; // Use fixed large value
                     controlPanelBody.style.paddingTop = '1.5rem';
                     controlPanelBody.style.marginTop = '1rem';
                     controlPanelBody.style.borderTop = '1px solid #e2e8f0';
@@ -757,7 +768,7 @@
 
 
             // --- Initial Setup ---
-            function initialize() {
+            function resetValues() {
                 sliders.telecabin1Tickets.value = BASE_VALUES.baseTelecabin1Tickets;
                 sliders.telecabin2Tickets.value = BASE_VALUES.baseTelecabin2Tickets;
                 sliders.sleighTickets.value = BASE_VALUES.baseSleighTickets;
@@ -771,14 +782,17 @@
                 sliders.inflationRate.value = 0;
                 
                 calculateFinance();
-                setTimeout(() => setPanelOpen(false, true), 100); // Start collapsed
             }
 
-            // --- Event Listeners ---
-            setupCostBreakdownChart();
-            Object.values(sliders).forEach(slider => slider.addEventListener('input', calculateFinance));
-            resetButton.addEventListener('click', initialize);
-            initialize();
+            function initialSetup() {
+                setupCostBreakdownChart();
+                Object.values(sliders).forEach(slider => slider.addEventListener('input', calculateFinance));
+                resetButton.addEventListener('click', resetValues);
+                resetValues();
+                setTimeout(() => setPanelOpen(false, true), 100); 
+            }
+
+            initialSetup();
         });
     </script>
 </body>
