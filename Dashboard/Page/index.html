@@ -54,9 +54,13 @@
         
         .page > main {
             flex-grow: 1; /* Allow main content to take up available space */
-            overflow-y: auto; /* Enable scrolling ONLY for the main content area if needed */
+            overflow: hidden; /* Changed from auto to hidden to prevent scroll on cover */
             width: 100%;
             padding: 1rem 2.5rem;
+        }
+        
+        #tocPage main {
+            overflow-y: auto; /* Re-enable scroll only for TOC main content */
         }
 
         #coverPage {
@@ -134,6 +138,16 @@
         .tooltip-container:hover .tooltip {
             opacity: 1;
         }
+
+        /* Responsive typography for cover title - Adjusted for smaller screens */
+        .responsive-h1 {
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            line-height: 1.2;
+        }
+        .responsive-h2 {
+            font-size: clamp(1.1rem, 3.5vw, 1.875rem);
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body class="bg-gray-300 flex items-center justify-center min-h-screen p-4">
@@ -142,18 +156,18 @@
         
         <!-- Page 1: Cover -->
         <div id="coverPage" class="page active">
-            <header class="flex justify-center">
-                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-32 md:h-40"
+            <header class="flex justify-center pt-2 md:pt-4">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28 md:h-32 max-h-[20vh]"
                      onerror="this.onerror=null; this.src='https://placehold.co/400x200/e2e8f0/334155?text=Logo+NA';">
             </header>
             <main class="text-center cover-clickable-area">
                 <div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">اطلس سرمایه گذاری</h1>
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-700 mt-2">شهرک توریستی نمک آبرود</h2>
+                    <h1 class="responsive-h1 font-extrabold text-gray-800">اطلس سرمایه گذاری</h1>
+                    <h2 class="responsive-h2 font-bold text-gray-700 mt-2">شهرک توریستی نمک آبرود</h2>
                     <p class="text-gray-500 mt-4 text-xs">برای مشاهده فهرست، روی عنوان بالا کلیک کنید</p>
                 </div>
             </main>
-            <footer class="flex flex-col items-center pb-10">
+            <footer class="flex flex-col items-center pb-4 md:pb-8">
                 <div class="flex items-center justify-center gap-x-8 mb-4">
                     <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-16 md:h-20"
                          onerror="this.onerror=null; this.src='https://placehold.co/100x64/e2e8f0/334155?text=Logo+OMS';">
@@ -180,7 +194,7 @@
             <header class="flex justify-between items-center border-b border-gray-300">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-800">فهرست مطالب</h2>
                 <button id="backToCoverButton" title="بازگشت به جلد" class="flex items-center p-2 rounded-full hover:bg-gray-200 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http="www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                     <span class="text-xs text-gray-500 font-light mr-1">بازگشت</span>
