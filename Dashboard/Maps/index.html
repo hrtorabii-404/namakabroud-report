@@ -67,26 +67,6 @@
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
-        /* Header Logo Styles */
-        .logo-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .logo {
-            height: 110px;
-            width: auto;
-            object-fit: contain;
-        }
-        .logo.center {
-            height: 230px;
-        }
-        .logo.right {
-            height: 130px;
-        }
-
         #details-panel {
             transition: opacity 0.3s ease-in-out, max-height 0.4s ease-in-out;
             max-height: 0;
@@ -97,19 +77,34 @@
             max-height: 1000px; /* Large enough to not clip content */
             opacity: 1;
         }
+        
+        /* Footer Logo Styles */
+        .footer-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem; /* 16px */
+            margin-top: 1rem; /* 16px */
+        }
+        .footer-logo {
+            height: 55px; /* Half of 110px */
+            width: auto;
+            object-fit: contain;
+        }
+        .footer-logo.center {
+            height: 115px; /* Half of 230px */
+        }
+        .footer-logo.right {
+            height: 65px; /* Half of 130px */
+        }
 
     </style>
 </head>
 <body class="bg-slate-100">
 
-    <div class="max-w-7xl mx-auto p-4 lg:p-8 flex flex-col min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col min-h-screen">
         <header class="mb-6 text-center">
-            <div class="logo-container mb-4">
-                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
-                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
-                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-700">داشبورد تعاملی پروژه‌ها و ضوابط پهنه‌بندی شهرک نمک‌آبرود</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-700 mt-8 mb-4">داشبورد تعاملی پروژه‌ها و ضوابط پهنه‌بندی شهرک نمک‌آبرود</h1>
         </header>
 
         <!-- Main Application Container -->
@@ -142,7 +137,7 @@
             </main>
         </div>
         
-        <footer class="mt-6 text-center text-sm text-gray-600 py-4">
+        <footer class="mt-6 text-center text-sm text-gray-600 pt-4 pb-2">
             <p>
                 تهیه شده در 
                 <span class="font-semibold text-teal-700 relative group cursor-pointer">
@@ -155,6 +150,11 @@
                 </span>
                 - شهریورماه 1404
             </p>
+             <div class="footer-logo-container">
+                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="footer-logo">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="footer-logo center">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="footer-logo right">
+            </div>
         </footer>
     </div>
 
