@@ -150,20 +150,15 @@
             0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
-        #info-box {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: none;
-            z-index: 10;
-            transition: opacity 0.3s ease;
-            max-width: 280px;
+        #details-panel {
+            transition: opacity 0.3s ease-in-out, max-height 0.4s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #details-panel.visible {
+            max-height: 1000px; /* Large enough to not clip content */
+            opacity: 1;
         }
     </style>
 </head>
@@ -266,13 +261,13 @@
             
             <!-- Interactive Map -->
             <div class="card p-6 mb-8">
-                <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نقشه تعاملی پروژه‌ها</h3>
-                <div id="map-app" class="flex flex-col md:flex-row h-[85vh] bg-gray-100 text-gray-800 rounded-lg overflow-hidden">
+                <h3 class="text-xl font-semibold text-slate-700 mb-4 text-center">نقشه تعاملی پروژه‌ها و ضوابط پهنه‌بندی</h3>
+                <div id="map-app" class="flex flex-col md:flex-row bg-gray-100 text-gray-800 rounded-lg overflow-hidden border">
                     <!-- Sidebar -->
                     <aside class="w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg p-4 flex flex-col">
                         <header class="pb-4 border-b mb-4">
-                            <h1 class="text-xl font-bold text-teal-700 text-center">پهنه‌بندی و پروژه‌ها</h1>
-                            <p class="text-sm text-gray-500 text-center mt-1">برای مشاهده نقشه، روی هر پهنه کلیک کنید</p>
+                            <h2 class="text-xl font-bold text-teal-700 text-center">لیست پروژه‌ها</h2>
+                            <p class="text-sm text-gray-500 text-center mt-1">برای مشاهده نقشه، روی هر پهنه یا پروژه کلیک کنید</p>
                         </header>
                         <button id="reset-map-btn" class="w-full text-center bg-teal-600 text-white py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors duration-300 mb-4 font-semibold">
                             نمایش نقشه کلی شهرک
@@ -281,16 +276,19 @@
                     </aside>
             
                     <!-- Main Content -->
-                    <main class="w-full md:w-2/3 lg:w-3/4 p-4 md:p-6 lg:p-8 bg-gray-200 flex items-center justify-center">
-                        <div id="map-container" class="relative w-full h-full bg-white rounded-xl shadow-inner p-4 flex items-center justify-center">
+                    <main class="w-full md:w-2/3 lg:w-3/4 p-4 md:p-6 lg:p-8 bg-gray-50 flex flex-col items-center justify-start">
+                        <div id="map-container" class="relative w-full bg-white rounded-xl shadow-inner p-4 flex items-center justify-center">
                             <div id="map-surface">
                                 <div id="map-marker"></div>
-                                <div id="info-box"></div>
                             </div>
+                        </div>
+                        <div id="details-panel" class="w-full mt-4 bg-white rounded-xl shadow-inner p-5">
+                            <!-- Details will be injected here -->
                         </div>
                     </main>
                 </div>
             </div>
+
 
             <!-- Table -->
             <div class="card overflow-x-auto">
@@ -353,78 +351,92 @@
 
         // --- MAP DATASET ---
         const defaultMap = 'https://uploadkon.ir/uploads/aa2602_2501-Mahalat.jpg';
+        const zoneRegulations = {
+            'R1': { title: 'سکونت و اقامت عام شرقی (R1)', description: 'این پهنه هسته اصلی بخش مسکونی شرق شهرک است. شامل ویلاهای ۲ طبقه (R11) تا آپارتمان‌های ۵ طبقه (R15) می‌شود و تراکم در آن به صورت پلکانی افزایش می‌یابد.' },
+            'R2': { title: 'سکونت و اقامت عام غربی (R2)', description: 'این پهنه بخش مسکونی غرب شهرک را پوشش می‌دهد. شامل ویلاهای ۲ طبقه (R21) تا آپارتمان‌های ۴ طبقه (R24) است و تراکم کمتری نسبت به بخش شرقی دارد.' },
+            'R3': { title: 'سکونت و اقامت ویژه (R3)', description: 'پهنه اختصاص یافته به برج‌ها و ساختمان‌های بلندمرتبه. R31 برای اقامت موقت (هتل) و R32 و R33 برای مجتمع‌های مسکونی لوکس و بلندمرتبه طراحی شده است.' },
+            'S1': { title: 'خدمات فراشهری (S1)', description: 'این پهنه در ورودی شهرک قرار دارد و برای خدمات کلان‌مقیاس طراحی شده است. شامل خدمات یادگیری و درمانی (S11)، فراغت (S12)، تفرج (S13) و کسب‌وکار (S14) می‌شود.' },
+            'S2': { title: 'خدمات درون‌شهری (S2)', description: 'این پهنه برای تامین نیازهای داخلی شهرک است. S21 برای خدمات پشتیبان اقامت موقت (فصلی) و S22 برای خدمات پشتیبان اقامت دائم (مراکز محلات) است.' },
+            'S3': { title: 'تاسیسات شهری (S3)', description: 'پهنه اختصاص یافته به زیرساخت‌ها و تاسیسات شهری مانند پست‌های برق، ایستگاه‌های پمپاژ آب و... که تابع ضوابط دستگاه‌های مربوطه است.' },
+            'S4': { title: 'گردشگری متمرکز (S4)', description: 'این پهنه به طور خاص به محدوده تله‌کابین و خدمات مکمل آن مانند پارکینگ، مراکز خرید و رستوران‌ها اختصاص دارد و نیازمند تهیه طرح یکپارچه است.' },
+            'G1': { title: 'حفاظت و اقامت موقت ساحلی (G1)', description: 'پهنه ساحلی که ترکیبی از حفاظت و توسعه است. G11 (حریم دریا) کاملاً حفاظت‌شده، G12 (هتل پارسیان) تثبیت‌شده، و G13 تا G15 برای اقامتگاه‌های ساحلی از ۲ تا ۲۵ طبقه است.' },
+            'G2': { title: 'حفاظت فعال (G2)', description: 'پهنه پارک جنگلی. G21 (بوستان بنفشه) برای گردشگری و تفرج (مانند پارک ماجراجویی) و G22 (بوستان شمشاد) برای اکوتوریسم (مانند گلمپینگ) با حداقل مداخله طراحی شده است.' },
+            'G3': { title: 'محور ویژه میانی (G3)', description: 'این پهنه محور سبز میانی شهرک است. G31 برای فضاهای عمومی و گردشگری خوراک و G32 برای خدمات عمومی و رفاهی با تراکم بیشتر در نظر گرفته شده است.' },
+            'G4': { title: 'حریم هیدرولوژیک (G4)', description: 'پهنه کاملاً حفاظت‌شده مربوط به منابع آبی. G41 بستر و حریم رودخانه است و G42 حریم انهار که برای مسیرهای پیاده و دوچرخه مناسب است.' },
+            'G5': { title: 'کمربند سبز (G5)', description: 'پهنه مرزی شهرک. G51 به عنوان حائل با طبیعت، برای سازه‌های بسیار سبک گردشگری (مانند کلبه) مناسب است و G52 به عنوان حائل با سکونتگاه‌های مجاور، کاملاً حفاظت‌شده و برای فضای سبز عمومی است.' }
+        };
         const mapProjectData = [
             {
-                zoneName: 'پهنه G1 - عرصه ساحلی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2502-G1.jpg',
+                zoneName: 'پهنه G1 - عرصه ساحلی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2502-G1.jpg', zoneCode: 'G1', zoneArea: '37.2 هکتار', subZones: ['G11', 'G12', 'G13', 'G14', 'G15'],
                 projects: [
-                    { name: 'مارینا و پلاژ ساحلی', code: 'G11', area: '324,691', builtUpArea: 'محوطه‌سازی', location: 'عرصه ساحلی', coords: { top: '10%', left: '65%' } },
-                    { name: 'ویلاهای لوکس ساحلی', code: 'G13', area: '75,680', builtUpArea: '45,600', location: 'عرصه ساحلی', coords: { top: '18%', left: '57%' } },
-                    { name: 'سوییتهای ساحلی', code: 'G14', area: '56,997', builtUpArea: '68,396', location: 'عرصه ساحلی', coords: { top: '20%', left: '63%' } },
-                    { name: 'هتل ۵ ستاره ساحلی', code: 'G15', area: '60,779', builtUpArea: '151,948', location: 'عرصه ساحلی', coords: { top: '12%', left: '35%' } }
+                    { name: 'مارینا و پلاژ ساحلی', code: 'G11', area: '324,691', builtUpArea: 'محوطه‌سازی', location: 'عرصه ساحلی', coords: { top: '10%', left: '65%' }, keyInfo: "ایجاد یک مرکز تفریحات ساحلی مدرن با کاربری‌های پذیرایی، ورزشی و گردشگری آبی." },
+                    { name: 'ویلاهای لوکس ساحلی', code: 'G13', area: '75,680', builtUpArea: '45,600', location: 'عرصه ساحلی', coords: { top: '18%', left: '57%' }, keyInfo: "احداث ۴۵ واحد ویلای لوکس دو طبقه به همراه کلوپ مرکزی، استخر و فضاهای ورزشی اختصاصی." },
+                    { name: 'سوییتهای ساحلی', code: 'G14', area: '56,997', builtUpArea: '68,396', location: 'عرصه ساحلی', coords: { top: '20%', left: '63%' }, keyInfo: "ساخت ۶۸ بلوک سوئیت آپارتمان ۶ طبقه با یک مجتمع خدمات رفاهی و تفریحی مرکزی قدرتمند." },
+                    { name: 'هتل ۵ ستاره ساحلی', code: 'G15', area: '60,779', builtUpArea: '151,948', location: 'عرصه ساحلی', coords: { top: '12%', left: '35%' }, keyInfo: "احداث یک برج ۲۵ طبقه به عنوان هتل ۵ ستاره شامل فضاهای اقامتی، رستوران‌ها، سالن‌های همایش و مرکز تندرستی." }
                 ]
             },
             {
-                zoneName: 'پهنه G2 - پارک جنگلی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2503-G2.jpg',
+                zoneName: 'پهنه G2 - پارک جنگلی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2503-G2.jpg', zoneCode: 'G2', zoneArea: '158.8 هکتار', subZones: ['G21', 'G22'],
                 projects: [
-                    { name: 'اکوکمپ لینورا (بوستان بنفشه)', code: 'G21', area: '1,051,323', builtUpArea: '105,132', location: 'پارک جنگلی', coords: { top: '30%', left: '55%' } },
-                    { name: 'اکواوایلد شمشاد (بوستان شمشاد)', code: 'G22', area: '537,176', builtUpArea: '53,718', location: 'پارک جنگلی', coords: { top: '20%', left: '38%' } }
+                    { name: 'اکوکمپ لینورا (بوستان بنفشه)', code: 'G21', area: '1,051,323', builtUpArea: '105,132', location: 'پارک جنگلی', coords: { top: '30%', left: '55%' }, keyInfo: "توسعه اکوپارک با محوریت اقامت (هتل بوتیک، کلبه)، خوراک (رستوران محلی)، سرگرمی (اکوپارک) و کشاورزی (مزرعه گردشگری)." },
+                    { name: 'اکواوایلد شمشاد (بوستان شمشاد)', code: 'G22', area: '537,176', builtUpArea: '53,718', location: 'پارک جنگلی', coords: { top: '20%', left: '38%' }, keyInfo: "ایجاد پارک حیات وحش و ماجراجویی شامل آکواریوم، باغ پرندگان، باغ خزندگان و پارک ماجراجویی جنگلی." }
                 ]
             },
             {
-                zoneName: 'پهنه G3 - عرصه میانی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2504-G3.jpg',
+                zoneName: 'پهنه G3 - عرصه میانی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2504-G3.jpg', zoneCode: 'G3', zoneArea: '53 هکتار', subZones: ['G31', 'G32'],
                 projects: [
-                    { name: 'دهکده گردشگری خوراک', code: 'G31', area: '170,000', builtUpArea: '68,000', location: 'عرصه میانی', coords: { top: '70%', left: '62%' } },
-                    { name: 'دهکده هنر و صنایع دستی', code: 'G32', area: '279,490', builtUpArea: '279,490', location: 'عرصه میانی', coords: { top: '65%', left: '59.5%' } }
+                    { name: 'دهکده گردشگری خوراک', code: 'G31', area: '170,000', builtUpArea: '68,000', location: 'عرصه میانی', coords: { top: '70%', left: '62%' }, keyInfo: "ایجاد یک هاب خوراکی شامل دهکده غذای ایرانی، خیابان غذای ملل، سالن جشنواره‌ها و فروشگاه محصولات غذایی." },
+                    { name: 'دهکده هنر و صنایع دستی', code: 'G32', area: '279,490', builtUpArea: '279,490', location: 'عرصه میانی', coords: { top: '65%', left: '59.5%' }, keyInfo: "مرکز فرهنگی-اقتصادی شامل بازارچه‌های صنایع دستی ایران و جهان، کارگاه‌های زنده، گالری هنر و آکادمی آموزشی." }
                 ]
             },
             { 
-                zoneName: 'پهنه G4 - حریم هیدرولوژیک', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2505-G4.jpg', 
+                zoneName: 'پهنه G4 - حریم هیدرولوژیک', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2505-G4.jpg', zoneCode: 'G4', zoneArea: '17.5 هکتار', subZones: ['G41', 'G42'],
                 projects: [
-                    { name: 'حریم رودخانه و انهار', code: 'G41 / G42', description: 'پهنه کاملاً حفاظت‌شده مربوط به منابع آبی. G41 بستر و حریم رودخانه است و G42 حریم انهار که برای مسیرهای پیاده و دوچرخه مناسب است.', coords: null }
+                    { name: 'حریم رودخانه و انهار', code: 'G41', description: 'پهنه کاملاً حفاظت‌شده مربوط به منابع آبی...', coords: null }
                 ] 
             },
             { 
-                zoneName: 'پهنه G5 - کمربند سبز', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2506-G5.jpg', 
+                zoneName: 'پهنه G5 - کمربند سبز', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2506-G5.jpg', zoneCode: 'G5', zoneArea: '39.7 هکتار', subZones: ['G51', 'G52'],
                 projects: [
-                     { name: 'کمربند سبز', code: 'G51 / G52', description: 'پهنه مرزی شهرک. G51 به عنوان حائل با طبیعت، برای سازه‌های بسیار سبک گردشگری (مانند کلبه) و G52 به عنوان حائل با سکونتگاه‌های مجاور، برای فضای سبز عمومی است.', coords: null }
+                     { name: 'کمربند سبز', code: 'G51', description: 'پهنه مرزی شهرک...', coords: null }
                 ] 
             },
             {
-                zoneName: 'پهنه S1 - عرصه ورودی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2507-S1.jpg',
+                zoneName: 'پهنه S1 - عرصه ورودی', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2507-S1.jpg', zoneCode: 'S1', zoneArea: '72 هکتار', subZones: ['S11', 'S12', 'S13', 'S14'],
                 projects: [
-                    { name: 'مرکز سلامت و تندرستی', code: 'S11', area: '114,249', builtUpArea: '91,399', location: 'ورودی شهرک', coords: { top: '38%', left: '50%' } },
-                    { name: 'زمین پارتی گلف (Pitch & Putt)', code: 'S12', area: '50,000', builtUpArea: '30,000', location: 'ورودی شهرک', coords: { top: '40%', left: '56%' } },
-                    { name: 'پیست موتورسواری سوپرکراس', code: 'S12', area: '40,000', builtUpArea: '24,000', location: 'ورودی شهرک', coords: { top: '41%', left: '57%' } },
-                    { name: 'آرنای سرگرمی‌های دیجیتال نمک‌آبرود', code: 'S13', area: '90,000', builtUpArea: '54,000', location: 'ورودی شهرک', coords: { top: '40%', left: '64%' } },
+                    { name: 'مرکز سلامت و تندرستی', code: 'S11', area: '114,249', builtUpArea: '91,399', location: 'ورودی شهرک', coords: { top: '38%', left: '50%' }, keyInfo: "مقصد جامع گردشگری سلامت با خدمات آب‌درمانی، اسپا، کلینیک پزشکی ورزشی و مرکز توانبخشی." },
+                    { name: 'زمین پارتی گلف (Pitch & Putt)', code: 'S12', area: '50,000', builtUpArea: '30,000', location: 'ورودی شهرک', coords: { top: '40%', left: '56%' }, keyInfo: "زمین گلف ۱۸ حفره‌ای استاندارد به همراه کلوپ‌هاوس مرکزی و آکادمی تخصصی آموزش گلف." },
+                    { name: 'پیست موتورسواری سوپرکراس', code: 'S12', area: '40,000', builtUpArea: '24,000', location: 'ورودی شهرک', coords: { top: '41%', left: '57%' }, keyInfo: "مجموعه مسابقات موتوری شامل پیست اصلی سوپرکراس، جایگاه تماشاچیان و پیست کارتینگ سرپوشیده." },
+                    { name: 'آرنای سرگرمی‌های دیجیتال نمک‌آبرود', code: 'S13', area: '90,000', builtUpArea: '54,000', location: 'ورودی شهرک', coords: { top: '40%', left: '64%' }, keyInfo: "هاب نوآوری گردشگری شامل مرکز رشد، فضای کار اشتراکی، تالار نمایش فناوری و آکادمی گردشگری دیجیتال." },
                     { name: 'شهر کسب و کار', code: 'S14', description: 'پهنه S14 برای خدمات کلان‌مقیاس کسب‌وکار طراحی شده است.', location: 'ورودی شهرک', coords: { top: '40%', left: '71%' } }
                 ]
             },
             {
-                zoneName: 'پهنه S2 - مراکز محلات', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2508-S2.jpg',
+                zoneName: 'پهنه S2 - مراکز محلات', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2508-S2.jpg', zoneCode: 'S2', zoneArea: '32.5 هکتار', subZones: ['S21', 'S22'],
                 projects: [
-                    { name: 'مرکز محله ۱ (تم فرهنگی)', code: 'S22', area: '40,000', builtUpArea: '16,000', location: 'مراکز محلات', coords: null },
-                    { name: 'مرکز محله ۲ (تم پذیرایی)', code: 'S22', area: '15,826', builtUpArea: '6,330', location: 'مراکز محلات', coords: null },
-                    { name: 'مرکز محله ۳ (تم بازی بزرگسالان)', code: 'S22', area: '25,000', builtUpArea: '10,000', location: 'مراکز محلات', coords: null },
-                    { name: 'مرکز محله ۴ (تم بازی کودکان)', code: 'S22', area: '35,000', builtUpArea: '14,000', location: 'مراکز محلات', coords: null }
+                    { name: 'مرکز محله ۱ (تم فرهنگی)', code: 'S22', area: '40,000', builtUpArea: '16,000', location: 'مراکز محلات', coords: null, keyInfo: "فرهنگسرا شامل سالن تئاتر، گالری هنر، کافه کتاب و پارک هنری برای رویدادهای فرهنگی." },
+                    { name: 'مرکز محله ۲ (تم پذیرایی)', code: 'S22', area: '15,826', builtUpArea: '6,330', location: 'مراکز محلات', coords: null, keyInfo: "فود پلازا با رستوران‌های اصلی، کافه نانوایی، فود هال و فضای نشستن بیرونی وسیع." },
+                    { name: 'مرکز محله ۳ (تم بازی بزرگسالان)', code: 'S22', area: '25,000', builtUpArea: '10,000', location: 'مراکز محلات', coords: null, keyInfo: "مرکز سرگرمی شامل سالن بولینگ و بیلیارد، آرنای واقعیت مجازی، اتاق فرار و آرنای لیزر تگ." },
+                    { name: 'مرکز محله ۴ (تم بازی کودکان)', code: 'S22', area: '35,000', builtUpArea: '14,000', location: 'مراکز محلات', coords: null, keyInfo: "مجتمع کودک و خانواده با مناطق بازی آموزشی و دیجیتال، رستوران خانوادگی و زمین بازی ماجراجویانه." }
                 ]
             },
             { 
-                zoneName: 'پهنه S3 - تاسیسات شهری', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2509-S3.jpg', 
+                zoneName: 'پهنه S3 - تاسیسات شهری', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2509-S3.jpg', zoneCode: 'S3', zoneArea: '0.9 هکتار', subZones: ['S31'],
                 projects: [
-                    { name: 'تاسیسات شهری', code: 'S31', description: 'پهنه اختصاص یافته به زیرساخت‌ها و تاسیسات شهری مانند پست‌های برق، ایستگاه‌های پمپاژ آب و... که تابع ضوابط دستگاه‌های مربوطه است.', coords: { top: '66.5%', left: '74%' } }
+                    { name: 'تاسیسات شهری', code: 'S31', description: 'پهنه اختصاص یافته به زیرساخت‌ها و تاسیسات شهری...', coords: { top: '66.5%', left: '74%' } }
                 ] 
             },
             {
-                zoneName: 'پهنه S4 - عرصه تله‌کابین', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2510-S4.jpg',
+                zoneName: 'پهنه S4 - عرصه تله‌کابین', mapUrl: 'https://uploadkon.ir/uploads/81ba02_2510-S4.jpg', zoneCode: 'S4', zoneArea: '6.2 هکتار', subZones: ['S41'],
                 projects: [
-                    { name: 'تجاری و پارکینگ تله‌کابین', code: 'S41', area: '61,512', builtUpArea: '61,512', location: 'عرصه تله‌کابین', coords: { top: '90%', left: '80%' } }
+                    { name: 'تجاری و پارکینگ تله‌کابین', code: 'S41', area: '61,512', builtUpArea: '61,512', location: 'عرصه تله‌کابین', coords: { top: '90%', left: '80%' }, keyInfo: "دروازه ورودی تله‌کابین شامل پارکینگ طبقاتی، مرکز خرید، فودکورت و مرکز سرگرمی خانواده." }
                 ]
             },
             {
                 zoneName: 'پروژه‌های استراتژیک', mapUrl: defaultMap,
                 projects: [
-                    { name: 'پل سبزآبی (اتصال ورودی به ساحل)', code: '-', area: '20,000', builtUpArea: '4,000', location: 'بین عرصه‌ای', coords: null },
-                    { name: 'پارک ماجراجویی ابرها (بام تله‌کابین)', code: '-', area: '50,000', builtUpArea: '2,500', location: 'بام تله‌کابین', coords: null }
+                    { name: 'پل سبزآبی (اتصال ورودی به ساحل)', code: '-', area: '20,000', builtUpArea: '4,000', location: 'بین عرصه‌ای', coords: null, keyInfo: "مسیر تفریحی خطی به طول ۱۵۰۰ متر برای پیاده‌روی و دوچرخه‌سواری، متصل به دو پایانه خدماتی-تفریحی." },
+                    { name: 'پارک ماجراجویی ابرها (بام تله‌کابین)', code: '-', area: '50,000', builtUpArea: '2,500', location: 'بام تله‌کابین', coords: null, keyInfo: "اکو پارک ماجراجویانه با مسیرهای هوایی، زیپ‌لاین، صخره‌نوردی و مسیرهای جنگل‌پیمایی." }
                 ]
             }
         ];
@@ -470,7 +482,7 @@
         const projectListContainer = document.getElementById('project-list');
         const resetMapBtn = document.getElementById('reset-map-btn');
         const mapMarker = document.getElementById('map-marker');
-        const infoBox = document.getElementById('info-box');
+        const detailsPanel = document.getElementById('details-panel');
         let activeMapItem = null;
         
         const areaToZonePrefix = {
@@ -522,7 +534,7 @@
 
             const filteredData = projectsData.filter(p => {
                 const areaMatch = selectedArea === 'all' || p.area === selectedArea;
-                const zoneMatch = selectedZone === 'all' || p.zoneCode === selectedZone;
+                const zoneMatch = selectedZone === 'all' || p.zoneCode.includes(selectedZone);
                 const partnershipMatch = selectedPartnership === 'all' || p.partnershipType === selectedPartnership;
                 return areaMatch && zoneMatch && partnershipMatch;
             });
@@ -588,7 +600,7 @@
 
         function updateBuiltAreaChart(data) {
             const ctx = document.getElementById('builtAreaChart').getContext('2d');
-            const sortedData = [...data].sort((a,b) => a.proposedBuiltUpArea - b.proposedBuiltUpArea);
+            const sortedData = [...data].filter(p=>p.isProject).sort((a,b) => a.proposedBuiltUpArea - b.proposedBuiltUpArea);
             const labels = sortedData.map(p => p.projectName);
             const chartData = sortedData.map(p => p.proposedBuiltUpArea);
             const backgroundColors = sortedData.map(p => areaColorMap.get(p.area) || '#cccccc');
@@ -701,10 +713,10 @@
 
         function hideMapDetails() {
             mapMarker.style.display = 'none';
-            infoBox.style.display = 'none';
+            detailsPanel.classList.remove('visible');
         }
-
-        function showProjectOnMap(project) {
+        
+        function showProjectDetails(project) {
             if (project.coords) {
                 mapMarker.style.top = project.coords.top;
                 mapMarker.style.left = project.coords.left;
@@ -713,14 +725,77 @@
                 mapMarker.style.display = 'none';
             }
             
-            let infoHtml = `<h3 class="font-bold text-md mb-2 border-b pb-1 text-teal-800">${project.name}</h3>`;
-            if (project.description) {
-                infoHtml += `<p class="text-sm"><strong class="font-semibold text-gray-600">کد پهنه:</strong> ${project.code}</p><p class="text-sm mt-2">${project.description}</p>`;
-            } else {
-                infoHtml += `<p class="text-sm"><strong class="font-semibold">کد پهنه:</strong> ${project.code}</p><p class="text-sm"><strong class="font-semibold">موقعیت:</strong> ${project.location}</p><p class="text-sm"><strong class="font-semibold">مساحت:</strong> ${project.area} م.م.</p><p class="text-sm"><strong class="font-semibold">زیربنا:</strong> ${project.builtUpArea} م.م.</p>`;
+            let projectDetailsHtml = '';
+            if (!project.description) {
+                projectDetailsHtml = `
+                    <div class="space-y-2 text-sm">
+                        <h4 class="font-semibold text-gray-800 border-b pb-2 mb-3">مشخصات پروژه</h4>
+                        <p><strong class="font-medium text-gray-500 w-20 inline-block">کد پهنه:</strong> <span class="font-bold text-blue-600">${project.code}</span></p>
+                        <p><strong class="font-medium text-gray-500 w-20 inline-block">موقعیت:</strong> <span class="text-gray-800">${project.location}</span></p>
+                        <p><strong class="font-medium text-gray-500 w-20 inline-block">مساحت:</strong> <span class="font-bold text-green-600">${project.area}</span> م.م.</p>
+                        <p><strong class="font-medium text-gray-500 w-20 inline-block">زیربنا:</strong> <span class="font-bold text-green-600">${project.builtUpArea}</span> م.م.</p>
+                        ${project.keyInfo ? `<p class="mt-2 pt-2 border-t"><strong class="font-medium text-gray-500">نکات کلیدی:</strong> ${project.keyInfo}</p>` : ''}
+                    </div>
+                `;
             }
-            infoBox.innerHTML = infoHtml;
-            infoBox.style.display = 'block';
+
+            const mainZoneCode = project.code ? project.code.substring(0, 2) : null;
+            const regulation = mainZoneCode ? zoneRegulations[mainZoneCode] : null;
+            let regulationHtml = '';
+
+            if (regulation) {
+                regulationHtml = `
+                    <div class="space-y-2 text-sm">
+                         <h4 class="font-semibold text-gray-800 border-b pb-2 mb-3">${regulation.title}</h4>
+                         <p class="text-gray-700 leading-relaxed">${regulation.description}</p>
+                    </div>
+                `;
+            }
+            
+            let finalHtml = `
+                <h3 class="font-bold text-xl mb-4 text-teal-700">${project.name}</h3>
+                <div class="grid grid-cols-1 ${projectDetailsHtml && regulationHtml ? 'md:grid-cols-2' : ''} gap-x-6 gap-y-4">
+                    ${projectDetailsHtml}
+                    ${regulationHtml}
+                </div>
+            `;
+
+            detailsPanel.innerHTML = finalHtml;
+            detailsPanel.classList.add('visible');
+        }
+
+        function showZoneDetails(zone) {
+            mapMarker.style.display = 'none';
+            const regulation = zone.zoneCode ? zoneRegulations[zone.zoneCode.substring(0,2)] : null;
+
+            let zoneDetailsHtml = `
+                 <div class="space-y-2 text-sm">
+                    <h4 class="font-semibold text-gray-800 border-b pb-2 mb-3">مشخصات پهنه</h4>
+                    <p><strong class="font-medium text-gray-500 w-28 inline-block">مساحت کل پهنه:</strong> <span class="font-bold text-green-600">${zone.zoneArea}</span></p>
+                    <p><strong class="font-medium text-gray-500 w-28 inline-block">زیر‌پهنه‌ها:</strong> <span class="font-bold text-blue-600">${zone.subZones ? zone.subZones.join('، ') : 'N/A'}</span></p>
+                </div>
+            `;
+
+            let regulationHtml = '';
+             if (regulation) {
+                regulationHtml = `
+                    <div class="space-y-2 text-sm">
+                         <h4 class="font-semibold text-gray-800 border-b pb-2 mb-3">${regulation.title}</h4>
+                         <p class="text-gray-700 leading-relaxed">${regulation.description}</p>
+                    </div>
+                `;
+            }
+
+            let finalHtml = `
+                <h3 class="font-bold text-xl mb-4 text-teal-700">${zone.zoneName}</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    ${zoneDetailsHtml}
+                    ${regulationHtml}
+                </div>
+            `;
+
+            detailsPanel.innerHTML = finalHtml;
+            detailsPanel.classList.add('visible');
         }
 
         function updateMapSidebar(visibleZones) {
@@ -744,7 +819,7 @@
                     projectItem.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setMap(zone.mapUrl, () => showProjectOnMap(project));
+                        setMap(zone.mapUrl, () => showProjectDetails(project));
                         if (activeMapItem) activeMapItem.classList.remove('bg-teal-100', 'font-bold');
                         projectItem.classList.add('bg-teal-100', 'font-bold');
                         activeMapItem = projectItem;
@@ -759,7 +834,9 @@
                     document.querySelectorAll('.accordion-content').forEach(el => { if (el !== content) { el.style.maxHeight = null; el.previousElementSibling.querySelector('.accordion-icon').style.transform = 'rotate(0deg)'; }});
                     content.style.maxHeight = isOpen ? null : `${content.scrollHeight}px`;
                     icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-                    setMap(zone.mapUrl, () => zone.projects.length === 1 && zone.projects[0].description ? showProjectOnMap(zone.projects[0]) : hideMapDetails());
+                    setMap(zone.mapUrl, () => showZoneDetails(zone));
+                    if (activeMapItem) activeMapItem.classList.remove('bg-teal-100', 'font-bold');
+                    activeMapItem = null;
                 });
 
                 zoneContainer.appendChild(zoneHeader);
@@ -778,7 +855,7 @@
             }
             
             if (targetZone) {
-                setMap(targetZone.mapUrl);
+                setMap(targetZone.mapUrl, () => showZoneDetails(targetZone));
                 updateMapSidebar([targetZone]);
                 setTimeout(() => {
                      const firstAccordion = document.querySelector('#project-list .accordion-content');
@@ -789,7 +866,7 @@
                      }
                 }, 100);
             } else {
-                setMap(defaultMap);
+                setMap(defaultMap, hideMapDetails);
                 updateMapSidebar(mapProjectData);
             }
         }
@@ -797,10 +874,10 @@
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             populateFilters();
-            updateDashboard(); // This will also call updateMapView for initial setup
+            updateDashboard();
             
             resetMapBtn.addEventListener('click', () => {
-                setMap(defaultMap);
+                setMap(defaultMap, hideMapDetails);
                 updateMapSidebar(mapProjectData);
                 areaFilter.value = 'all';
                 zoneFilter.value = 'all';
