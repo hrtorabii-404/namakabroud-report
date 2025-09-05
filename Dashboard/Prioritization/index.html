@@ -42,17 +42,18 @@
             text-align: right;
             border-radius: 8px;
             padding: 1rem;
-            position: absolute;
-            z-index: 10;
-            bottom: 115%;
-            left: 50%;
-            margin-left: -170px;
+            position: absolute; /* Default position for static tooltips like matrix */
+            z-index: 100;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s;
             font-size: 0.875rem;
             line-height: 1.7;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border: 1px solid #e2e8f0;
+            pointer-events: none; /* Prevent tooltip from blocking mouse events */
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
         .slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 4px; background-color: #e2e8f0; outline: none; }
@@ -77,8 +78,7 @@
         .priority-matrix-cell:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 5; }
         .matrix-tooltip .tooltiptext { 
             width: 450px; 
-            margin-left: -225px; 
-            background-color: #1e293b; 
+            background-color: #1e2b3b;
             color: #e2e8f0; 
             text-align: right; 
             font-size: 0.8rem;
@@ -109,6 +109,10 @@
         #control-panel-card.closed:hover {
             background-color: #f1f5f9; /* Lighter grey on hover when closed */
         }
+        .footer-tooltip .tooltiptext {
+            transform: translate(-50%, -110%) !important;
+        }
+
     </style>
 </head>
 <body class="text-slate-800">
@@ -146,7 +150,7 @@
              </div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div id="indicator-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
              <div class="card text-center tooltip">
                 <h3 class="text-lg font-bold" style="color:#7a5195;">ضرورت و تأثیر اجتماعی</h3>
                 <p id="social-card-value" class="text-4xl font-extrabold my-2" style="color:#7a5195;"></p>
@@ -326,8 +330,8 @@
 
     <footer class="bg-white text-center p-4 mt-8 border-t">
         <p class="text-slate-600">تهیه شده توسط 
-            <span class="tooltip font-bold text-slate-700">مهندسین مشاور ایده پرداز محیط
-                <span class="tooltiptext !w-auto !min-w-[220px] !-ml-[110px] !bg-[#1e293b] !text-white !text-xs !leading-relaxed">
+            <span class="tooltip footer-tooltip font-bold text-slate-700">مهندسین مشاور ایده پرداز محیط
+                <span class="tooltiptext !w-auto !min-w-[220px] !bg-[#1e293b] !text-white !text-xs !leading-relaxed">
                     تحلیل و طراحی: حمیدرضا ترابی
                     <br>
                     <span class="opacity-80">hr.torabii@gmail.com</span>
@@ -978,7 +982,8 @@
                     sliders[key].addEventListener('input', (e) => syncAndNormalize(key, parseInt(e.target.value, 10)) );
                 });
 
-                document.getElementById('reset-weights').addEventListener('click', () => {
+                document.getElementById('reset-weights').addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevents the accordion from closing
                     currentWeights = { ...initialWeights };
                     updateAllSliderUI();
                     updateAllVisuals(baselineRankings);
@@ -1085,8 +1090,57 @@
                 });
             }
 
+            function setupSmartTooltips() {
+                // Target only the four main indicator cards
+                const smartTooltips = document.querySelectorAll('#indicator-cards-grid .tooltip'); 
+
+                smartTooltips.forEach(tooltip => {
+                    const tooltipText = tooltip.querySelector('.tooltiptext');
+                    if (tooltipText) {
+                        // Set the position to fixed for these specific tooltips to allow viewport-relative positioning
+                        tooltipText.style.position = 'fixed';
+                        tooltipText.style.bottom = 'auto';
+                        tooltipText.style.left = '0';
+                        tooltipText.style.transform = 'none';
+                        
+                        tooltip.addEventListener('mousemove', (e) => {
+                            const tooltipHeight = tooltipText.offsetHeight;
+                            const tooltipWidth = tooltipText.offsetWidth;
+                            const viewportWidth = window.innerWidth;
+                            const viewportHeight = window.innerHeight;
+                            const offset = 20; // Gap from the cursor
+
+                            let top, left;
+
+                            // Vertical positioning: position below cursor, but flip above if not enough space
+                            if (e.clientY + tooltipHeight + offset > viewportHeight) {
+                                top = e.clientY - tooltipHeight - offset; // Flip above
+                            } else {
+                                top = e.clientY + offset; // Position below
+                            }
+
+                            // Horizontal positioning: center on cursor
+                            left = e.clientX - (tooltipWidth / 2);
+
+                            // Boundary checks to prevent going off-screen
+                            if (left < offset) {
+                                left = offset;
+                            }
+                            if (left + tooltipWidth + offset > viewportWidth) {
+                                left = viewportWidth - tooltipWidth - offset;
+                            }
+                            
+                            tooltipText.style.left = `${left}px`;
+                            tooltipText.style.top = `${top}px`;
+                        });
+                    }
+                });
+            }
+
+
             setupControls();
             setupAccordion();
+            setupSmartTooltips();
         });
     </script>
 </body>
