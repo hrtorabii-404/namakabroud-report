@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک پیشرفت فاز ۵: ارزیابی آسیب‌پذیری و ریسک</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f4f8; /* A lighter, cooler gray */
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 3rem;
+            padding-right: 3rem;
+        }
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            right: 1.4rem; 
+            top: 1.5rem; 
+            width: 4px;
+            height: calc(100% - 1.5rem);
+            background: linear-gradient(to bottom, #60a5fa, #2563eb); /* blue gradient */
+            border-radius: 2px;
+        }
+         .timeline-marker {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 3rem; 
+            height: 3rem; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            z-index: 10;
+            border: 4px solid #f0f4f8;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-right: 4px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .card-green { border-right-color: #22c55e; }
+        .card-blue { border-right-color: #3b82f6; }
+        .card-amber { border-right-color: #f59e0b; }
+        
+        .progress-bar-container {
+            background-color: #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 2px solid #cbd5e1;
+            padding: 4px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #22d3ee, #3b82f6); /* cyan-400 to blue-500 */
+            transition: width 1.5s ease-in-out;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            border-radius: 0.25rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header with Logos -->
+        <header class="text-center mb-12">
+            <div class="flex justify-center items-center gap-8 mb-6">
+                <img src="https://uploadkon.ir/uploads/71ce06_25logo-1-low.jpg" alt="PEISEZ Logo" class="h-16 md:h-20 object-contain">
+                <img src="https://uploadkon.ir/uploads/25ba06_25لوگو.jpg" alt="Hamoon Gostar Sanat Logo" class="h-20 md:h-24 object-contain">
+            </div>
+            <h1 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">گزارش پیشرفت فاز ۵: ارزیابی آسیب‌پذیری و ریسک</h1>
+            <p class="text-lg text-slate-600 mt-3">خلاصه وضعیت مدیریتی برای منطقه ویژه اقتصادی صنایع انرژی‌بر پارسیان</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold text-center mb-4 text-slate-700">نمودار پیشرفت کلی فاز پنجم</h2>
+            <div class="progress-bar-container w-full h-12 shadow-inner">
+                <div id="progressBar" class="flex items-center justify-center progress-bar" style="width: 0%;">
+                    <span class="text-xl font-bold text-white drop-shadow-md">80%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-5xl mx-auto">
+            <div class="timeline">
+                <!-- Section 1: Completed Activities -->
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-green-500 text-white text-2xl shadow-lg">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold mb-6 text-green-700">بخش اول: فعالیت‌های اصلی انجام شده (۸۰٪)</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="card card-green bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                            <h3 class="font-bold text-lg mb-2">تحلیل وابستگی متقابل دارایی‌ها (<strong class="text-sky-600">MICMAC</strong>)</h3>
+                            <p class="text-slate-600">مدل‌سازی کمی روابط و تأثیرات متقابل بین <strong>۸ کارگروه اصلی دارایی‌ها</strong>.</p>
+                        </div>
+                        <div class="card card-green bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                             <h3 class="font-bold text-lg mb-2">تحلیل جامع محیط پیرامونی</h3>
+                            <p class="text-slate-600">بررسی وابستگی‌های استراتژیک به زیرساخت‌های خارجی و <strong>تأثیر مخاطرات طبیعی</strong>.</p>
+                        </div>
+                        <div class="card card-green bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                            <h3 class="font-bold text-lg mb-2">تحلیل سناریوهای شکست آبشاری</h3>
+                            <p class="text-slate-600">شبیه‌سازی سناریوهای بحرانی جهت شناسایی <strong>نقاط شکست منفرد (Single Point of Failure)</strong>.</p>
+                        </div>
+                        <div class="card card-green bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                             <h3 class="font-bold text-lg mb-2">ارزیابی کمی ریسک (<strong class="text-sky-600">FEMA</strong>)</h3>
+                             <p class="text-slate-600">محاسبه امتیاز خطرپذیری برای <strong>۷۸ دارایی اصلی</strong> در برابر <strong>۱۰ تهدید مبنا</strong>.</p>
+                        </div>
+                         <div class="card card-green bg-white p-5 rounded-xl border border-slate-200 shadow-lg md:col-span-2">
+                             <h3 class="font-bold text-lg mb-2">تحلیل و طبقه‌بندی پیامدها (<strong class="text-sky-600">DPSIR</strong>)</h3>
+                             <p class="text-slate-600">دسته‌بندی پیامدهای تهدیدات در ابعاد <strong>کالبدی، انسانی، اقتصادی-اجتماعی و زیست‌محیطی</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Key Strategic Finding -->
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-red-500 text-white text-2xl shadow-lg animate-pulse">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold mb-6 text-red-700">بخش دوم: یافته راهبردی کلیدی</h2>
+                    <div class="card highlight-box p-6 rounded-xl border-2 border-red-300 shadow-2xl">
+                        <h3 class="text-2xl font-black text-center text-red-800 mb-4">شناسایی پاشنه آشیل منطقه: مثلث وابستگی بحرانی</h3>
+                        <p class="text-slate-700 text-center text-lg mb-6">تحلیل‌ها یک وابستگی سیستمی و حیاتی غیرقابل انکار را میان سه شاهرگ اصلی منطقه به اثبات رساند. آسیب به هر یک از این اضلاع، منجر به <strong>فلج شدن دومینو وار کل سیستم</strong> خواهد شد.</p>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-24 h-24 bg-sky-500 text-white rounded-full flex flex-col justify-center items-center shadow-lg mb-2"><i class="fas fa-bolt fa-2x"></i><span class="font-bold mt-1">انرژی</span></div>
+                                <p class="text-sm font-semibold text-slate-600">خوشه برق و نیروگاه‌ها</p>
+                            </div>
+                            <i class="fas fa-arrow-left text-4xl text-slate-500 hidden md:block"></i>
+                            <i class="fas fa-arrow-down text-4xl text-slate-500 md:hidden"></i>
+                            <div class="flex flex-col items-center">
+                                 <div class="w-24 h-24 bg-indigo-500 text-white rounded-full flex flex-col justify-center items-center shadow-lg mb-2"><i class="fas fa-industry fa-2x"></i><span class="font-bold mt-1">تولید</span></div>
+                                 <p class="text-sm font-semibold text-slate-600">واحدهای پتروشیمی و صنعت</p>
+                            </div>
+                            <i class="fas fa-arrow-left text-4xl text-slate-500 hidden md:block"></i>
+                            <i class="fas fa-arrow-down text-4xl text-slate-500 md:hidden"></i>
+                            <div class="flex flex-col items-center">
+                                <div class="w-24 h-24 bg-emerald-500 text-white rounded-full flex flex-col justify-center items-center shadow-lg mb-2"><i class="fas fa-ship fa-2x"></i><span class="font-bold mt-1">صادرات</span></div>
+                                <p class="text-sm font-semibold text-slate-600">اسکله‌ها و حمل‌ونقل دریایی</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Key Outputs -->
+                <div class="timeline-item">
+                     <div class="timeline-marker bg-blue-500 text-white text-2xl shadow-lg">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold mb-6 text-blue-700">بخش سوم: سایر خروجی‌های کلیدی</h2>
+                    <div class="space-y-4">
+                        <div class="card card-blue bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                             <h3 class="font-bold text-lg">اولویت‌بندی نهایی دارایی‌ها بر اساس امتیاز ریسک</h3>
+                            <p class="text-slate-600">ارائه نقشه راه علمی و قابل دفاع برای <strong>تخصیص بهینه منابع و اولویت‌بندی اقدامات پدافندی</strong>.</p>
+                        </div>
+                        <div class="card card-blue bg-white p-5 rounded-xl border border-slate-200 shadow-lg">
+                            <h3 class="font-bold text-lg">شناسایی تهدیدات با اولویت مطلق</h3>
+                            <p class="text-slate-600">تهدیدات <strong>ویژه و نیمه‌سخت</strong> (<strong>حملات دقیق پهپادی و تهاجمات سایبری</strong>) به عنوان محتمل‌ترین و خطرناک‌ترین سناریوها شناسایی شدند.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Remaining Work -->
+                <div class="timeline-item">
+                     <div class="timeline-marker bg-amber-500 text-white text-2xl shadow-lg">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold mb-6 text-amber-700">بخش چهارم: مسیر پیش رو (۲۰٪ باقی‌مانده)</h2>
+                     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="card card-amber bg-white p-5 rounded-xl border border-slate-200 shadow-lg text-center">
+                            <i class="fas fa-map-signs fa-3x text-amber-500 mb-3"></i>
+                            <h3 class="font-bold text-lg">تدقیق نقشه‌های پهنه‌بندی ریسک</h3>
+                        </div>
+                        <div class="card card-amber bg-white p-5 rounded-xl border border-slate-200 shadow-lg text-center">
+                            <i class="fas fa-tasks fa-3x text-amber-500 mb-3"></i>
+                            <h3 class="font-bold text-lg">تدوین بخش مدیریت ریسک</h3>
+                        </div>
+                         <div class="card card-amber bg-white p-5 rounded-xl border border-slate-200 shadow-lg text-center">
+                            <i class="fas fa-sitemap fa-3x text-amber-500 mb-3"></i>
+                            <h3 class="font-bold text-lg">ارائه استراتژی‌های مدیریت ریسک</h3>
+                        </div>
+                         <div class="card card-amber bg-white p-5 rounded-xl border border-slate-200 shadow-lg text-center">
+                            <i class="fas fa-file-archive fa-3x text-amber-500 mb-3"></i>
+                            <h3 class="font-bold text-lg">جمع‌بندی نهایی مستندات</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+         <!-- Footer -->
+        <footer class="text-center mt-16 pt-8 border-t-2 border-slate-300">
+            <p class="text-slate-600 font-semibold">تهیه شده توسط: شرکت مهندسین مشاور هامون گستر صنعت</p>
+        </footer>
+    </div>
+    
+    <script>
+        window.addEventListener('load', () => {
+            const progressBar = document.getElementById('progressBar');
+            setTimeout(() => {
+                progressBar.style.width = '80%';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
