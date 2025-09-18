@@ -212,9 +212,10 @@
                 { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
                 { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
                 { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
-                { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
                 { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
                 { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
                 { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
                 { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
                 { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
@@ -264,9 +265,10 @@
                         "پارک ماجراجویی ابرها": "FS_Abr",
                         "هتل 5 ستاره": "FS_Hotel",
                         "دهکده گردشگری خوراک": "FS_Khorak",
-                        "مرکز محله ۴ (بازی کودکان)": "FS_Koodak",
+                        "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi",
                         "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza",
                         "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal",
+                        "مرکز محله ۴ (بازی کودکان)": "FS_Koodak",
                         "اکوکمپ لینورا": "FS_Linora",
                         "پل سبز آبی": "FS_Pol",
                         "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi",
@@ -275,7 +277,7 @@
                         "ویلاهای لوکس ساحلی": "FS_Villa"
                     };
                     const linkKey = projectLinkMap[project.title];
-                    const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}/`;
+                    const destination = `http://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
                     
                     const rect = this.getBoundingClientRect();
                     this.style.position = 'fixed';
@@ -297,7 +299,7 @@
             });
 
             // Add placeholder cards
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 7; i++) {
                 const placeholder = document.createElement('div');
                 placeholder.className = 'placeholder-card';
                 placeholder.innerHTML = `
@@ -342,6 +344,5 @@
     </script>
 </body>
 </html>
-
 
 
