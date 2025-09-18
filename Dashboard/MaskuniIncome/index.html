@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریتی تحلیل درآمد</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts (Vazirmatn for Persian) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f2f5; /* A softer, more professional background */
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .kpi-card, .insight-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .icon-bg {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo.center {
+            height: 150px;
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: 240px;
+            background-color: #374151; /* gray-700 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            font-weight: normal;
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #374151 transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #a7a7a7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #888; }
+    </style>
+</head>
+<body class="p-4 md:p-6 lg:p-8">
+    <div class="max-w-screen-xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8">
+             <div class="card mb-8">
+                <div class="logo-container">
+                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+                    <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo">
+                </div>
+            </div>
+            <div class="text-center">
+                <h1 class="text-4xl font-extrabold text-slate-800">داشبورد مدیریتی و استراتژیک درآمدهای مسکونی</h1>
+                <p class="text-slate-500 mt-2 text-lg">تحلیل جامع درآمدها برای تصمیم‌گیری‌های کلان مدیریتی</p>
+            </div>
+        </header>
+
+        <main class="space-y-8">
+            <!-- Management Report Summary Card -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">📄 خلاصه مدیریتی (یافته‌های کلیدی)</h2>
+                <div class="prose prose-sm max-w-none text-slate-600 space-y-4">
+                     <p>
+                        تحلیل داده‌های به‌روز شده نشان می‌دهد که پورتفولیوی درآمدی شرکت بسیار بزرگ و قابل توجه است. مجموع درآمد پیش‌بینی‌شده بالغ بر <strong>۶۲ هزار میلیارد تومان</strong> است. حدود <strong>۴۲٪</strong> از این مبلغ قطعی شده، اما <strong>۵۸٪</strong> در وضعیت "فاقد قرارداد" یا "در حال انعقاد" قرار دارد که بزرگترین فرصت رشد و در عین حال مهم‌ترین ریسک سبد درآمدی شرکت است.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>رفع ابهام فوری:</strong> بیش از <strong>۴۱٪</strong> از درآمدها (حدود ۲۵.۷ هزار میلیارد تومان) مربوط به پروژه‌های با سرمایه‌گذار <strong>"نامشخص"</strong> است.</li>
+                        <li><strong>تمرکز بر پروژه‌های استراتژیک:</strong> تنها <strong>۴ پروژه</strong> مسئول تولید <strong>۳۳٪</strong> از کل درآمد شرکت هستند و نیازمند نظارت ویژه می‌باشند.</li>
+                        <li><strong>برنامه‌ریزی برای اوج درآمدی:</strong> اوج درآمدزایی در سال‌های <strong>۱۴۰۶ تا ۱۴۰۸</strong> خواهد بود و برنامه‌ریزی برای تحقق آن باید از هم‌اکنون آغاز شود.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                 <div class="card kpi-card">
+                    <div class="icon-bg bg-green-100 text-green-600">💰</div>
+                    <div>
+                        <h3 class="text-slate-500 font-medium">مجموع درآمد برآوردی</h3>
+                        <p id="total-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                 <div class="card kpi-card">
+                    <div class="icon-bg bg-cyan-100 text-cyan-600">✅</div>
+                    <div>
+                        <h3 class="text-slate-500 font-medium">درآمد قطعی شده</h3>
+                        <p id="confirmed-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="icon-bg bg-amber-100 text-amber-600">⏳</div>
+                    <div>
+                        <h3 class="text-slate-500 font-medium">پتانسیل (در حال انعقاد)</h3>
+                        <p id="potential-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="icon-bg bg-rose-100 text-rose-600">🚩</div>
+                     <div>
+                        <h3 class="text-slate-500 font-medium">ریسک (فاقد قرارداد)</h3>
+                        <p id="risk-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="icon-bg bg-blue-100 text-blue-600">🏗️</div>
+                    <div>
+                        <h3 class="text-slate-500 font-medium">تعداد کل پروژه‌ها</h3>
+                        <p id="total-projects" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                <div class="card kpi-card">
+                    <div class="icon-bg bg-red-100 text-red-600">❓</div>
+                    <div>
+                        <h3 class="text-slate-500 font-medium">سرمایه‌گذار نامشخص</h3>
+                        <p id="unknown-investor" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+                 <div class="card kpi-card">
+                    <div class="icon-bg bg-yellow-100 text-yellow-600">⚠️</div>
+                     <div>
+                        <h3 class="text-slate-500 font-medium">مجموع درآمد غیرقطعی</h3>
+                        <p id="unconfirmed-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attractive Management Insight Cards -->
+             <div class="card">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">💡 نکات کلیدی مدیریتی</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-4 bg-orange-50 rounded-lg">
+                         <div class="flex items-center gap-3">
+                            <span class="text-3xl">🎯</span>
+                            <div>
+                                <p class="font-bold text-lg text-orange-800">تمرکز استراتژیک</p>
+                                <p class="text-sm text-orange-600"><strong>۳۳٪</strong> کل درآمد فقط از <strong>۴ پروژه</strong> است.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="p-4 bg-red-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">❗</span>
+                             <div>
+                                <p class="font-bold text-lg text-red-800">پتانسیل و ریسک</p>
+                                <p class="text-sm text-red-600"><strong>۵۸٪</strong> درآمد (۳۶ همت) هنوز قطعی نشده است.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="p-4 bg-blue-50 rounded-lg">
+                         <div class="flex items-center gap-3">
+                            <span class="text-3xl">📈</span>
+                             <div>
+                                <p class="font-bold text-lg text-blue-800">اوج درآمدی آتی</p>
+                                <p class="text-sm text-blue-600"><strong>۸۶٪</strong> فروش آتی در سال‌های <strong>۱۴۰۶-۱۴۰۸</strong> است.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-purple-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">🔍</span>
+                             <div>
+                                <p class="font-bold text-lg text-purple-800">نیاز به شفاف‌سازی</p>
+                                <p class="text-sm text-purple-600"><strong>۴۱٪</strong> درآمد از سرمایه‌گذار <strong>نامشخص</strong> است.</p>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Main Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Investor Analysis -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-slate-800 mb-1">🤝 تحلیل درآمد بر اساس سرمایه‌گذار</h3>
+                    <p class="text-slate-500 mb-4 text-sm">شناسایی شرکای استراتژیک و پروژه‌های نیازمند شفاف‌سازی</p>
+                    <div class="chart-container">
+                        <canvas id="investorRevenueChart"></canvas>
+                    </div>
+                </div>
+                 <!-- Yearly Projection Line Chart -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">📅 پیش‌بینی جریان درآمدی آتی</h3>
+                    <div class="chart-container">
+                        <canvas id="yearlyProjectionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 <!-- Contract Status Doughnut Chart -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">📊 تفکیک درآمد بر اساس وضعیت قرارداد</h3>
+                    <div class="chart-container">
+                        <canvas id="contractStatusChart"></canvas>
+                    </div>
+                </div>
+                 <!-- Pareto (Project Class) Bar Chart -->
+                <div class="card">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">🎯 تحلیل پروژه‌های کلیدی (پارتو)</h3>
+                    <div class="chart-container">
+                        <canvas id="paretoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        <!-- Footer Section -->
+        <footer class="text-center py-8 mt-12 border-t border-gray-200">
+            <p class="text-gray-600">
+                تهیه شده توسط 
+                <span class="font-semibold text-teal-600 tooltip-container">
+                    مهندسین مشاور ایده پرداز محیط
+                    <span class="tooltip-text">
+                        <span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>
+                        hr.torabii@gmail.com
+                    </span>
+                </span>
+            </p>
+            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Data from the NEW Management Report (in Billion Tomans) ---
+        const reportData = {
+            totalRevenue: 61995, // میلیارد تومان
+            contractStatus: {
+                labels: ['دارای قرارداد', 'فاقد قرارداد', 'در حال انعقاد'],
+                data: [25927, 23128, 12940],
+            },
+            investors: {
+                labels: ['نامشخص', 'شرکت آکام فولاد', 'لوتوس مهر ایرانیان', 'آتیه سازان همکاران', 'سایر شرکت‌ها'],
+                data: [25671, 5453, 5415, 4855, 20601], 
+            },
+            pareto: {
+                labels: ['A (استراتژیک)', 'B (مهم)', 'C (معمولی)'],
+                data: [20447, 39071, 2477]
+            },
+            yearly: {
+                labels: ['1405', '1406', '1407', '1408', '1409'],
+                data: [1660, 17888, 15921, 15521, 5891]
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            Chart.defaults.font.family = 'Vazirmatn';
+            Chart.defaults.font.size = 12;
+            Chart.defaults.color = '#64748b';
+
+            const formatDynamicValue = (num_billion_toman, isCurrency = true) => {
+                if (!isCurrency) {
+                    return num_billion_toman.toLocaleString('fa-IR');
+                }
+                if (num_billion_toman >= 1000) {
+                    const hemt = num_billion_toman / 1000;
+                    return `${hemt.toFixed(1)} همت`;
+                }
+                return `${num_billion_toman.toLocaleString('fa-IR')} میلیارد تومان`;
+            };
+            
+            const totalProjects = 27; // From report context
+
+            // --- Update KPIs ---
+            document.getElementById('total-revenue').textContent = formatDynamicValue(reportData.totalRevenue);
+            document.getElementById('confirmed-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[0]);
+            document.getElementById('potential-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[2]);
+            document.getElementById('risk-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[1]);
+            const unconfirmedRevenue = reportData.contractStatus.data[1] + reportData.contractStatus.data[2];
+            document.getElementById('unconfirmed-revenue').textContent = formatDynamicValue(unconfirmedRevenue);
+            document.getElementById('total-projects').textContent = formatDynamicValue(totalProjects, false);
+            document.getElementById('unknown-investor').textContent = formatDynamicValue(reportData.investors.data[0]);
+            
+            // --- Chart 1: Investor Revenue ---
+            new Chart(document.getElementById('investorRevenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: reportData.investors.labels,
+                    datasets: [{
+                        data: reportData.investors.data,
+                        backgroundColor: ['#ef4444', '#8b5cf6', '#6366f1', '#3b82f6', '#14b8a6'],
+                        borderRadius: 8,
+                        barPercentage: 0.7
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (c) => `${c.label}: ${formatDynamicValue(c.raw)}` } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'هزار میلیارد تومان (همت)' }, ticks: { callback: (val) => val / 1000 } },
+                        y: { ticks: { font: { size: 14 } } }
+                    }
+                }
+            });
+
+            // --- Chart 2: Yearly Projection ---
+            const ctx2 = document.getElementById('yearlyProjectionChart').getContext('2d');
+            const lineGradient = ctx2.createLinearGradient(0, 0, 0, 300);
+            lineGradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
+            lineGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: reportData.yearly.labels,
+                    datasets: [{
+                        label: 'درآمد', data: reportData.yearly.data,
+                        borderColor: '#3b82f6', backgroundColor: lineGradient,
+                        fill: true, tension: 0.4, pointBackgroundColor: '#3b82f6',
+                        pointRadius: 5, pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${formatDynamicValue(c.raw)}` } } },
+                    scales: { y: { ticks: { callback: (val) => `${formatDynamicValue(val)}` } } }
+                }
+            });
+
+            // --- Chart 3: Contract Status ---
+            new Chart(document.getElementById('contractStatusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: reportData.contractStatus.labels,
+                    datasets: [{
+                        data: reportData.contractStatus.data,
+                        backgroundColor: ['#10b981', '#ef4444', '#f97316'],
+                        borderColor: '#ffffff', borderWidth: 4, hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '70%',
+                    plugins: { legend: { position: 'bottom', labels: { padding: 20 } },
+                    tooltip: { callbacks: { label: (c) => `${c.label}: ${formatDynamicValue(c.raw)}` } } }
+                }
+            });
+            
+             // --- Chart 4: Pareto Analysis ---
+            new Chart(document.getElementById('paretoChart'), {
+                type: 'bar',
+                data: {
+                    labels: reportData.pareto.labels,
+                    datasets: [{
+                        data: reportData.pareto.data,
+                        backgroundColor: ['#4f46e5', '#3b82f6', '#14b8a6'],
+                        borderRadius: 8, barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${formatDynamicValue(c.raw)}` } } },
+                    scales: { y: { ticks: { callback: (val) => `${formatDynamicValue(val)}` } } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
