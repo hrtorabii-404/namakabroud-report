@@ -333,7 +333,7 @@
         <!-- Project Cost Breakdown Section -->
         <div class="card mt-6">
             <h2 class="text-2xl font-bold text-center text-slate-700 mb-2">تحلیل و تفکیک هزینه‌های کلان پروژه</h2>
-            <p class="text-center text-slate-500 text-sm mb-6 max-w-2xl mx-auto">این بخش، بودجه کل مورد نیاز برای تکمیل تمامی پروژه‌های زیرساختی طی ۵ سال را به تفکیک دسته‌بندی‌های اصلی نمایش می‌دهد. مجموع کل هزینه‌ها تقریباً ۵,۱۸۹ میلیارد تومان است.</p>
+            <p class="text-center text-slate-500 text-sm mb-6 max-w-2xl mx-auto">این بخش، بودجه کل مورد نیاز برای تکمیل تمامی پروژه‌های زیرساختی و نیمه‌تمام طی ۵ سال را به تفکیک دسته‌بندی‌های اصلی نمایش می‌دهد. مجموع کل هزینه‌ها تقریباً ۵,۹۸۶ میلیارد تومان است.</p>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
                 <div class="md:col-span-2">
                     <div class="relative h-[300px] w-full">
@@ -448,10 +448,11 @@
                 baseEntranceCount: 301242 + 286714,
             };
             
-            const PROJECT_COSTS = [942.9, 910.6, 907.4, 1050.0, 1377.8];
+            // UPDATED: Project costs are now based on the new total of 5,986.2B Toman, distributed across 5 years.
+            const PROJECT_COSTS = [1102.4, 1070.1, 1066.9, 1209.5, 1537.3];
             const YEARS = ['۱۴۰۵', '۱۴۰۶', '۱۴۰۷', '۱۴۰۸', '۱۴۰۹'];
             const YEARLY_PROJECT_DESCRIPTIONS = [
-                'تکمیل زیرساخت‌های اصلی (آب، برق، گاز) و شروع فاضلاب',
+                'تکمیل زیرساخت‌های اصلی و شروع پروژه‌های جدید',
                 'تکمیل فاضلاب، ورودی‌ها و شروع پروژه زهکشی',
                 'ادامه پروژه زهکشی و تکمیل تصفیه‌خانه',
                 'تکمیل زهکشی و شروع پروژه‌های راه‌سازی و نیروگاه',
@@ -672,9 +673,9 @@
             // --- Cost Breakdown Chart Setup ---
             function setupCostBreakdownChart() {
                 const costData = {
-                    labels: ['پست برق و نیروگاه', 'زهکشی و آب‌های سطحی', 'شبکه فاضلاب', 'راه‌سازی', 'زیرساخت‌های اصلی', 'دسترسی و ورودی‌ها', 'ساختمان‌های خدماتی', 'تصفیه‌خانه فاضلاب'],
-                    data: [1592.0, 1473.3, 824.2, 541.1, 299.2, 212.6, 149.2, 97.1],
-                    colors: ['#4f46e5', '#06b6d4', '#10b981', '#64748b', '#3b82f6', '#a855f7', '#f97316', '#14b8a6']
+                    labels: ['پست برق و نیروگاه', 'زهکشی و آب‌های سطحی', 'شبکه فاضلاب و تصفیه‌خانه', 'راه‌سازی', 'پروژه‌های نیمه تمام مسکونی', 'زیرساخت‌های اصلی', 'دسترسی و ورودی‌ها', 'ساختمان‌های خدماتی'],
+                    data: [1592.0, 1473.3, 1200.0, 541.1, 518.9, 299.2, 212.6, 149.2],
+                    colors: ['#4f46e5', '#06b6d4', '#10b981', '#64748b', '#ef4444', '#3b82f6', '#a855f7', '#f97316']
                 };
 
                 new Chart(document.getElementById('cost-breakdown-chart').getContext('2d'), {
@@ -731,7 +732,7 @@
                     controlPanel.classList.add('is-open');
                     controlPanel.style.backgroundColor = '#ffffff'; // white
                     controlPanelArrow.style.transform = 'rotate(180deg)';
-                    controlPanelBody.style.maxHeight = "500px"; // Use fixed large value
+                    controlPanelBody.style.maxHeight = controlPanelBody.scrollHeight + "px";
                     controlPanelBody.style.paddingTop = '1.5rem';
                     controlPanelBody.style.marginTop = '1rem';
                     controlPanelBody.style.borderTop = '1px solid #e2e8f0';
@@ -759,10 +760,22 @@
                     }, 50);
                 }
             }
+            
+            controlPanelBody.addEventListener('transitionend', () => {
+                if(controlPanel.classList.contains('is-open')) {
+                    controlPanelBody.style.maxHeight = 'none'; // Allow content to reflow if window is resized
+                }
+            });
+
 
             controlPanelHeader.addEventListener('click', (e) => {
                 if (!resetButton.contains(e.target)) {
-                    setPanelOpen(!controlPanel.classList.contains('is-open'));
+                    if (controlPanel.classList.contains('is-open')) {
+                         controlPanelBody.style.maxHeight = controlPanelBody.scrollHeight + "px";
+                         setTimeout(() => setPanelOpen(false), 10);
+                    } else {
+                        setPanelOpen(true);
+                    }
                 }
             });
 
@@ -787,7 +800,10 @@
             function initialSetup() {
                 setupCostBreakdownChart();
                 Object.values(sliders).forEach(slider => slider.addEventListener('input', calculateFinance));
-                resetButton.addEventListener('click', resetValues);
+                resetButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    resetValues();
+                });
                 resetValues();
                 setTimeout(() => setPanelOpen(false, true), 100); 
             }
