@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارزیابی مالی پروژه‌های شهرک توریستی نمک آبرود</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            overflow-x: hidden;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .logo.center {
+            height: 150px;
+        }
+
+        /* Project Card Styling */
+        .project-card {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .project-card .card-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            font-size: 40px;
+            line-height: 1;
+        }
+        
+        .project-card:hover .card-icon-wrapper {
+            transform: scale(1.1);
+            background-color: #0d948830;
+        }
+        
+        .card-icon-wrapper.neighborhood-center {
+             background-color: #fffbeb;
+        }
+        
+        .project-card:hover .card-icon-wrapper.neighborhood-center {
+            background-color: #fde68a;
+        }
+
+        .project-card .hover-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: rgba(248, 250, 252, 0.85); /* Light gray with transparency */
+            -webkit-backdrop-filter: blur(4px); /* Frosted glass effect for Safari */
+            backdrop-filter: blur(4px); /* Frosted glass effect */
+            color: #495057;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Slower and smoother transition */
+            z-index: 3;
+            border-top: 1px solid rgba(226, 232, 240, 0.7); /* Subtle top border */
+        }
+
+        .project-card:hover .hover-info {
+            transform: translateY(0);
+        }
+        
+        .placeholder-card {
+            background-color: #f8f9fa;
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            min-height: 250px;
+        }
+
+        /* Page Transition Effect */
+        .page-fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .card-fly-out {
+            position: fixed !important;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2.5);
+            opacity: 0;
+            z-index: 1000;
+            transition: transform 0.5s ease-in, opacity 0.5s ease-in;
+        }
+
+        /* Tooltip */
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #343a40; color: #f8f9fa; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; border: 1px solid #495057; }
+        .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #343a40 transparent transparent transparent; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        
+        /* Interactive Header Chart */
+        #header-chart-icon {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+            width: 40px;
+            margin-top: 24px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        #header-chart-icon .bar {
+            width: 6px;
+            background-color: #0d9488;
+            border-radius: 2px;
+            transition: height 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="page-container">
+        <!-- Header Section -->
+        <header class="py-6 md:py-8 container mx-auto px-4">
+             <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+                <div class="logo-container">
+                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+                    <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
+                </div>
+                <div class="flex justify-center items-center gap-4">
+                    <h1 class="text-3xl md:text-4xl font-bold text-center mt-6 text-gray-800">
+                        ارزیابی مالی پروژه های پیشنهادی
+                    </h1>
+                     <div id="header-chart-icon">
+                        <div class="bar" style="height: 40%;"></div>
+                        <div class="bar" style="height: 70%;"></div>
+                        <div class="bar" style="height: 50%;"></div>
+                        <div class="bar" style="height: 85%;"></div>
+                    </div>
+                </div>
+                <p class="text-center mt-3 text-lg text-gray-600">داشبورد جامع امکان‌سنجی مالی شهرک توریستی نمک آبرود</p>
+            </div>
+        </header>
+
+        <!-- Main Content: Projects Grid -->
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- Project cards will be injected here by JavaScript -->
+            </div>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="text-center py-8 mt-12 border-t border-gray-200">
+            <p class="text-gray-600">
+                تهیه شده توسط 
+                <span class="font-semibold text-teal-600 tooltip-container">
+                    مهندسین مشاور ایده پرداز محیط
+                    <span class="tooltip-text">
+                        <span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>
+                        hr.torabii@gmail.com
+                    </span>
+                </span>
+            </p>
+            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const projects = [
+                { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
+                { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
+                { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
+                { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
+                { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
+                { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
+                { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
+                { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
+                { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
+                { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
+                { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
+            ];
+
+            const grid = document.getElementById('projects-grid');
+            const pageContainer = document.getElementById('page-container');
+
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                
+                const iconWrapperClass = project.isNeighborhoodCenter 
+                    ? 'card-icon-wrapper neighborhood-center'
+                    : 'card-icon-wrapper';
+
+                card.innerHTML = `
+                    <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
+                        <div class="${iconWrapperClass}">
+                            ${project.icon}
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
+                        <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
+                    </div>
+                    <div class="hover-info">
+                         <div class="w-full text-center">
+                            <div class="flex justify-between text-sm py-1 border-b border-gray-200">
+                                <span class="font-semibold text-gray-700">نرخ بازده داخلی (IRR)</span>
+                                <span class="font-mono text-teal-700 font-bold">${project.irr}</span>
+                            </div>
+                            <div class="flex justify-between text-sm py-1">
+                                <span class="font-semibold text-gray-700">دوره بازگشت سرمایه</span>
+                                <span class="font-mono text-teal-700 font-bold">${project.payback}</span>
+                            </div>
+                            <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const projectLinkMap = {
+                        "مرکز سلامت و تندرستی": "FS_Salamat",
+                        "پارک ماجراجویی ابرها": "FS_Abr",
+                        "هتل 5 ستاره": "FS_Hotel",
+                        "دهکده گردشگری خوراک": "FS_Khorak",
+                        "مرکز محله ۴ (بازی کودکان)": "FS_Koodak",
+                        "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza",
+                        "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal",
+                        "اکوکمپ لینورا": "FS_Linora",
+                        "پل سبز آبی": "FS_Pol",
+                        "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi",
+                        "سوئیت‌های ساحلی": "FS_Sueet",
+                        "تجاری و پارکینگ تله کابین": "FS_Telekabin",
+                        "ویلاهای لوکس ساحلی": "FS_Villa"
+                    };
+                    const linkKey = projectLinkMap[project.title];
+                    const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}/`;
+                    
+                    const rect = this.getBoundingClientRect();
+                    this.style.position = 'fixed';
+                    this.style.top = `${rect.top}px`;
+                    this.style.left = `${rect.left}px`;
+                    this.style.width = `${rect.width}px`;
+                    this.style.height = `${rect.height}px`;
+                    this.style.margin = '0';
+
+                    pageContainer.classList.add('page-fade-out');
+                    this.classList.add('card-fly-out');
+
+                    setTimeout(() => {
+                        window.location.href = destination;
+                    }, 500);
+                });
+
+                grid.appendChild(card);
+            });
+
+            // Add placeholder cards
+            for (let i = 0; i < 8; i++) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'placeholder-card';
+                placeholder.innerHTML = `
+                    <div class="text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="mt-2 text-sm font-medium">پروژه در دست بررسی</p>
+                    </div>
+                `;
+                grid.appendChild(placeholder);
+            }
+            
+            // Interactive header chart logic
+            const headerBox = document.querySelector('header > div');
+            const chartIcon = document.getElementById('header-chart-icon');
+            const bars = chartIcon.querySelectorAll('.bar');
+            const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+
+            headerBox.addEventListener('mousemove', (e) => {
+                const rect = headerBox.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                const mouseX = x / width;
+
+                bars.forEach((bar, index) => {
+                    const barX = (index + 0.5) / bars.length;
+                    const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+                    const newHeight = 20 + proximity * 80;
+                    bar.style.height = `${newHeight}%`;
+                });
+                chartIcon.style.opacity = '1';
+            });
+
+            headerBox.addEventListener('mouseleave', () => {
+                bars.forEach((bar, index) => {
+                    bar.style.height = `${baseHeights[index]}%`;
+                });
+                chartIcon.style.opacity = '0.6';
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
