@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مالی: مرکز محله 2 (فود پلازا)</title>
+    <title>داشبورد مالی: مرکز محله 2 (فودپلازا)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- ApexCharts JS -->
@@ -126,7 +126,7 @@
                          onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+IMPco';">
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: مرکز محله 2 (فود پلازا)</h1>
+            <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: مرکز محله 2 (فودپلازا)</h1>
             <p class="text-lg text-gray-500 mt-2">تحلیل شاخص‌های کلیدی مالی پروژه</p>
         </header>
 
@@ -139,13 +139,13 @@
                     <p class="text-gray-600 leading-relaxed mt-4">
                         <span class="relative inline-block tooltip-container">
                             <a href="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
-                                پروژه "مرکز محله 2 (فود پلازا)"
+                                پروژه "مرکز محله 2 (فودپلازا)"
                                 <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 shadow-lg">
                                     برای اطلاع از جزییات فنی پروژه ها کلیک کنید
                                 </span>
                             </a>
                         </span>
-                        یک مجتمع پذیرایی مدرن و پویا است که شامل رستوران‌های متنوع، کافه‌ها، و فضاهای فروشگاهی خوراکی (Food Hall) برای ارائه تجربیات غذایی منحصر به فرد و ایجاد یک مرکز اجتماعی پرجنب‌وجوش طراحی شده است.
+                        یک مجموعه پذیرایی مدرن و پویا است که شامل رستوران‌های متنوع، فود هال، و کافه‌های تخصصی می‌باشد و با هدف ایجاد یک مقصد جذاب و سودآور طراحی شده است.
                     </p>
                 </div>
                 <!-- Project Stats in Frames -->
@@ -264,14 +264,24 @@
         // --- CORRECTED DATA & CONFIG for Food Plaza Project ---
         const baseCashFlows = [
             -1671122, -1253342, -1253342, // 3 years construction
-            902880, 1128600, 1354320, 1354320, 1354320, 1354320, 1354320, 
-            1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 
-            1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 
-            1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 1354320, 
-            1354320 // 30 years operation
+            902880, 1128600, 1354320,    // years 1 to 3 operation
+            1354320, 1354320, 1354320,    // years 4 to 6 operation
+            1354320, 1354320, 1354320,    // years 7 to 9 operation
+            1354320, 1354320, 1354320,    // years 10 to 12 operation
+            1354320, 1354320, 1354320,    // years 13 to 15 operation
+            1354320, 1354320, 1354320,    // years 16 to 18 operation
+            1354320, 1354320, 1354320,    // years 19 to 21 operation
+            1354320, 1354320, 1354320,    // years 22 to 24 operation
+            1354320, 1354320, 1354320,    // years 25 to 27 operation
+            1354320, 1354320, 1354320     // years 28 to 30 operation
         ];
-        const initialData = { constructionYears: 3, operationYears: 30 };
-        
+        const initialData = { 
+            constructionYears: 3, 
+            operationYears: 30,
+            baseTotalGrossInflow: 40187000,
+            baseTotalGrossOutflow: 36491000
+        };
+
         // --- DOM ELEMENTS ---
         const sliders = {
             discountRate: document.getElementById('discountRate'),
@@ -309,21 +319,28 @@
         // --- CALCULATION FUNCTIONS ---
         const calculateNPV = (rate, flows) => {
             return flows.reduce((accumulator, cashFlow, index) => {
-                // Correct calculation assuming cash flows start at the end of year 1
                 return accumulator + cashFlow / Math.pow(1 + rate, index + 1);
             }, 0);
         };
         
         const calculateIRR = (flows, tolerance = 1e-6, maxIterations = 100) => {
             let low = -0.99, high = 1.0;
+            if (flows.filter(f => f > 0).length === 0) return -1;
+            if (flows.filter(f => f < 0).length === 0) return Infinity;
+
             for (let i = 0; i < maxIterations; i++) {
                 let mid = (low + high) / 2;
-                if (mid === low || mid === high) return mid;
+                if (Math.abs(high - low) < tolerance) return mid;
                 let npv = calculateNPV(mid, flows);
                 if (Math.abs(npv) < tolerance) return mid;
-                (npv > 0) ? low = mid : high = mid;
+
+                if (npv > 0) {
+                    low = mid;
+                } else {
+                    high = mid;
+                }
             }
-            return (low + high) / 2;
+            return (calculateNPV(low, flows) > calculateNPV(high, flows)) ? low : high;
         };
         
         const calculatePaybackPeriod = (flows) => {
@@ -332,8 +349,8 @@
                 const lastCumulative = cumulative;
                 cumulative += flows[i];
                 if (cumulative > 0 && lastCumulative <= 0) {
-                    const fraction = -lastCumulative / flows[i];
-                    return i + fraction; // Returns TOTAL years from project start (0-indexed)
+                    const fraction = Math.abs(lastCumulative / flows[i]);
+                    return (i + 1) - 1 + fraction; 
                 }
             }
             return Infinity;
@@ -346,8 +363,8 @@
                 const discountedFlow = flows[i] / Math.pow(1 + rate, i + 1);
                 cumulativeDiscounted += discountedFlow;
                 if (cumulativeDiscounted > 0 && lastCumulative <= 0) {
-                    const fraction = -lastCumulative / discountedFlow;
-                    return i + fraction; // Returns TOTAL years from project start (0-indexed)
+                    const fraction = Math.abs(lastCumulative / discountedFlow);
+                    return (i + 1) - 1 + fraction; 
                 }
             }
             return Infinity;
@@ -396,35 +413,38 @@
             values.discountRate.textContent = `${(discountRate * 100).toFixed(0)}%`;
             values.revenueChange.textContent = `${revenueChange >= 0 ? '+' : ''}${(revenueChange * 100).toFixed(0)}%`;
             values.costChange.textContent = `${costChange >= 0 ? '+' : ''}${(costChange * 100).toFixed(0)}%`;
-            
             updateSliderAppearance();
 
+            const formatNum = (num, decimals = 0) => num.toLocaleString('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
             const adjustedCashFlows = baseCashFlows.map((cf, index) => {
-                if(index < initialData.constructionYears) return cf * (1 + costChange);
-                return cf * (1 + revenueChange); 
+                if (index < initialData.constructionYears) {
+                    return cf * (1 + costChange);
+                } else {
+                    return cf * (1 + revenueChange);
+                }
             });
             
-            const totalInflows = baseCashFlows.filter(cf => cf > 0).reduce((a, b) => a + b, 0) * (1 + revenueChange);
-            const totalOutflows = Math.abs(baseCashFlows.filter(cf => cf < 0).reduce((a, b) => a + b, 0)) * (1 + costChange);
-            const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a,b) => a+b, 0));
-            
+            const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+            const totalInflows = initialData.baseTotalGrossInflow * (1 + revenueChange);
+            const totalOutflows = initialData.baseTotalGrossOutflow * (1 + costChange);
+
+
             const npv = calculateNPV(discountRate, adjustedCashFlows);
             const irr = calculateIRR(adjustedCashFlows);
             const pp = calculatePaybackPeriod(adjustedCashFlows);
             const bc = calculateBCRatio(discountRate, adjustedCashFlows);
             const pbp = calculateDiscountedPaybackPeriod(discountRate, adjustedCashFlows);
             
-            const formatNum = (num) => num.toLocaleString('fa-IR', { maximumFractionDigits: 0 });
-            
-            values.npv.textContent = formatNum(npv);
+            values.npv.textContent = formatNum(npv, 0);
             values.irr.textContent = `${(irr * 100).toFixed(2)}%`;
-            values.pp.textContent = isFinite(pp) ? (pp).toFixed(2) : "N/A";
-            values.bc.textContent = isFinite(bc) ? bc.toFixed(2) : 'نامشخص';
-            values.inflow.textContent = formatNum(totalInflows);
-            values.outflow.textContent = formatNum(totalOutflows);
-            values.investment.textContent = formatNum(totalInvestment);
+            values.pp.textContent = isFinite(pp) ? formatNum(pp, 2) : "نامشخص";
+            values.bc.textContent = isFinite(bc) ? formatNum(bc, 2) : 'نامشخص';
+            values.investment.textContent = formatNum(totalInvestment, 0);
+            values.inflow.textContent = formatNum(totalInflows, 0);
+            values.outflow.textContent = formatNum(totalOutflows, 0);
+            values.pbp.textContent = isFinite(pbp) ? formatNum(pbp, 2) : 'نامشخص';
             
-            values.pbp.textContent = isFinite(pbp) ? (pbp).toFixed(2) : 'نامشخص';
             values.npv.classList.toggle('text-critical', npv < 0);
             values.irr.classList.toggle('text-critical', irr < discountRate);
             values.bc.classList.toggle('text-critical', bc < 1);
@@ -440,7 +460,7 @@
             
             updateTimelineChart(pp, pbp);
             updateNpvProfileChart(adjustedCashFlows, discountRate);
-            updateSensitivityMatrix(revenueChange, costChange, discountRate);
+            updateSensitivityMatrix(discountRate, revenueChange, costChange);
         }
         
         // --- CHARTING & MATRIX FUNCTIONS ---
@@ -492,8 +512,8 @@
                         let durationText = '';
                         if (label === 'دوران ساخت') durationText = `: ${initialData.constructionYears} سال`;
                         if (label === `دوران بهره برداری`) durationText = `: ${initialData.operationYears} سال`;
-                        if (label === 'بازگشت سرمایه') durationText = `: ${paybackPeriod.toFixed(2)} سال`;
-                        if (label === 'بازگشت تنزیل‌شده') durationText = `: ${discountedPayback.toFixed(2)} سال`;
+                        if (label === 'بازگشت سرمایه') durationText = `: ${isFinite(paybackPeriod) ? paybackPeriod.toFixed(2) : 'N/A'} سال`;
+                        if (label === 'بازگشت تنزیل‌شده') durationText = `: ${isFinite(discountedPayback) ? discountedPayback.toFixed(2) : 'N/A'} سال`;
                         return label + durationText;
                     }
                 }
@@ -532,7 +552,7 @@
             });
         }
         
-        function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate) {
+        function updateSensitivityMatrix(discountRate, currentRevenueChange, currentCostChange) {
             const head = document.getElementById('sensitivity-head');
             const body = document.getElementById('sensitivity-body');
             const costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
@@ -545,8 +565,10 @@
                 let rowHtml = `<tr><td class="font-bold bg-gray-50">${revChange >= 0 ? '+' : ''}${Math.round(revChange*100)}%</td>`;
                 costChanges.forEach(cstChange => {
                     const tempFlows = baseCashFlows.map((cf, index) => {
-                        if(index < initialData.constructionYears) return cf * (1 + sliderCostChange + cstChange);
-                        return cf * (1 + sliderRevChange + revChange);
+                        if(index < initialData.constructionYears) {
+                            return cf * (1 + currentCostChange + cstChange);
+                        }
+                        return cf * (1 + currentRevenueChange + revChange);
                     });
 
                     const irr = calculateIRR(tempFlows);
@@ -586,3 +608,4 @@
 </script>
 </body>
 </html>
+
