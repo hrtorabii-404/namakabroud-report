@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مالی: پل سبز آبی</title>
+    <title>داشبورد مالی: پروژه پل سبزآبی</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- ApexCharts JS -->
@@ -126,7 +126,7 @@
                          onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+IMPco';">
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: پل سبز آبی</h1>
+            <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: پروژه پل سبزآبی</h1>
             <p class="text-lg text-gray-500 mt-2">تحلیل شاخص‌های کلیدی مالی پروژه</p>
         </header>
 
@@ -139,25 +139,25 @@
                     <p class="text-gray-600 leading-relaxed mt-4">
                         <span class="relative inline-block tooltip-container">
                             <a href="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
-                                پروژه "پل سبز آبی"
+                                پروژه "پل سبزآبی"
                                 <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 shadow-lg">
                                     برای اطلاع از جزییات فنی پروژه ها کلیک کنید
                                 </span>
                             </a>
                         </span>
-                        یک مقصد تفریحی خطی و "مسیر پویا" به طول ۱۵۰۰ متر است که به عنوان مسیر سلامت برای پیاده‌روی و دوچرخه‌سواری عمل می‌کند و در دو انتهای خود دارای مجموعه‌های خدماتی-تفریحی است.
+                        این پروژه یک پل مدرن چندمنظوره با مسیرهای پیاده‌روی، دوچرخه‌سواری و فضاهای سبز است که با هدف ایجاد یک جاذبه گردشگری و بهبود ارتباطات محلی طراحی شده است.
                     </p>
                 </div>
                 <!-- Project Stats in Frames -->
                 <div class="lg:col-span-2 grid grid-cols-2 gap-4">
                     <div class="bg-sky-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
                         <h3 class="text-sm font-medium text-sky-800">مساحت عرصه</h3>
-                        <p class="text-xl font-bold text-sky-900 mt-1">۲۰٬۰۰۰</p>
+                        <p class="text-xl font-bold text-sky-900 mt-1">۱۰٬۰۰۰</p>
                         <span class="text-xs text-sky-700">متر مربع</span>
                     </div>
                     <div class="bg-green-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
                         <h3 class="text-sm font-medium text-green-800">زیربنای کل</h3>
-                        <p class="text-xl font-bold text-green-900 mt-1">۴٬۰۰۰</p>
+                        <p class="text-xl font-bold text-green-900 mt-1">۲٬۵۰۰</p>
                         <span class="text-xs text-green-700">متر مربع</span>
                     </div>
                     <div class="bg-yellow-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
@@ -187,7 +187,7 @@
                         <span>نرخ تنزیل</span>
                         <span id="discountRateValue" class="font-bold text-blue-600">18%</span>
                     </label>
-                    <input type="range" id="discountRate" min="5" max="40" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
+                    <input type="range" id="discountRate" min="5" max="50" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
                 </div>
                 <!-- Revenue Change Slider -->
                 <div class="flex flex-col space-y-2">
@@ -261,16 +261,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- UPDATED DATA & CONFIG for Project 17: Green-Blue Bridge ---
+        // --- DATA & CONFIG for Green-Blue Bridge Project ---
         const baseCashFlows = [
-            -1076000, -807000, -807000,          // 3 years construction
-            934560, 1168200, 1401840, 1401840, 1401840, 1401840, 1401840, 1401840,
-            1401840, 1401840, 1401840, 1401840, 1401840, 1401840, 1401840, 1401840,
-            1401840, 1401840, 1401840, 1401840, 1401840, 1401840, 1401840, 1401840,
-            1401840, 1401840, 1401840, 1401840, 1401840, 1401840 // 30 years operation
+            -1076000, -807000, -807000, // 3 years construction
+            934560, 1168200, 1401840,    // years 1 to 3 operation
+            1401840, 1401840, 1401840,    // years 4 to 6 operation
+            1401840, 1401840, 1401840,    // years 7 to 9 operation
+            1401840, 1401840, 1401840,    // years 10 to 12 operation
+            1401840, 1401840, 1401840,    // years 13 to 15 operation
+            1401840, 1401840, 1401840,    // years 16 to 18 operation
+            1401840, 1401840, 1401840,    // years 19 to 21 operation
+            1401840, 1401840, 1401840,    // years 22 to 24 operation
+            1401840, 1401840, 1401840,    // years 25 to 27 operation
+            1401840, 1401840, 1401840     // years 28 to 30 operation
         ];
-        const initialData = { constructionYears: 3, operationYears: 30 };
-        
+        const initialData = { 
+            constructionYears: 3, 
+            operationYears: 30,
+            baseTotalGrossInflow: 41354000,
+            baseTotalGrossOutflow: 38664000
+        };
+
         // --- DOM ELEMENTS ---
         const sliders = {
             discountRate: document.getElementById('discountRate'),
@@ -313,50 +324,47 @@
         };
         
         const calculateIRR = (flows, tolerance = 1e-6, maxIterations = 100) => {
-            let low = -0.99, high = 1.0;
+            let low = -0.99, high = 2.0;
+            if (flows.filter(f => f > 0).length === 0) return -1;
+            if (flows.filter(f => f < 0).length === 0) return Infinity;
+
             for (let i = 0; i < maxIterations; i++) {
                 let mid = (low + high) / 2;
-                if (mid === low || mid === high) return mid;
+                if (Math.abs(high - low) < tolerance) return mid;
                 let npv = calculateNPV(mid, flows);
                 if (Math.abs(npv) < tolerance) return mid;
-                (npv > 0) ? low = mid : high = mid;
+
+                if (npv > 0) {
+                    low = mid;
+                } else {
+                    high = mid;
+                }
             }
-            return (low + high) / 2;
+            return (calculateNPV(low, flows) > calculateNPV(high, flows)) ? low : high;
         };
         
         const calculatePaybackPeriod = (flows) => {
-            const investment = Math.abs(flows.slice(0, initialData.constructionYears).reduce((a,b) => a+b, 0));
-            let cumulativeCashFlow = 0;
-            const operationalFlows = flows.slice(initialData.constructionYears);
-
-            for (let i = 0; i < operationalFlows.length; i++) {
-                const lastCumulative = cumulativeCashFlow;
-                cumulativeCashFlow += operationalFlows[i];
-                if (cumulativeCashFlow >= investment) {
-                    const years = i;
-                    const neededFromThisYear = investment - lastCumulative;
-                    const fraction = neededFromThisYear / operationalFlows[i];
-                    return years + fraction;
+            let cumulative = 0;
+            for (let i = 0; i < flows.length; i++) {
+                const lastCumulative = cumulative;
+                cumulative += flows[i];
+                if (cumulative > 0 && lastCumulative <= 0) {
+                    const fraction = Math.abs(lastCumulative / flows[i]);
+                    return (i + 1) - 1 + fraction; 
                 }
             }
             return Infinity;
         };
 
         const calculateDiscountedPaybackPeriod = (rate, flows) => {
-            const totalInvestment = Math.abs(flows.slice(0, initialData.constructionYears).reduce((acc, val, i) => acc + val / Math.pow(1+rate, i+1), 0));
             let cumulativeDiscounted = 0;
-            const operationalFlows = flows.slice(initialData.constructionYears);
-
-             for (let i = 0; i < operationalFlows.length; i++) {
-                const yearIndex = initialData.constructionYears + i + 1;
+            for (let i = 0; i < flows.length; i++) {
                 const lastCumulative = cumulativeDiscounted;
-                const discountedFlow = operationalFlows[i] / Math.pow(1 + rate, yearIndex);
+                const discountedFlow = flows[i] / Math.pow(1 + rate, i + 1);
                 cumulativeDiscounted += discountedFlow;
-
-                if (cumulativeDiscounted >= totalInvestment) {
-                    const neededFromThisYear = totalInvestment - lastCumulative;
-                    const fraction = neededFromThisYear / discountedFlow;
-                    return (i + fraction);
+                if (cumulativeDiscounted > 0 && lastCumulative <= 0) {
+                    const fraction = Math.abs(lastCumulative / discountedFlow);
+                    return (i + 1) - 1 + fraction; 
                 }
             }
             return Infinity;
@@ -405,35 +413,38 @@
             values.discountRate.textContent = `${(discountRate * 100).toFixed(0)}%`;
             values.revenueChange.textContent = `${revenueChange >= 0 ? '+' : ''}${(revenueChange * 100).toFixed(0)}%`;
             values.costChange.textContent = `${costChange >= 0 ? '+' : ''}${(costChange * 100).toFixed(0)}%`;
-            
             updateSliderAppearance();
 
+            const formatNum = (num, decimals = 0) => num.toLocaleString('fa-IR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
             const adjustedCashFlows = baseCashFlows.map((cf, index) => {
-                if(index < initialData.constructionYears) return cf * (1 + costChange);
-                return cf * (1 + revenueChange); 
+                if (index < initialData.constructionYears) {
+                    return cf * (1 + costChange);
+                } else {
+                    return cf * (1 + revenueChange);
+                }
             });
             
-            const totalInflows = baseCashFlows.filter(cf => cf > 0).reduce((a, b) => a + b, 0) * (1 + revenueChange);
-            const totalOutflows = Math.abs(baseCashFlows.filter(cf => cf < 0).reduce((a, b) => a + b, 0)) * (1 + costChange);
-            const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a,b) => a+b, 0));
-            
+            const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+            const totalInflows = initialData.baseTotalGrossInflow * (1 + revenueChange);
+            const totalOutflows = initialData.baseTotalGrossOutflow * (1 + costChange);
+
+
             const npv = calculateNPV(discountRate, adjustedCashFlows);
             const irr = calculateIRR(adjustedCashFlows);
             const pp = calculatePaybackPeriod(adjustedCashFlows);
             const bc = calculateBCRatio(discountRate, adjustedCashFlows);
             const pbp = calculateDiscountedPaybackPeriod(discountRate, adjustedCashFlows);
             
-            const formatNum = (num) => num.toLocaleString('fa-IR', { maximumFractionDigits: 0 });
-            
-            values.npv.textContent = formatNum(npv);
+            values.npv.textContent = formatNum(npv, 0);
             values.irr.textContent = `${(irr * 100).toFixed(2)}%`;
-            values.pp.textContent = isFinite(pp) ? (pp + initialData.constructionYears).toFixed(2) : "N/A";
-            values.bc.textContent = isFinite(bc) ? bc.toFixed(2) : 'نامشخص';
-            values.inflow.textContent = formatNum(totalInflows);
-            values.outflow.textContent = formatNum(totalOutflows);
-            values.investment.textContent = formatNum(totalInvestment);
+            values.pp.textContent = isFinite(pp) ? formatNum(pp, 2) : "نامشخص";
+            values.bc.textContent = isFinite(bc) ? formatNum(bc, 2) : 'نامشخص';
+            values.investment.textContent = formatNum(totalInvestment, 0);
+            values.inflow.textContent = formatNum(totalInflows, 0);
+            values.outflow.textContent = formatNum(totalOutflows, 0);
+            values.pbp.textContent = isFinite(pbp) ? formatNum(pbp, 2) : 'نامشخص';
             
-            values.pbp.textContent = isFinite(pbp) ? (pbp + initialData.constructionYears).toFixed(2) : 'نامشخص';
             values.npv.classList.toggle('text-critical', npv < 0);
             values.irr.classList.toggle('text-critical', irr < discountRate);
             values.bc.classList.toggle('text-critical', bc < 1);
@@ -449,7 +460,7 @@
             
             updateTimelineChart(pp, pbp);
             updateNpvProfileChart(adjustedCashFlows, discountRate);
-            updateSensitivityMatrix(revenueChange, costChange, discountRate);
+            updateSensitivityMatrix(discountRate, revenueChange, costChange);
         }
         
         // --- CHARTING & MATRIX FUNCTIONS ---
@@ -479,15 +490,17 @@
             ];
 
             if (isFinite(paybackPeriod)) {
+                const ppTotalYears = paybackPeriod;
                 const ppEndDate = new Date(startYear, 0, 1);
-                ppEndDate.setFullYear(ppEndDate.getFullYear() + Math.floor(paybackPeriod + initialData.constructionYears));
-                ppEndDate.setMonth(ppEndDate.getMonth() + ((paybackPeriod + initialData.constructionYears) % 1) * 12);
+                ppEndDate.setFullYear(ppEndDate.getFullYear() + Math.floor(ppTotalYears));
+                ppEndDate.setMonth(ppEndDate.getMonth() + ((ppTotalYears % 1) * 12));
                 seriesData.push({ x: 'بازگشت سرمایه', y: [new Date(startYear, 0, 1).getTime(), ppEndDate.getTime()], fillColor: '#FEB019'});
             }
             if (isFinite(discountedPayback)) {
+                 const pbpTotalYears = discountedPayback;
                  const pbpEndDate = new Date(startYear, 0, 1);
-                 pbpEndDate.setFullYear(pbpEndDate.getFullYear() + Math.floor(discountedPayback + initialData.constructionYears));
-                 pbpEndDate.setMonth(pbpEndDate.getMonth() + ((discountedPayback + initialData.constructionYears) % 1) * 12);
+                 pbpEndDate.setFullYear(pbpEndDate.getFullYear() + Math.floor(pbpTotalYears));
+                 pbpEndDate.setMonth(pbpEndDate.getMonth() + ((pbpTotalYears % 1) * 12));
                  seriesData.push({ x: 'بازگشت تنزیل‌شده', y: [new Date(startYear, 0, 1).getTime(), pbpEndDate.getTime()], fillColor: '#775DD0'});
             }
 
@@ -499,8 +512,8 @@
                         let durationText = '';
                         if (label === 'دوران ساخت') durationText = `: ${initialData.constructionYears} سال`;
                         if (label === `دوران بهره برداری`) durationText = `: ${initialData.operationYears} سال`;
-                        if (label === 'بازگشت سرمایه') durationText = `: ${(paybackPeriod + initialData.constructionYears).toFixed(2)} سال`;
-                        if (label === 'بازگشت تنزیل‌شده') durationText = `: ${(discountedPayback + initialData.constructionYears).toFixed(2)} سال`;
+                        if (label === 'بازگشت سرمایه') durationText = `: ${isFinite(paybackPeriod) ? paybackPeriod.toFixed(2) : 'N/A'} سال`;
+                        if (label === 'بازگشت تنزیل‌شده') durationText = `: ${isFinite(discountedPayback) ? discountedPayback.toFixed(2) : 'N/A'} سال`;
                         return label + durationText;
                     }
                 }
@@ -523,7 +536,7 @@
         npvProfileChart.render();
 
         function updateNpvProfileChart(cashFlows, currentRate) {
-            const rates = Array.from({length: 20}, (_, i) => (i * 2.0) / 100 + 0.05);
+            const rates = Array.from({length: 20}, (_, i) => (i * 2.5) / 100 + 0.05); // Adjusted for higher IRR
             const npvData = rates.map(rate => ({ x: rate, y: parseFloat(calculateNPV(rate, cashFlows).toFixed(2)) }));
             const irr = calculateIRR(cashFlows);
 
@@ -539,7 +552,7 @@
             });
         }
         
-        function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate) {
+        function updateSensitivityMatrix(discountRate, currentRevenueChange, currentCostChange) {
             const head = document.getElementById('sensitivity-head');
             const body = document.getElementById('sensitivity-body');
             const costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
@@ -552,8 +565,10 @@
                 let rowHtml = `<tr><td class="font-bold bg-gray-50">${revChange >= 0 ? '+' : ''}${Math.round(revChange*100)}%</td>`;
                 costChanges.forEach(cstChange => {
                     const tempFlows = baseCashFlows.map((cf, index) => {
-                        if(index < initialData.constructionYears) return cf * (1 + sliderCostChange + cstChange);
-                        return cf * (1 + sliderRevChange + revChange);
+                        if(index < initialData.constructionYears) {
+                            return cf * (1 + currentCostChange + cstChange);
+                        }
+                        return cf * (1 + currentRevenueChange + revChange);
                     });
 
                     const irr = calculateIRR(tempFlows);
