@@ -275,7 +275,12 @@
             2637360, 2637360, 2637360,    // years 25 to 27 operation
             2637360, 2637360, 2637360     // years 28 to 30 operation
         ];
-        const initialData = { constructionYears: 3, operationYears: 30 };
+        const initialData = { 
+            constructionYears: 3, 
+            operationYears: 30,
+            baseTotalGrossInflow: 77923000,
+            baseTotalGrossOutflow: 68683000
+        };
 
         // --- DOM ELEMENTS ---
         const sliders = {
@@ -419,10 +424,11 @@
                     return cf * (1 + revenueChange);
                 }
             });
-
-            const totalInflows = adjustedCashFlows.filter(cf => cf > 0).reduce((a, b) => a + b, 0);
-            const totalOutflows = Math.abs(adjustedCashFlows.filter(cf => cf < 0).reduce((a, b) => a + b, 0));
+            
             const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+            const totalInflows = initialData.baseTotalGrossInflow * (1 + revenueChange);
+            const totalOutflows = initialData.baseTotalGrossOutflow * (1 + costChange);
+
 
             const npv = calculateNPV(discountRate, adjustedCashFlows);
             const irr = calculateIRR(adjustedCashFlows);
