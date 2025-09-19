@@ -262,20 +262,25 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // --- CORRECTED DATA & CONFIG for Cultural Center Project ---
-       const baseCashFlows = [
-    -4224000, -3168000, -3168000, // 3 سال ساخت
-    1805760, 2257200, 2708640,    // سال های 1 تا 3 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 4 تا 6 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 7 تا 9 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 10 تا 12 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 13 تا 15 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 16 تا 18 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 19 تا 21 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 22 تا 24 بهره برداری
-    2708640, 2708640, 2708640,    // سال های 25 تا 27 بهره برداری
-    2708640, 2708640, 2708640     // سال های 28 تا 30 بهره برداری
-];
-        const initialData = { constructionYears: 3, operationYears: 30 };
+        const baseCashFlows = [
+            -4224000, -3168000, -3168000, // 3 years construction
+            1805760, 2257200, 2708640,    // years 1 to 3 operation
+            2708640, 2708640, 2708640,    // years 4 to 6 operation
+            2708640, 2708640, 2708640,    // years 7 to 9 operation
+            2708640, 2708640, 2708640,    // years 10 to 12 operation
+            2708640, 2708640, 2708640,    // years 13 to 15 operation
+            2708640, 2708640, 2708640,    // years 16 to 18 operation
+            2708640, 2708640, 2708640,    // years 19 to 21 operation
+            2708640, 2708640, 2708640,    // years 22 to 24 operation
+            2708640, 2708640, 2708640,    // years 25 to 27 operation
+            2708640, 2708640, 2708640     // years 28 to 30 operation
+        ];
+        const initialData = { 
+            constructionYears: 3, 
+            operationYears: 30,
+            baseTotalGrossInflow: 80241000,
+            baseTotalGrossOutflow: 70041000
+        };
 
         // --- DOM ELEMENTS ---
         const sliders = {
@@ -419,10 +424,11 @@
                     return cf * (1 + revenueChange);
                 }
             });
-
-            const totalInflows = adjustedCashFlows.filter(cf => cf > 0).reduce((a, b) => a + b, 0);
-            const totalOutflows = Math.abs(adjustedCashFlows.filter(cf => cf < 0).reduce((a, b) => a + b, 0));
+            
             const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+            const totalInflows = initialData.baseTotalGrossInflow * (1 + revenueChange);
+            const totalOutflows = initialData.baseTotalGrossOutflow * (1 + costChange);
+
 
             const npv = calculateNPV(discountRate, adjustedCashFlows);
             const irr = calculateIRR(adjustedCashFlows);
