@@ -547,44 +547,64 @@
         </svg>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mainContent = document.getElementById('main-content');
-            const iframeContainer = document.getElementById('iframe-container');
-            const projectIframe = document.getElementById('project-iframe');
-            const backButton = document.getElementById('back-button');
-            const projectLinks = document.querySelectorAll('.project-link');
 
-            const goBack = () => {
-                projectIframe.src = 'about:blank'; // Stop loading content
-                mainContent.classList.remove('hidden');
-                iframeContainer.classList.add('hidden');
-                backButton.classList.add('hidden');
-            };
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mainContent = document.getElementById('main-content');
+    const iframeContainer = document.getElementById('iframe-container');
+    const projectIframe = document.getElementById('project-iframe');
+    const backButton = document.getElementById('back-button');
+    const projectLinks = document.querySelectorAll('.project-link');
 
-            projectLinks.forEach(link => {
-                link.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const url = this.getAttribute('href');
-                    
-                    projectIframe.src = url;
-                    mainContent.classList.add('hidden');
-                    iframeContainer.classList.remove('hidden');
-                    backButton.classList.remove('hidden');
-                });
-            });
+    const goBack = () => {
+        projectIframe.src = 'about:blank'; // Stop loading content
+        mainContent.classList.remove('hidden');
+        iframeContainer.classList.add('hidden');
+        backButton.classList.add('hidden');
+    };
 
-            backButton.addEventListener('click', goBack);
-
-            document.addEventListener('keydown', function(event) {
-                // Check if the iframe is visible and the key is Backspace
-                if (!iframeContainer.classList.contains('hidden') && event.key === 'Backspace') {
-                    event.preventDefault(); // Prevent default browser back navigation
-                    goBack();
-                }
-            });
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const url = this.getAttribute('href');
+            
+            projectIframe.src = url;
+            mainContent.classList.add('hidden');
+            iframeContainer.classList.remove('hidden');
+            backButton.classList.remove('hidden');
         });
-    </script>
+    });
+
+    backButton.addEventListener('click', goBack);
+
+    // مدیریت Backspace
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Backspace') {
+            event.preventDefault(); // Prevent default browser back navigation
+            const tag = event.target.tagName.toLowerCase();
+            const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
+
+            if (!isEditable) {
+                console.log('Backspace detected in iframe');
+                // اگر iframeContainer فعاله (یعنی داخل iframe داخلی هستیم)، به mainContent برگرد
+                if (!iframeContainer.classList.contains('hidden')) {
+                    goBack();
+                } else {
+                    // اگر در mainContent هستیم، پیام به والد بفرست تا به TOC برگرده
+                    window.parent.postMessage({ type: 'NAVIGATE_BACK' }, 'https://hrtorabii-404.github.io');
+                }
+            }
+        }
+    });
+
+    // مدیریت پیام از iframeهای داخلی‌تر (در صورت وجود)
+    window.addEventListener('message', function(e) {
+        if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+            goBack();
+        }
+    });
+});
+</script>
 </body>
 </html>
 
