@@ -307,7 +307,7 @@
     </script>
 
 <script>
-    // این اسکریپت را به تمام صفحات جزئیات پروژه اضافه کنید
+    // این اسکریپت باید در تمام صفحات جزئیات پروژه قرار گیرد
 
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Backspace') {
@@ -317,9 +317,9 @@
                                e.target.tagName === 'TEXTAREA';
             
             if (!isEditable) {
-                e.preventDefault(); // جلوگیری از بازگشت مرورگر
+                e.preventDefault(); // جلوگیری از بازگشت پیش‌فرض مرورگر
                 
-                // به والد مستقیم خود (یعنی لیست کارت‌ها) پیام بده
+                // به والد مستقیم خود (یعنی داشبورد لیست کارت‌ها) پیام بده
                 window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
             }
         }
