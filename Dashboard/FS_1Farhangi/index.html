@@ -606,6 +606,21 @@
         updateDashboard();
     });
 </script>
+<script>
+window.addEventListener('keydown', function(e){
+  if (e.key === 'Backspace') {
+    const el = e.target;
+    const tag = el && el.tagName;
+    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
+    if (!isEditable) {
+      e.preventDefault();
+      // پیام به والد بفرست (داشبورد اصلی)
+      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+    }
+  }
+});
+</script>
+
 </body>
 </html>
 
