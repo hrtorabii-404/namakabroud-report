@@ -186,135 +186,135 @@
         <iframe id="project-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            const projects = [
-                { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
-                { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
-                { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
-                { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
-                { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
-                { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
-                { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
-                { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
-                { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
-                { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
-                { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
-                { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
-                { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
-                { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
-                { title: "مسکونی باغ کیوی", englishTitle: "Kiwi Garden Residential", icon: "🥝", irr: "-۰.۳۲%", payback: "بازگشت ندارد", isNotViable: true },
-                { title: "مسکونی محله ۸", englishTitle: "Neighborhood 8 Residential", icon: "🏘️", irr: "۲۶.۹۹%", payback: "۳.۱۹ سال" },
-                { title: "پروژه اکواوایلد شمشاد (بوستان شمشاد)", englishTitle: "Aquawild Shamshad Project (Shamshad Park)", icon: "🌊", irr: "۲۶.۷۶%", payback: "۶.۰۵ سال" },
-                { title: "مرکز نوآوری و فناوری گردشگری", englishTitle: "Tourism Innovation & Technology Center", icon: "💡", irr: "۱۸.۹۳%", payback: "۷.۴۷ سال" },
-                { title: "مسکونی محله ۷", englishTitle: "Neighborhood 7 Residential", icon: "🏘️", irr: "-۱.۴۹%", payback: "غیرقابل بازگشت", isNotViable: true },
-                { title: "پروژه دهکده هنر و صنایع دستی", englishTitle: "Art and Handicrafts Village Project", icon: "🧵", irr: "۲۰.۹۲%", payback: "۳.۳۶ سال"},
-            ];
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- بخش تعاریف اولیه (بدون تغییر) ---
+        const projects = [
+            { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
+            { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
+            { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
+            { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
+            { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
+            { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
+            { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
+            { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
+            { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
+            { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
+            { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
+            { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
+            { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
+            { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
+            { title: "مسکونی باغ کیوی", englishTitle: "Kiwi Garden Residential", icon: "🥝", irr: "-۰.۳۲%", payback: "بازگشت ندارد", isNotViable: true },
+            { title: "مسکونی محله ۸", englishTitle: "Neighborhood 8 Residential", icon: "🏘️", irr: "۲۶.۹۹%", payback: "۳.۱۹ سال" },
+            { title: "پروژه اکواوایلد شمشاد (بوستان شمشاد)", englishTitle: "Aquawild Shamshad Project (Shamshad Park)", icon: "🌊", irr: "۲۶.۷۶%", payback: "۶.۰۵ سال" },
+            { title: "مرکز نوآوری و فناوری گردشگری", englishTitle: "Tourism Innovation & Technology Center", icon: "💡", irr: "۱۸.۹۳%", payback: "۷.۴۷ سال" },
+            { title: "مسکونی محله ۷", englishTitle: "Neighborhood 7 Residential", icon: "🏘️", irr: "-۱.۴۹%", payback: "غیرقابل بازگشت", isNotViable: true },
+            { title: "پروژه دهکده هنر و صنایع دستی", englishTitle: "Art and Handicrafts Village Project", icon: "🧵", irr: "۲۰.۹۲%", payback: "۳.۳۶ سال"},
+        ];
+        const grid = document.getElementById('projects-grid');
+        const pageContainer = document.getElementById('page-container');
+        const projectViewContainer = document.getElementById('project-view-container');
+        const projectIframe = document.getElementById('project-iframe');
+        const backBtn = document.getElementById('back-to-dashboard-btn');
 
-            const grid = document.getElementById('projects-grid');
-            const pageContainer = document.getElementById('page-container');
-            const projectViewContainer = document.getElementById('project-view-container');
-            const projectIframe = document.getElementById('project-iframe');
-            const backBtn = document.getElementById('back-to-dashboard-btn');
+        // --- تابع برای بازگشت از جزئیات به لیست کارت‌ها (صحیح و کارآمد) ---
+        const goBack = () => {
+            pageContainer.classList.remove('view-hidden');
+            projectViewContainer.classList.add('view-hidden');
+            projectIframe.src = 'about:blank'; // توقف بارگذاری محتوا
+            window.focus(); // بسیار مهم: فوکوس را به این صفحه برمی‌گرداند
+        };
 
-            projects.forEach(project => {
-                const card = document.createElement('div');
-                card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
-                const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
+        // --- بخش ساخت کارت‌ها و مدیریت کلیک (بدون تغییر) ---
+        projects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
+            const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
 
-                card.innerHTML = `
-                    <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
-                        <div class="${iconWrapperClass}">${project.icon}</div>
-                        <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
-                        <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
+            card.innerHTML = `
+                <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
+                    <div class="${iconWrapperClass}">${project.icon}</div>
+                    <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
+                    <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
+                </div>
+                <div class="hover-info">
+                        <div class="w-full text-center">
+                        <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
+                        <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
+                        <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
                     </div>
-                    <div class="hover-info">
-                         <div class="w-full text-center">
-                            <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
-                            <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
-                            <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
-                        </div>
-                    </div>`;
+                </div>`;
+            
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const projectLinkMap = {
+                    "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
+                };
+                const linkKey = projectLinkMap[project.title];
+                const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
                 
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const projectLinkMap = {
-                        "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
-                    };
-                    const linkKey = projectLinkMap[project.title];
-                    const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
-                    
-                    projectIframe.src = destination;
-                    pageContainer.classList.add('view-hidden');
-                    projectViewContainer.classList.remove('view-hidden');
-                });
-                grid.appendChild(card);
+                projectIframe.src = destination;
+                pageContainer.classList.add('view-hidden');
+                projectViewContainer.classList.remove('view-hidden');
             });
-
-            backBtn.addEventListener('click', () => {
-                pageContainer.classList.remove('view-hidden');
-                projectViewContainer.classList.add('view-hidden');
-                projectIframe.src = 'about:blank'; // Stop loading the previous page
-            });
-
-            // Interactive header chart logic
-            const headerBox = document.querySelector('header > div');
-            const chartIcon = document.getElementById('header-chart-icon');
-            const bars = chartIcon.querySelectorAll('.bar');
-            const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
-            headerBox.addEventListener('mousemove', (e) => {
-                const rect = headerBox.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const mouseX = x / rect.width;
-                bars.forEach((bar, index) => {
-                    const barX = (index + 0.5) / bars.length;
-                    const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
-                    const newHeight = 20 + proximity * 80;
-                    bar.style.height = `${newHeight}%`;
-                });
-                chartIcon.style.opacity = '1';
-            });
-            headerBox.addEventListener('mouseleave', () => {
-                bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
-                chartIcon.style.opacity = '0.6';
-            });
-
-            // Backspace key to go back
-            document.addEventListener('keydown', function(e) {
-                // Check if we are in the project view and the key is Backspace
-                if (!projectViewContainer.classList.contains('view-hidden') && e.key === 'Backspace') {
-                    e.preventDefault(); // Prevent browser from navigating back
-                    backBtn.click(); // Simulate a click on the back button
-                }
-            });
+            grid.appendChild(card);
         });
-    </script>
 
-<script>
-// گوش دادن به پیام از iframe داخلی
-window.addEventListener('message', function(e){
-  if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
-    // اینجا هم باید مثل AtlasTest یک تابع back داشته باشی
-    const backBtn = document.getElementById('back-to-dashboard-btn');
-    if (backBtn) backBtn.click();
-  }
-});
-</script>
+        backBtn.addEventListener('click', goBack);
 
-<script>
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Backspace') {
-    const el = e.target;
-    const tag = el && el.tagName;
-    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-    if (!isEditable) {
-      e.preventDefault();
-      // پیام به والد بفرست (داشبورد اصلی)
-      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-    }
-  }
-});
+        // =================================================================
+        // START: معماری صحیح و یکپارچه برای مدیریت Backspace
+        // =================================================================
+
+        // ۱. گوش دادن به پیام از iframe فرزند (صفحات جزئیات)
+        // مسئولیت: بستن جزئیات و بازگشت به لیست کارت‌ها
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'CHILD_NAVIGATE_BACK') {
+                goBack();
+            }
+        });
+
+        // ۲. ارسال پیام به والد اصلی (صفحه فهرست)
+        // مسئولیت: بازگشت از لیست کارت‌ها به فهرست اصلی
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+                if (!isEditable) {
+                    e.preventDefault();
+                    // فقط زمانی پیام بفرست که در حال نمایش لیست کارت‌ها هستیم
+                    if (projectViewContainer.classList.contains('view-hidden')) {
+                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                    }
+                }
+            }
+        });
+        
+        // =================================================================
+        // END: معماری صحیح
+        // =================================================================
+
+        // --- بخش انیمیشن هدر (بدون تغییر) ---
+        const headerBox = document.querySelector('header > div');
+        const chartIcon = document.getElementById('header-chart-icon');
+        const bars = chartIcon.querySelectorAll('.bar');
+        const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+        headerBox.addEventListener('mousemove', (e) => {
+            const rect = headerBox.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const mouseX = x / rect.width;
+            bars.forEach((bar, index) => {
+                const barX = (index + 0.5) / bars.length;
+                const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+                const newHeight = 20 + proximity * 80;
+                bar.style.height = `${newHeight}%`;
+            });
+            chartIcon.style.opacity = '1';
+        });
+        headerBox.addEventListener('mouseleave', () => {
+            bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
+            chartIcon.style.opacity = '0.6';
+        });
+    });
 </script>
 
 </body>
