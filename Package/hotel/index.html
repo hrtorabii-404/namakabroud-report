@@ -33,7 +33,6 @@
             background-color: rgba(239, 68, 68, 0.1);
             color: #EF4444;
         }
-        /* Table styles */
         .table-container {
             overflow-x: auto;
         }
@@ -54,7 +53,6 @@
         tbody tr:last-child td {
             border-bottom: none;
         }
-        /* Tooltip styles */
         .tooltip-row {
             position: relative;
             cursor: help;
@@ -62,7 +60,7 @@
         .tooltip-row .tooltip-text {
             visibility: hidden;
             width: 300px;
-            background-color: #1f2937; /* Gray 800 */
+            background-color: #1f2937;
             color: #fff;
             text-align: center;
             border-radius: 8px;
@@ -99,13 +97,11 @@
 </head>
 <body class="p-4 sm:p-6 md:p-8">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
         <header class="mb-8 text-center">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">پروژه شماره ۴: هتل ۵ ستاره ساحلی</h1>
             <p class="text-lg text-gray-500 mt-2">تحلیل و نمایش داده‌های کلان پروژه</p>
         </header>
 
-        <!-- Key Metrics -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="card p-5 flex items-center">
                 <div class="icon-bg p-3 rounded-full mr-4">
@@ -145,7 +141,6 @@
             </div>
         </div>
 
-        <!-- Section 1: Building GFA Breakdown -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
             <div class="lg:col-span-3 card p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">۱. برنامه فیزیکی ساختمان هتل (تفکیک زیربنا)</h2>
@@ -195,7 +190,6 @@
             </div>
         </div>
         
-        <!-- Section 2: Site Land Use -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
              <div class="lg:col-span-3 card p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">۲. برنامه کاربری محوطه (تفکیک عرصه)</h2>
@@ -240,11 +234,14 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // =======================================================
+            // بخش ۱: راه‌اندازی نمودارها
+            // =======================================================
+    
             // Chart 1: GFA Breakdown (Doughnut)
             const gfaCtx = document.getElementById('gfaChart').getContext('2d');
             new Chart(gfaCtx, {
@@ -270,7 +267,7 @@
                     }
                 }
             });
-
+    
             // Chart 2: Land Use Breakdown (Bar)
             const landUseCtx = document.getElementById('landUseChart').getContext('2d');
             new Chart(landUseCtx, {
@@ -301,22 +298,21 @@
                     }
                 }
             });
+    
+            // =======================================================
+            // بخش ۲: مدیریت کلید Backspace
+            // =======================================================
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+                    if (!isEditable) {
+                        e.preventDefault();
+                        window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
+                    }
+                }
+            });
+    
         });
     </script>
-<script>
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Backspace') {
-    const el = e.target;
-    const tag = el && el.tagName;
-    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-    if (!isEditable) {
-      e.preventDefault();
-      // پیام به والد بفرست (داشبورد اصلی)
-      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-    }
-  }
-});
-</script>
-
 </body>
 </html>
