@@ -124,24 +124,21 @@
         #header-chart-icon .bar { width: 6px; background-color: #0d9488; border-radius: 2px; transition: height 0.2s ease-out; }
 
         /* View-switching Logic */
-        #page-container {
+        #page-container, #project-view-container {
             transition: opacity 0.4s ease-in-out;
         }
         .view-hidden {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            position: absolute !important;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
         }
         #project-view-container {
-            opacity: 1;
-            pointer-events: auto;
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: 50;
-            transition: opacity 0.4s ease-in-out;
         }
         #back-to-dashboard-btn {
             position: fixed;
@@ -221,14 +218,6 @@
             const projectIframe = document.getElementById('project-iframe');
             const backBtn = document.getElementById('back-to-dashboard-btn');
 
-            function goBack() {
-                pageContainer.classList.remove('view-hidden');
-                projectViewContainer.classList.add('view-hidden');
-                projectIframe.src = 'about:blank'; // Stop loading content
-                // *** THE CRITICAL FIX: Re-focus the current window (this iframe) to catch the next backspace ***
-                window.focus(); 
-            }
-
             projects.forEach(project => {
                 const card = document.createElement('div');
                 card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
@@ -251,7 +240,7 @@
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
                     const projectLinkMap = {
-                        "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
+                        "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
                     };
                     const linkKey = projectLinkMap[project.title];
                     const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
@@ -263,53 +252,60 @@
                 grid.appendChild(card);
             });
 
-            backBtn.addEventListener('click', goBack);
+            backBtn.addEventListener('click', () => {
+                pageContainer.classList.remove('view-hidden');
+                projectViewContainer.classList.add('view-hidden');
+                projectIframe.src = 'about:blank'; // Stop loading the previous page
+            });
 
             // Interactive header chart logic
             const headerBox = document.querySelector('header > div');
             const chartIcon = document.getElementById('header-chart-icon');
-            
-            if (headerBox && chartIcon) {
-                const bars = chartIcon.querySelectorAll('.bar');
-                const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
-                headerBox.addEventListener('mousemove', (e) => {
-                    const rect = headerBox.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const mouseX = x / rect.width;
-                    bars.forEach((bar, index) => {
-                        const barX = (index + 0.5) / bars.length;
-                        const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
-                        const newHeight = 20 + proximity * 80;
-                        bar.style.height = `${newHeight}%`;
-                    });
-                    chartIcon.style.opacity = '1';
+            const bars = chartIcon.querySelectorAll('.bar');
+            const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+            headerBox.addEventListener('mousemove', (e) => {
+                const rect = headerBox.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const mouseX = x / rect.width;
+                bars.forEach((bar, index) => {
+                    const barX = (index + 0.5) / bars.length;
+                    const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+                    const newHeight = 20 + proximity * 80;
+                    bar.style.height = `${newHeight}%`;
                 });
-                headerBox.addEventListener('mouseleave', () => {
-                    bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
-                    chartIcon.style.opacity = '0.6';
-                });
-            }
+                chartIcon.style.opacity = '1';
+            });
+            headerBox.addEventListener('mouseleave', () => {
+                bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
+                chartIcon.style.opacity = '0.6';
+            });
 
-            // --- START: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
-            window.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace') {
-                    const tag = e.target.tagName.toLowerCase();
-                    const isEditable = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
-    
-                    if (!isEditable) {
-                        e.preventDefault(); 
-                        
-                        if (!projectViewContainer.classList.contains('view-hidden')) {
-                            goBack();
-                        } else {
-                            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-                        }
-                    }
+            // Backspace key to go back
+            document.addEventListener('keydown', function(e) {
+                // Check if we are in the project view and the key is Backspace
+                if (!projectViewContainer.classList.contains('view-hidden') && e.key === 'Backspace') {
+                    e.preventDefault(); // Prevent browser from navigating back
+                    backBtn.click(); // Simulate a click on the back button
                 }
             });
-            // --- END: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
         });
     </script>
+
+<script>
+window.addEventListener('keydown', function(e){
+  if (e.key === 'Backspace') {
+    const el = e.target;
+    const tag = el && el.tagName;
+    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
+    if (!isEditable) {
+      e.preventDefault();
+      // پیام به والد بفرست (داشبورد اصلی)
+      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+    }
+  }
+});
+</script>
+
 </body>
 </html>
 
