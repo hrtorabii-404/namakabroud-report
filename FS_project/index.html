@@ -279,9 +279,17 @@
                 bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
                 chartIcon.style.opacity = '0.6';
             });
+
+            // Backspace key to go back
+            document.addEventListener('keydown', function(e) {
+                // Check if we are in the project view and the key is Backspace
+                if (!projectViewContainer.classList.contains('view-hidden') && e.key === 'Backspace') {
+                    e.preventDefault(); // Prevent browser from navigating back
+                    backBtn.click(); // Simulate a click on the back button
+                }
+            });
         });
     </script>
 </body>
 </html>
-
 
