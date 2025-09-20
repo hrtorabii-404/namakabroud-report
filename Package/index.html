@@ -547,44 +547,52 @@
         </svg>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mainContent = document.getElementById('main-content');
-            const iframeContainer = document.getElementById('iframe-container');
-            const projectIframe = document.getElementById('project-iframe');
-            const backButton = document.getElementById('back-button');
-            const projectLinks = document.querySelectorAll('.project-link');
+  document.addEventListener('DOMContentLoaded', function () {
+    const mainContent = document.getElementById('main-content');
+    const iframeContainer = document.getElementById('iframe-container');
+    const projectIframe = document.getElementById('project-iframe');
+    const backButton = document.getElementById('back-button');
+    const projectLinks = document.querySelectorAll('.project-link');
 
-            const goBack = () => {
-                projectIframe.src = 'about:blank'; // Stop loading content
-                mainContent.classList.remove('hidden');
-                iframeContainer.classList.add('hidden');
-                backButton.classList.add('hidden');
-            };
+    const goBack = () => {
+        projectIframe.src = 'about:blank'; // Stop loading content
+        mainContent.classList.remove('hidden');
+        iframeContainer.classList.add('hidden');
+        backButton.classList.add('hidden');
+    };
 
-            projectLinks.forEach(link => {
-                link.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const url = this.getAttribute('href');
-                    
-                    projectIframe.src = url;
-                    mainContent.classList.add('hidden');
-                    iframeContainer.classList.remove('hidden');
-                    backButton.classList.remove('hidden');
-                });
-            });
-
-            backButton.addEventListener('click', goBack);
-
-            document.addEventListener('keydown', function(event) {
-                // Check if the iframe is visible and the key is Backspace
-                if (!iframeContainer.classList.contains('hidden') && event.key === 'Backspace') {
-                    event.preventDefault(); // Prevent default browser back navigation
-                    goBack();
-                }
-            });
+    projectLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const url = this.getAttribute('href');
+            
+            projectIframe.src = url;
+            mainContent.classList.add('hidden');
+            iframeContainer.classList.remove('hidden');
+            backButton.classList.remove('hidden');
         });
-    </script>
+    });
+
+    backButton.addEventListener('click', goBack);
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Backspace') {
+            event.preventDefault(); // Prevent default browser back navigation
+            const tag = event.target.tagName.toLowerCase();
+            const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
+
+            if (!isEditable) {
+                // اگر iframeContainer فعاله (یعنی داخل iframe داخلی هستیم)، به mainContent برگرد
+                if (!iframeContainer.classList.contains('hidden')) {
+                    goBack();
+                } else {
+                    // اگر در mainContent هستیم، پیام به والد بفرست تا به TOC برگرده
+                    window.parent.postMessage({ type: 'NAVIGATE_BACK' }, 'https://hrtorabii-404.github.io');
+                }
+            }
+        }
+    });
+});
 <script>
 // گوش دادن به پیام از iframe داخلی
 window.addEventListener('message', function(e){
