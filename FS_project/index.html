@@ -292,6 +292,17 @@
     </script>
 
 <script>
+// گوش دادن به پیام از iframe داخلی
+window.addEventListener('message', function(e){
+  if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+    // اینجا هم باید مثل AtlasTest یک تابع back داشته باشی
+    const backBtn = document.getElementById('back-to-dashboard-btn');
+    if (backBtn) backBtn.click();
+  }
+});
+</script>
+
+<script>
 window.addEventListener('keydown', function(e){
   if (e.key === 'Backspace') {
     const el = e.target;
