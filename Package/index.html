@@ -220,6 +220,9 @@
             height: 100%;
             border: none;
         }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8">
@@ -479,7 +482,7 @@
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Pol/" class="project-card project-link">
                 <div class="project-header">
                     <div class="project-number">۱۸</div>
-                     <svg class="project-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.425 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75A2.25 2.25 0 0 1 16.5 4.5v.75c0 .71-.215 1.41-.622 2.006a9.041 9.041 0 0 1-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.498 4.498 0 0 0-.322 1.672v4.5A2.25 2.25 0 0 1 10.5 21a2.25 2.25 0 0 1-2.25-2.25v-4.5c0-.71.215-1.41.622-2.006a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75a2.25 2.25 0 0 1 2.25 2.25" /></svg>
+                     <svg class="project-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.425 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75A2.25 2.25 0 0 1 16.5 4.5v.75c0 .71-.215 1.41-.622 2.006a9.041 9.041 0 0 1-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.498 4.498 0 0 0-.322 1.672v4.5A2.25 2.25 0 0 1 10.5 21a2.25 2.25 0 0 1-2.25-2.25v-4.5c0-.71.215-1.41.622-2.006a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956-1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75a2.25 2.25 0 0 1 2.25 2.25" /></svg>
                 </div>
                 <h2 class="project-title">پل سبزآبی</h2>
                 <div class="tooltip">
@@ -561,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function () {
         mainContent.classList.remove('hidden');
         iframeContainer.classList.add('hidden');
         backButton.classList.add('hidden');
-        // *** FIX: Re-focus the current window (this iframe) to catch the next backspace ***
+        // *** THE CRITICAL FIX: Re-focus the current window (this iframe) to catch the next backspace ***
         window.focus(); 
     };
 
@@ -580,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
     backButton.addEventListener('click', goBack);
 
     // --- START: UNIFIED BACKSPACE LOGIC ---
-    document.addEventListener('keydown', function(event) {
+    window.addEventListener('keydown', function(event) {
         if (event.key === 'Backspace') {
             const tag = event.target.tagName.toLowerCase();
             const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
