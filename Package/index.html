@@ -577,27 +577,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     backButton.addEventListener('click', goBack);
 
-    // مدیریت Backspace
+    // --- START: MODIFIED BACKSPACE LOGIC ---
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Backspace') {
-            event.preventDefault(); // Prevent default browser back navigation
             const tag = event.target.tagName.toLowerCase();
             const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
 
             if (!isEditable) {
-                console.log('Backspace detected in iframe');
-                // اگر iframeContainer فعاله (یعنی داخل iframe داخلی هستیم)، به mainContent برگرد
+                event.preventDefault(); // Prevent default browser back navigation
+                
+                // If the detail iframe is visible, close it.
                 if (!iframeContainer.classList.contains('hidden')) {
                     goBack();
                 } else {
-                    // اگر در mainContent هستیم، پیام به والد بفرست تا به TOC برگرده
-                    window.parent.postMessage({ type: 'NAVIGATE_BACK' }, 'https://hrtorabii-404.github.io');
+                    // Otherwise, tell the parent to go back.
+                    // Using '*' for targetOrigin is more robust.
+                    window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
                 }
             }
         }
     });
+    // --- END: MODIFIED BACKSPACE LOGIC ---
 
-    // مدیریت پیام از iframeهای داخلی‌تر (در صورت وجود)
+    // Listening for messages from even deeper iframes (if any)
     window.addEventListener('message', function(e) {
         if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
             goBack();
@@ -607,4 +609,3 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
-
