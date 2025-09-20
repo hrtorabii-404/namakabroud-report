@@ -219,86 +219,78 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('areaChart').getContext('2d');
-            const data = {
-                labels: ['فضای بکر', 'اقامت', 'رویداد', 'سرگرمی', 'زیرساخت', 'کشاورزی', 'خوراک', 'آموزش'],
-                datasets: [{
-                    label: 'مساحت عرصه (مترمربع)',
-                    data: [464323, 185000, 150000, 85000, 65000, 50000, 24000, 8000],
-                    backgroundColor: [
-                        '#15803d', '#22c55e', '#84cc16', '#f59e0b', '#6b7280', '#0ea5e9', '#f43f5e', '#8b5cf6'
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            };
-
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return new Intl.NumberFormat('fa-IR').format(value);
-                                },
-                                font: { family: 'Vazirmatn' }
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                font: { family: 'Vazirmatn', size: 11 }
-                            }
+    document.addEventListener('DOMContentLoaded', function () {
+        // =======================================================
+        // بخش ۱: راه‌اندازی نمودار (بدون تغییر)
+        // =======================================================
+        const ctx = document.getElementById('areaChart').getContext('2d');
+        const data = {
+            labels: ['فضای بکر', 'اقامت', 'رویداد', 'سرگرمی', 'زیرساخت', 'کشاورزی', 'خوراک', 'آموزش'],
+            datasets: [{
+                label: 'مساحت عرصه (مترمربع)',
+                data: [464323, 185000, 150000, 85000, 65000, 50000, 24000, 8000],
+                backgroundColor: ['#15803d', '#22c55e', '#84cc16', '#f59e0b', '#6b7280', '#0ea5e9', '#f43f5e', '#8b5cf6'],
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        };
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return new Intl.NumberFormat('fa-IR').format(value); },
+                            font: { family: 'Vazirmatn' }
                         }
                     },
-                    plugins: {
-                        legend: {
-                           display: false
-                        },
-                        tooltip: {
-                            rtl: true,
-                            bodyFont: { family: 'Vazirmatn' },
-                            titleFont: { family: 'Vazirmatn' },
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.x !== null) {
-                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
-                                    }
-                                    return label;
-                                }
+                    y: {
+                        ticks: {
+                            font: { family: 'Vazirmatn', size: 11 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        rtl: true,
+                        bodyFont: { family: 'Vazirmatn' },
+                        titleFont: { family: 'Vazirmatn' },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.x !== null) { label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع'; }
+                                return label;
                             }
                         }
                     }
                 }
-            };
+            }
+        };
+        new Chart(ctx, config);
 
-            new Chart(ctx, config);
+        // =======================================================
+        // بخش ۲: مدیریت کلید Backspace (اصلاح شده)
+        // =======================================================
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+                if (!isEditable) {
+                    e.preventDefault();
+                    // *** ایراد دوم اینجا برطرف شد ***
+                    // این پیام صحیح برای ارسال از صفحه جزئیات به لیست کارت‌ها است
+                    window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
+                }
+            }
         });
-    </script>
-<script>
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Backspace') {
-    const el = e.target;
-    const tag = el && el.tagName;
-    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-    if (!isEditable) {
-      e.preventDefault();
-      // پیام به والد بفرست (داشبورد اصلی)
-      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-    }
-  }
-});
-</script>
 
+    }); // <-- *** ایراد اول اینجا برطرف شد *** (}); اضافی حذف گردید)
+</script>
 </body>
 </html>
