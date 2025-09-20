@@ -482,7 +482,7 @@
             <a href="https://hrtorabii-404.github.io/namakabroud-report/Package/Pol/" class="project-card project-link">
                 <div class="project-header">
                     <div class="project-number">۱۸</div>
-                     <svg class="project-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.425 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75A2.25 2.25 0 0 1 16.5 4.5v.75c0 .71-.215 1.41-.622 2.006a9.041 9.041 0 0 1-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.498 4.498 0 0 0-.322 1.672v4.5A2.25 2.25 0 0 1 10.5 21a2.25 2.25 0 0 1-2.25-2.25v-4.5c0-.71.215-1.41.622-2.006a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956-1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75a2.25 2.25 0 0 1 2.25 2.25" /></svg>
+                     <svg class="project-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.425 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75A2.25 2.25 0 0 1 16.5 4.5v.75c0 .71-.215 1.41-.622 2.006a9.041 9.041 0 0 1-2.861 2.4c-.723.384-1.35.956-1.653 1.715a4.498 4.498 0 0 0-.322 1.672v4.5A2.25 2.25 0 0 1 10.5 21a2.25 2.25 0 0 1-2.25-2.25v-4.5c0-.71.215-1.41.622-2.006a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75a2.25 2.25 0 0 1 2.25 2.25" /></svg>
                 </div>
                 <h2 class="project-title">پل سبزآبی</h2>
                 <div class="tooltip">
@@ -533,77 +533,145 @@
         </div>
         
         <!-- Footer -->
-        <footer class="footer-container">
-            تهیه شده در مهندسین مشاور 
-            <span class="author-tooltip" data-tooltip="حمیدرضا ترابی&#xa;hr.torabii@gmail.com">ایده پرداز محیط</span>
-            - شهریورماه 1404
+        <footer class="text-center py-8 mt-12 border-t border-gray-200">
+            <p class="text-gray-600">تهیه شده توسط <span class="font-semibold text-teal-600 tooltip-container">مهندسین مشاور ایده پرداز محیط<span class="tooltip-text"><span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>hr.torabii@gmail.com</span></span></p>
+            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
         </footer>
     </div>
 
-    <!-- Iframe and Back Button (initially hidden) -->
-    <div id="iframe-container" class="hidden">
-        <iframe id="project-iframe" src=""></iframe>
+    <!-- Project Detail View (Iframe) -->
+    <div id="project-view-container" class="view-hidden">
+        <button id="back-to-dashboard-btn" class="bg-white/70 backdrop-blur-sm text-gray-800 font-semibold py-2 px-5 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" /></svg>
+            بازگشت
+        </button>
+        <iframe id="project-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
     </div>
-    <div id="back-button" class="hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-    </div>
 
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const mainContent = document.getElementById('main-content');
-    const iframeContainer = document.getElementById('iframe-container');
-    const projectIframe = document.getElementById('project-iframe');
-    const backButton = document.getElementById('back-button');
-    const projectLinks = document.querySelectorAll('.project-link');
-
-    const goBack = () => {
-        projectIframe.src = 'about:blank'; // Stop loading content
-        mainContent.classList.remove('hidden');
-        iframeContainer.classList.add('hidden');
-        backButton.classList.add('hidden');
-        // *** THE CRITICAL FIX: Re-focus the current window (this iframe) to catch the next backspace ***
-        window.focus(); 
-    };
-
-    projectLinks.forEach(link => {
-        link.addEventListener('click', function (event) {
-            event.preventDefault();
-            const url = this.getAttribute('href');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             
-            projectIframe.src = url;
-            mainContent.classList.add('hidden');
-            iframeContainer.classList.remove('hidden');
-            backButton.classList.remove('hidden');
-        });
-    });
+            const projects = [
+                { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
+                { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
+                { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
+                { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
+                { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
+                { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
+                { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
+                { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
+                { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
+                { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
+                { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
+                { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
+                { title: "مسکونی باغ کیوی", englishTitle: "Kiwi Garden Residential", icon: "🥝", irr: "-۰.۳۲%", payback: "بازگشت ندارد", isNotViable: true },
+                { title: "مسکونی محله ۸", englishTitle: "Neighborhood 8 Residential", icon: "🏘️", irr: "۲۶.۹۹%", payback: "۳.۱۹ سال" },
+                { title: "پروژه اکواوایلد شمشاد (بوستان شمشاد)", englishTitle: "Aquawild Shamshad Project (Shamshad Park)", icon: "🌊", irr: "۲۶.۷۶%", payback: "۶.۰۵ سال" },
+                { title: "مرکز نوآوری و فناوری گردشگری", englishTitle: "Tourism Innovation & Technology Center", icon: "💡", irr: "۱۸.۹۳%", payback: "۷.۴۷ سال" },
+                { title: "مسکونی محله ۷", englishTitle: "Neighborhood 7 Residential", icon: "🏘️", irr: "-۱.۴۹%", payback: "غیرقابل بازگشت", isNotViable: true },
+                { title: "پروژه دهکده هنر و صنایع دستی", englishTitle: "Art and Handicrafts Village Project", icon: "🧵", irr: "۲۰.۹۲%", payback: "۳.۳۶ سال"},
+            ];
 
-    backButton.addEventListener('click', goBack);
+            const grid = document.getElementById('projects-grid');
+            const pageContainer = document.getElementById('page-container');
+            const projectViewContainer = document.getElementById('project-view-container');
+            const projectIframe = document.getElementById('project-iframe');
+            const backBtn = document.getElementById('back-to-dashboard-btn');
 
-    // --- START: UNIFIED BACKSPACE LOGIC ---
-    window.addEventListener('keydown', function(event) {
-        if (event.key === 'Backspace') {
-            const tag = event.target.tagName.toLowerCase();
-            const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
-
-            if (!isEditable) {
-                event.preventDefault(); // Prevent default browser back navigation
-                
-                // If the detail iframe is visible, close it.
-                if (!iframeContainer.classList.contains('hidden')) {
-                    goBack();
-                } else {
-                    // Otherwise, tell the parent to go back to TOC.
-                    window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-                }
+            function showProjectView(url) {
+                projectIframe.src = url;
+                pageContainer.classList.add('view-hidden');
+                projectViewContainer.classList.remove('view-hidden');
+                // Tell the parent we are now in a sub-view
+                window.parent.postMessage({ type: 'CHILD_ENTERS_SUBVIEW' }, '*');
             }
-        }
-    });
-    // --- END: UNIFIED BACKSPACE LOGIC ---
-});
-</script>
+
+            function goBack() {
+                pageContainer.classList.remove('view-hidden');
+                projectViewContainer.classList.add('view-hidden');
+                projectIframe.src = 'about:blank'; // Stop loading content
+                // Tell the parent we are back in the list view
+                window.parent.postMessage({ type: 'CHILD_LEAVES_SUBVIEW' }, '*');
+                // Focus this window so it's ready for the next command
+                window.focus(); 
+            }
+
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
+                const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
+
+                card.innerHTML = `
+                    <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
+                        <div class="${iconWrapperClass}">${project.icon}</div>
+                        <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
+                        <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
+                    </div>
+                    <div class="hover-info">
+                         <div class="w-full text-center">
+                            <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
+                            <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
+                            <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
+                        </div>
+                    </div>`;
+                
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const projectLinkMap = {
+                        "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
+                    };
+                    const linkKey = projectLinkMap[project.title];
+                    const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
+                    
+                    showProjectView(destination);
+                });
+                grid.appendChild(card);
+            });
+
+            backBtn.addEventListener('click', goBack);
+
+            // Interactive header chart logic
+            const headerBox = document.querySelector('header > div');
+            const chartIcon = document.getElementById('header-chart-icon');
+            
+            if (headerBox && chartIcon) {
+                const bars = chartIcon.querySelectorAll('.bar');
+                const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+                headerBox.addEventListener('mousemove', (e) => {
+                    const rect = headerBox.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const mouseX = x / rect.width;
+                    bars.forEach((bar, index) => {
+                        const barX = (index + 0.5) / bars.length;
+                        const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+                        const newHeight = 20 + proximity * 80;
+                        bar.style.height = `${newHeight}%`;
+                    });
+                    chartIcon.style.opacity = '1';
+                });
+                headerBox.addEventListener('mouseleave', () => {
+                    bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
+                    chartIcon.style.opacity = '0.6';
+                });
+            }
+
+            // This page only LISTENS for commands from the parent. It does not have its own keydown listener.
+            window.addEventListener('message', function(e) {
+                if (e.data && e.data.type === 'HANDLE_BACKSPACE') {
+                    // The parent (AtlasTest) has caught a backspace press and is telling us to handle it.
+                    if (!projectViewContainer.classList.contains('view-hidden')) {
+                        // If our detail view is open, we handle it by closing it.
+                        goBack();
+                    } else {
+                        // If our list view is open, we tell the parent to navigate away from us.
+                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
