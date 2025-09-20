@@ -561,6 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
         mainContent.classList.remove('hidden');
         iframeContainer.classList.add('hidden');
         backButton.classList.add('hidden');
+        document.body.focus(); // <-- THE FIX: Restore focus to the main document
     };
 
     projectLinks.forEach(link => {
@@ -577,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     backButton.addEventListener('click', goBack);
 
-    // --- START: MODIFIED BACKSPACE LOGIC ---
+    // --- START: UNIFIED BACKSPACE LOGIC ---
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Backspace') {
             const tag = event.target.tagName.toLowerCase();
@@ -591,13 +592,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     goBack();
                 } else {
                     // Otherwise, tell the parent to go back.
-                    // Using '*' for targetOrigin is more robust.
                     window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
                 }
             }
         }
     });
-    // --- END: MODIFIED BACKSPACE LOGIC ---
+    // --- END: UNIFIED BACKSPACE LOGIC ---
 
     // Listening for messages from even deeper iframes (if any)
     window.addEventListener('message', function(e) {
@@ -609,3 +609,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
+
