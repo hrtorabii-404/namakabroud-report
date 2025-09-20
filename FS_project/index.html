@@ -256,6 +256,7 @@
                 pageContainer.classList.remove('view-hidden');
                 projectViewContainer.classList.add('view-hidden');
                 projectIframe.src = 'about:blank'; // Stop loading the previous page
+                document.body.focus(); // <-- THE FIX: Restore focus to the main document
             });
 
             // Interactive header chart logic
@@ -316,3 +317,4 @@
 
 </body>
 </html>
+
