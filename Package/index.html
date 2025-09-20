@@ -547,7 +547,6 @@
         </svg>
     </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const mainContent = document.getElementById('main-content');
@@ -571,7 +570,6 @@
             link.addEventListener('click', function (event) {
                 event.preventDefault();
                 const url = this.getAttribute('href');
-                
                 projectIframe.src = url;
                 mainContent.classList.add('hidden');
                 iframeContainer.classList.remove('hidden');
@@ -593,16 +591,19 @@
             }
         });
 
-        // ۲. ارسال پیام به والد اصلی (صفحه فهرست)
-        // مسئولیت: بازگشت از لیست کارت‌ها به فهرست اصلی
+        // ۲. مدیریت Backspace در این صفحه (لیست کارت‌ها)
         window.addEventListener('keydown', function(event) {
             if (event.key === 'Backspace') {
                 const isEditable = event.target.isContentEditable || event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
                 if (!isEditable) {
                     event.preventDefault();
-                    // فقط زمانی پیام بفرست که در حال نمایش لیست کارت‌ها هستیم (iframe مخفی است)
+                    // اگر در حال نمایش لیست کارت‌ها هستیم (iframe مخفی است)
                     if (iframeContainer.classList.contains('hidden')) {
+                        // به والد اصلی (صفحه فهرست) پیام بفرست
                         window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                    } else {
+                        // اگر جزئیات نمایش داده می‌شود، با بک اسپیس برگرد
+                        goBack();
                     }
                 }
             }
@@ -613,6 +614,8 @@
         // =================================================================
     });
 </script>
+
+    
     
 </body>
 </html>
