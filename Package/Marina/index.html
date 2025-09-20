@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'Backspace' && !isEditable) {
             e.preventDefault(); // جلوگیری از بازگشت مرورگر
             // ارسال پیام NAVIGATE_BACK به صفحه والد (FS_project)
-            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, 'https://hrtorabii-404.github.io');
+            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
         }
     });
 });
