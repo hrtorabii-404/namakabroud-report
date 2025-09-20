@@ -280,43 +280,39 @@
                 chartIcon.style.opacity = '0.6';
             });
 
-            // Backspace key to go back
+            // --- START: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
             document.addEventListener('keydown', function(e) {
-                // Check if we are in the project view and the key is Backspace
-                if (!projectViewContainer.classList.contains('view-hidden') && e.key === 'Backspace') {
+                const el = e.target;
+                const tag = el && el.tagName;
+                const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
+                
+                if (e.key === 'Backspace' && !isEditable) {
                     e.preventDefault(); // Prevent browser from navigating back
-                    backBtn.click(); // Simulate a click on the back button
+
+                    // Check if we are in the project detail view (the iframe is visible)
+                    const projectViewContainer = document.getElementById('project-view-container');
+                    if (!projectViewContainer.classList.contains('view-hidden')) {
+                        // If yes, simulate a click on the internal back button
+                        document.getElementById('back-to-dashboard-btn').click();
+                    } else {
+                        // If we are on the main grid, tell the parent to navigate back
+                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                    }
                 }
             });
+            // --- END: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
         });
     </script>
 
-<script>
-// گوش دادن به پیام از iframe داخلی
-window.addEventListener('message', function(e){
-  if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
-    // اینجا هم باید مثل AtlasTest یک تابع back داشته باشی
-    const backBtn = document.getElementById('back-to-dashboard-btn');
-    if (backBtn) backBtn.click();
-  }
-});
-</script>
-
-<script>
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Backspace') {
-    const el = e.target;
-    const tag = el && el.tagName;
-    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-    if (!isEditable) {
-      e.preventDefault();
-      // پیام به والد بفرست (داشبورد اصلی)
-      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-    }
-  }
-});
-</script>
+    <!-- This message listener is useful if the loaded iframe itself has a back button logic -->
+    <script>
+    window.addEventListener('message', function(e){
+      if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+        const backBtn = document.getElementById('back-to-dashboard-btn');
+        if (backBtn) backBtn.click();
+      }
+    });
+    </script>
 
 </body>
 </html>
-
