@@ -295,46 +295,98 @@
 
     </div>
 
-    <script>
-        const pages = document.querySelectorAll('.page');
-        const coverClickableArea = document.querySelector('.cover-clickable-area');
-        const backToCoverButton = document.getElementById('backToCoverButton');
-        const backToTocButtons = document.querySelectorAll('.back-to-toc');
-        const tocCards = document.querySelectorAll('.toc-card');
+<script>
+    const pages = document.querySelectorAll('.page');
+    const coverClickableArea = document.querySelector('.cover-clickable-area');
+    const backToCoverButton = document.getElementById('backToCoverButton');
+    const backToTocButtons = document.querySelectorAll('.back-to-toc');
+    const tocCards = document.querySelectorAll('.toc-card');
 
-        function showPage(pageId) {
-            pages.forEach(page => {
-                page.classList.toggle('active', page.id === pageId);
-            });
-        }
+    let navigationHistory = ['coverPage'];
 
-        // Event Listeners
-        coverClickableArea.addEventListener('click', () => showPage('tocPage'));
-        backToCoverButton.addEventListener('click', () => showPage('coverPage'));
-        
-        backToTocButtons.forEach(button => {
-            button.addEventListener('click', () => showPage('tocPage'));
+    function showPage(pageId) {
+        pages.forEach(page => {
+            page.classList.toggle('active', page.id === pageId);
         });
+    }
 
-        tocCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const pageId = card.dataset.page;
-                if (!pageId) return;
+    function navigateTo(pageId) {
+        const current = navigationHistory[navigationHistory.length - 1];
+        if (pageId !== current) {
+            navigationHistory.push(pageId);
+        }
+        showPage(pageId);
+    }
 
+function goBack() {
+        if (navigationHistory.length > 1) {
+            navigationHistory.pop();
+            const prevPage = navigationHistory[navigationHistory.length - 1];
+            showPage(prevPage);
+            
+            // *** مهم: فوکوس را به پنجره اصلی برگردان ***
+            // تا Backspace بعدی در صفحه فهرست به درستی کار کند
+            if (prevPage === 'tocPage' || prevPage === 'coverPage') {
+                window.focus();
+            }
+        }
+    }
+
+    // Event Listeners
+    coverClickableArea.addEventListener('click', () => navigateTo('tocPage'));
+    backToCoverButton.addEventListener('click', () => navigateTo('coverPage'));
+    
+    backToTocButtons.forEach(button => {
+        button.addEventListener('click', () => navigateTo('tocPage'));
+    });
+
+    tocCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const pageId = card.dataset.page;
+            if (pageId) {
                 const targetPage = document.getElementById(pageId);
+                // Reload iframe on navigation to ensure scripts are fresh
                 if (targetPage) {
                     const iframe = targetPage.querySelector('iframe');
-                    // If there's an iframe, reset its src to force a reload.
-                    // This solves the state-persistence issue.
                     if (iframe && iframe.src) {
-                        iframe.src = iframe.src; 
+                       // Note: Re-setting src might not be enough for some caching scenarios
+                       // but is good practice.
+                       const oldSrc = iframe.src;
+                       iframe.src = 'about:blank';
+                       setTimeout(() => { iframe.src = oldSrc; }, 0);
                     }
-                    showPage(pageId);
                 }
-            });
+                navigateTo(pageId);
+            }
         });
+    });
+    
+    window.addEventListener('message', function(e) {
+        // A minor security check, but for this context it's okay.
+        // In a real app, you'd want to check e.origin.
+        if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+            goBack();
+        }
+    });
 
-    </script>
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace') {
+            const activePage = document.querySelector('.page.active');
+            // Only act if the focus is on the main page (not inside an iframe)
+            if (document.hasFocus() && activePage) {
+                 // If it's a content page (with an iframe), do nothing, let the child handle it.
+                 // If it's TOC, go back to cover.
+                 // If it's cover, do nothing.
+                if (activePage.id === 'tocPage') {
+                    e.preventDefault();
+                    goBack();
+                }
+            }
+        }
+    });
+</script>
+
+
 </body>
 </html>
 
