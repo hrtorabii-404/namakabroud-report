@@ -185,10 +185,8 @@
         </button>
         <iframe id="project-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
     </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- بخش تعاریف اولیه (بدون تغییر) ---
         const projects = [
             { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
             { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
@@ -217,7 +215,7 @@
         const projectIframe = document.getElementById('project-iframe');
         const backBtn = document.getElementById('back-to-dashboard-btn');
 
-        // --- تابع برای بازگشت از جزئیات به لیست کارت‌ها (صحیح و کارآمد) ---
+        // تابع برای بازگشت از جزئیات به لیست کارت‌ها
         const goBack = () => {
             pageContainer.classList.remove('view-hidden');
             projectViewContainer.classList.add('view-hidden');
@@ -225,12 +223,11 @@
             window.focus(); // بسیار مهم: فوکوس را به این صفحه برمی‌گرداند
         };
 
-        // --- بخش ساخت کارت‌ها و مدیریت کلیک (بدون تغییر) ---
+        // بخش ساخت کارت‌ها (بدون تغییر) ...
         projects.forEach(project => {
             const card = document.createElement('div');
             card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
             const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
-
             card.innerHTML = `
                 <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
                     <div class="${iconWrapperClass}">${project.icon}</div>
@@ -238,21 +235,17 @@
                     <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
                 </div>
                 <div class="hover-info">
-                        <div class="w-full text-center">
+                    <div class="w-full text-center">
                         <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
                         <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
                         <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
                     </div>
                 </div>`;
-            
             card.addEventListener('click', function(e) {
                 e.preventDefault();
-                const projectLinkMap = {
-                    "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
-                };
+                const projectLinkMap = { "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti" };
                 const linkKey = projectLinkMap[project.title];
                 const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
-                
                 projectIframe.src = destination;
                 pageContainer.classList.add('view-hidden');
                 projectViewContainer.classList.remove('view-hidden');
@@ -266,24 +259,28 @@
         // START: معماری صحیح و یکپارچه برای مدیریت Backspace
         // =================================================================
 
-        // ۱. گوش دادن به پیام از iframe فرزند (صفحات جزئیات)
+        // ۱. گوش دادن به پیام از iframe فرزند (صفحه جزئیات)
         // مسئولیت: بستن جزئیات و بازگشت به لیست کارت‌ها
         window.addEventListener('message', function(event) {
+            // اطمینان از اینکه پیام معتبر است
             if (event.data && event.data.type === 'CHILD_NAVIGATE_BACK') {
                 goBack();
             }
         });
 
-        // ۲. ارسال پیام به والد اصلی (صفحه فهرست)
-        // مسئولیت: بازگشت از لیست کارت‌ها به فهرست اصلی
+        // ۲. مدیریت Backspace در این صفحه (لیست کارت‌ها)
         window.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace') {
                 const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
                 if (!isEditable) {
                     e.preventDefault();
-                    // فقط زمانی پیام بفرست که در حال نمایش لیست کارت‌ها هستیم
+                    // اگر در حال نمایش لیست کارت‌ها هستیم (و نه جزئیات پروژه)
                     if (projectViewContainer.classList.contains('view-hidden')) {
+                        // به والد اصلی (صفحه فهرست) پیام بفرست
                         window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                    } else {
+                        // اگر در حال نمایش جزئیات پروژه هستیم، با بک اسپیس برگرد
+                        goBack();
                     }
                 }
             }
@@ -316,6 +313,8 @@
         });
     });
 </script>
+
+    
 
 </body>
 </html>
