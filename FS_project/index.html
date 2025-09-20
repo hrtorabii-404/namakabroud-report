@@ -218,6 +218,14 @@
             const projectIframe = document.getElementById('project-iframe');
             const backBtn = document.getElementById('back-to-dashboard-btn');
 
+            function goBack() {
+                pageContainer.classList.remove('view-hidden');
+                projectViewContainer.classList.add('view-hidden');
+                projectIframe.src = 'about:blank'; // Stop loading content
+                // *** FIX: Re-focus the current window (this iframe) to catch the next backspace ***
+                window.focus();
+            }
+
             projects.forEach(project => {
                 const card = document.createElement('div');
                 card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
@@ -252,34 +260,33 @@
                 grid.appendChild(card);
             });
 
-            backBtn.addEventListener('click', () => {
-                pageContainer.classList.remove('view-hidden');
-                projectViewContainer.classList.add('view-hidden');
-                projectIframe.src = 'about:blank'; // Stop loading the previous page
-                document.body.focus(); // <-- THE FIX: Restore focus to the main document
-            });
+            backBtn.addEventListener('click', goBack);
 
             // Interactive header chart logic
             const headerBox = document.querySelector('header > div');
             const chartIcon = document.getElementById('header-chart-icon');
-            const bars = chartIcon.querySelectorAll('.bar');
-            const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
-            headerBox.addEventListener('mousemove', (e) => {
-                const rect = headerBox.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const mouseX = x / rect.width;
-                bars.forEach((bar, index) => {
-                    const barX = (index + 0.5) / bars.length;
-                    const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
-                    const newHeight = 20 + proximity * 80;
-                    bar.style.height = `${newHeight}%`;
+            
+            // *** FIX: Check if chartIcon exists before using it to prevent crash ***
+            if (headerBox && chartIcon) {
+                const bars = chartIcon.querySelectorAll('.bar');
+                const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+                headerBox.addEventListener('mousemove', (e) => {
+                    const rect = headerBox.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const mouseX = x / rect.width;
+                    bars.forEach((bar, index) => {
+                        const barX = (index + 0.5) / bars.length;
+                        const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+                        const newHeight = 20 + proximity * 80;
+                        bar.style.height = `${newHeight}%`;
+                    });
+                    chartIcon.style.opacity = '1';
                 });
-                chartIcon.style.opacity = '1';
-            });
-            headerBox.addEventListener('mouseleave', () => {
-                bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
-                chartIcon.style.opacity = '0.6';
-            });
+                headerBox.addEventListener('mouseleave', () => {
+                    bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
+                    chartIcon.style.opacity = '0.6';
+                });
+            }
 
             // --- START: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
             document.addEventListener('keydown', function(e) {
@@ -288,33 +295,17 @@
                 const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
                 
                 if (e.key === 'Backspace' && !isEditable) {
-                    e.preventDefault(); // Prevent browser from navigating back
-
-                    // Check if we are in the project detail view (the iframe is visible)
-                    const projectViewContainer = document.getElementById('project-view-container');
+                    e.preventDefault(); 
+                    
                     if (!projectViewContainer.classList.contains('view-hidden')) {
-                        // If yes, simulate a click on the internal back button
-                        document.getElementById('back-to-dashboard-btn').click();
+                        goBack();
                     } else {
-                        // If we are on the main grid, tell the parent to navigate back
                         window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
                     }
                 }
             });
-            // --- END: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
         });
     </script>
-
-    <!-- This message listener is useful if the loaded iframe itself has a back button logic -->
-    <script>
-    window.addEventListener('message', function(e){
-      if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
-        const backBtn = document.getElementById('back-to-dashboard-btn');
-        if (backBtn) backBtn.click();
-      }
-    });
-    </script>
-
 </body>
 </html>
 
