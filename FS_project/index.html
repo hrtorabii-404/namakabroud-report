@@ -124,21 +124,24 @@
         #header-chart-icon .bar { width: 6px; background-color: #0d9488; border-radius: 2px; transition: height 0.2s ease-out; }
 
         /* View-switching Logic */
-        #page-container, #project-view-container {
+        #page-container {
             transition: opacity 0.4s ease-in-out;
         }
         .view-hidden {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
         }
         #project-view-container {
+            opacity: 1;
+            pointer-events: auto;
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: 50;
+            transition: opacity 0.4s ease-in-out;
         }
         #back-to-dashboard-btn {
             position: fixed;
@@ -222,8 +225,8 @@
                 pageContainer.classList.remove('view-hidden');
                 projectViewContainer.classList.add('view-hidden');
                 projectIframe.src = 'about:blank'; // Stop loading content
-                // *** FIX: Re-focus the current window (this iframe) to catch the next backspace ***
-                window.focus();
+                // *** THE CRITICAL FIX: Re-focus the current window (this iframe) to catch the next backspace ***
+                window.focus(); 
             }
 
             projects.forEach(project => {
@@ -266,7 +269,6 @@
             const headerBox = document.querySelector('header > div');
             const chartIcon = document.getElementById('header-chart-icon');
             
-            // *** FIX: Check if chartIcon exists before using it to prevent crash ***
             if (headerBox && chartIcon) {
                 const bars = chartIcon.querySelectorAll('.bar');
                 const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
@@ -289,21 +291,23 @@
             }
 
             // --- START: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
-            document.addEventListener('keydown', function(e) {
-                const el = e.target;
-                const tag = el && el.tagName;
-                const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-                
-                if (e.key === 'Backspace' && !isEditable) {
-                    e.preventDefault(); 
-                    
-                    if (!projectViewContainer.classList.contains('view-hidden')) {
-                        goBack();
-                    } else {
-                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    const tag = e.target.tagName.toLowerCase();
+                    const isEditable = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+    
+                    if (!isEditable) {
+                        e.preventDefault(); 
+                        
+                        if (!projectViewContainer.classList.contains('view-hidden')) {
+                            goBack();
+                        } else {
+                            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+                        }
                     }
                 }
             });
+            // --- END: UNIFIED AND CORRECTED BACKSPACE LOGIC ---
         });
     </script>
 </body>
