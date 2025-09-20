@@ -585,6 +585,17 @@
             });
         });
     </script>
+<script>
+// گوش دادن به پیام از iframe داخلی
+window.addEventListener('message', function(e){
+  if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+    // اینجا هم باید مثل AtlasTest یک تابع back داشته باشی
+    const backBtn = document.getElementById('back-to-dashboard-btn');
+    if (backBtn) backBtn.click();
+  }
+});
+</script>
+
 </body>
 </html>
 
