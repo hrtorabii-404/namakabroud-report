@@ -8,14 +8,8 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Chart.js for creating charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Persian Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,7 +79,7 @@
             </div>
             <div class="border-y-4 border-indigo-700 py-10 px-6 md:py-12 md:px-8 w-full">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-900">گزارش مدیریتی و تحلیلی شهرک نمک‌آبرود</h1>
-                <p class="text-lg md:text-xl text-slate-600 mt-4">شناسنامه تکمیل پروژه های زیرساختی</p>
+                <p class="text-lg md:text-xl text-slate-600 mt-4">شناسنامه پروژه های تکمیل زیرساختی و مسکونی</p>
                 <p class="text-sm text-slate-400 mt-12">بر اساس طرح بهنگام - شهریورماه 1404</p>
             </div>
         </header>
@@ -105,10 +99,15 @@
                     <!-- Infrastructure dashboard will be populated here -->
                 </div>
 
+                <!-- NEW DETAILED INFRASTRUCTURE DASHBOARD -->
+                <div id="detailed-infra-dashboard-container" class="mb-12">
+                    <!-- This will be populated by the new JS function -->
+                </div>
+
                 <div id="land-use-table-container">
                     <!-- Land use table will be populated here -->
                 </div>
-                <!-- Comparison Table Container - MOVED HERE -->
+                <!-- Comparison Table Container -->
                  <div id="comparison-table-container" class="mt-8">
                     <!-- This will be populated by JavaScript -->
                 </div>
@@ -157,7 +156,7 @@
                 </div>
             </section>
             
-            <!-- New section for service projects costs -->
+            <!-- Service projects costs section -->
             <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
             <section id="service-projects-container" class="pt-2">
                  <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-4">هزینه‌های پروژه‌های خدماتی</h2>
@@ -166,6 +165,17 @@
                     <!-- Cards will be populated here -->
                  </div>
             </section>
+
+             <!-- NEW: Unfinished Residential Projects section -->
+            <hr class="mb-8 border-t-2 border-slate-300 border-dashed">
+            <section id="residential-projects-container" class="pt-2">
+                 <h2 class="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-4">هزینه‌های پروژه‌های مسکونی نیمه‌تمام</h2>
+                 <p class="text-center text-base md:text-lg text-slate-600 max-w-3xl mx-auto mb-10">برآورد هزینه مورد نیاز جهت تکمیل پروژه‌های مسکونی باقی‌مانده.</p>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="residential-cards-container">
+                    <!-- Cards will be populated here by JS -->
+                 </div>
+            </section>
+
 
              <!-- New Footer Text for PDF -->
             <div class="text-center text-slate-500 text-sm mt-16 pt-8 border-t">
@@ -188,6 +198,10 @@
         </footer>
     </div>
     
+    <!-- Library Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <!-- MAIN APPLICATION SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -299,6 +313,31 @@
                 { name: "آتش‌نشانی", unit: "متر مربع", quantity: 1000, unitPrice: 133.8, totalCost: 133800, icon: "siren", iconColor: "text-red-500", bgColor: "bg-red-50" }
             ];
 
+             const residentialProjectsData = [
+                { 
+                    name: "۳۶ ویلایی توسکا", 
+                    totalCost: 443880, 
+                    icon: "home", 
+                    iconColor: "text-teal-500", 
+                    bgColor: "bg-teal-50", 
+                    details: [
+                        { label: "هزینه ساخت (۲۰,۷۳۰ م.م)", value: "۴۱۴,۶۰۰" },
+                        { label: "هزینه محوطه‌سازی (۱۱,۷۱۲ م.م)", value: "۲۹,۲۸۰" }
+                    ]
+                },
+                { 
+                    name: "پروژه باب الجواد (مشهد)", 
+                    totalCost: 75000, 
+                    icon: "building", 
+                    iconColor: "text-amber-500", 
+                    bgColor: "bg-amber-50", 
+                    details: [
+                        { label: "درصد باقیمانده پروژه", value: "~۵٪" },
+                        { label: "هزینه مورد نیاز اتمام", value: "۷۵,۰۰۰" }
+                    ]
+                }
+            ];
+
             const supraLocalProjects = [
                  { 
                     name: "تکمیل پست‌های برق و نیروگاه", 
@@ -333,10 +372,10 @@
                     details: "اجرای کامل شبکه جمع‌آوری فاضلاب به طول ۸۸ کیلومتر و احداث تصفیه‌خانه.", 
                     icon: 'recycle',
                     cost_details: [
-                        { type: "هزینه لوله‌گذاری", totalCost: 572000 },
-                        { type: "هزینه تصفیه‌خانه", totalCost: 97100 },
-                        { type: "هزینه منهول‌ها", totalCost: 235100 },
-                        { type: "جمع کل", totalCost: 921300, isTotal: true }
+                        { type: "هزینه لوله‌گذاری", totalCost: 759000 },
+                        { type: "هزینه تصفیه‌خانه", totalCost: 129000 },
+                        { type: "هزینه منهول‌ها", totalCost: 312000 },
+                        { type: "جمع کل", totalCost: 1200000, isTotal: true }
                     ]
                 },
                 { 
@@ -372,17 +411,80 @@
                     { value: "۲۴٪", label: "پیشرفت کل روبنایی" },
                     { value: "محله ۵", label: "بهترین عملکرد زیرساختی" },
                     { value: "محله ۸", label: "بیشترین نیاز به توجه" },
-                    { value: "۵,۱۸۹", label: "جمع کل هزینه (میلیارد تومان)" }
+                    { value: "۵,۹۸۶.۲", label: "جمع کل هزینه (میلیارد تومان)" }
                 ]
             };
 
-            // --- Function to populate the infrastructure dashboard ---
             function populateInfrastructureDashboard() {
                 const container = document.getElementById('infrastructure-dashboard-container');
+                const formatNumber = (num) => new Intl.NumberFormat('fa-IR').format(Math.ceil(num / 1000));
+                
+                const supraLocalServicesCost = serviceProjectsData.reduce((sum, p) => sum + p.totalCost, 0);
+                const supraLocalInfraCost = supraLocalProjects.reduce((sum, p) => sum + p.cost_details.find(d => d.isTotal).totalCost, 0);
+                const totalSupraLocalCost = supraLocalServicesCost + supraLocalInfraCost;
+                
+                const totalNeighborhoodCost = 840200; 
+
+                const totalResidentialCost = residentialProjectsData.reduce((sum, p) => sum + p.totalCost, 0);
+                
+                const grandTotal = totalSupraLocalCost + totalNeighborhoodCost + totalResidentialCost;
+
+                const categories = [
+                    { title: "پروژه‌های فرامحله‌ای", totalCost: totalSupraLocalCost, icon: "building-2", iconColor: "text-sky-600", bgColor: "bg-sky-100" },
+                    { title: "زیرساخت‌های داخل محلات", totalCost: totalNeighborhoodCost, icon: "construction", iconColor: "text-amber-600", bgColor: "bg-amber-100" },
+                    { title: "مسکونی نیمه‌تمام", totalCost: totalResidentialCost, icon: "home", iconColor: "text-red-600", bgColor: "bg-red-100" },
+                ];
+
+                let cardsHTML = '';
+                categories.forEach(cat => {
+                    cardsHTML += `
+                        <div class="infra-card bg-white p-6 rounded-xl shadow-md border border-slate-200/80 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-start justify-between">
+                                    <h3 class="text-lg font-semibold text-slate-800">${cat.title}</h3>
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${cat.bgColor}">
+                                        <i data-lucide="${cat.icon}" class="w-6 h-6 ${cat.iconColor}"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <p class="text-sm text-slate-500 mb-1">هزینه کل برآوردی (میلیارد تومان)</p>
+                                    <p class="text-3xl font-bold text-slate-900">${formatNumber(cat.totalCost)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const totalCardHTML = `
+                    <div class="infra-card bg-slate-800 text-white p-6 rounded-xl shadow-lg border border-slate-700 md:col-span-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold">جمع کل هزینه های پروژه</h3>
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-slate-700">
+                                <i data-lucide="sigma" class="w-6 h-6 text-cyan-400"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p class="text-base text-slate-400 mb-2">مبلغ نهایی (میلیارد تومان)</p>
+                            <p class="text-4xl md:text-5xl font-bold text-white tracking-tight">${(grandTotal / 1000).toLocaleString('fa-IR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</p>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = `
+                    <h3 class="text-xl font-bold text-center text-indigo-900 mb-4 mt-10">داشبورد برآورد هزینه‌های کلان پروژه</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        ${cardsHTML}
+                        ${totalCardHTML}
+                    </div>
+                `;
+            }
+
+            function populateDetailedInfrastructureDashboard() {
+                const container = document.getElementById('detailed-infra-dashboard-container');
                 const projects = [
                     { title: "پست برق و نیروگاه", icon: "server-cog", iconColor: "text-yellow-600", bgColor: "bg-yellow-100", totalCost: 1592000 },
                     { title: "زهکشی و آب‌های سطحی", icon: "waves", iconColor: "text-cyan-500", bgColor: "bg-cyan-50", totalCost: 1473300 },
-                    { title: "فاضلاب و تصفیه‌خانه", icon: "recycle", iconColor: "text-purple-500", bgColor: "bg-purple-50", totalCost: 921300 },
+                    { title: "فاضلاب و تصفیه‌خانه", icon: "recycle", iconColor: "text-purple-500", bgColor: "bg-purple-50", totalCost: 1200000 },
                     { title: "شبکه راه و معابر", icon: "construction", iconColor: "text-orange-500", bgColor: "bg-orange-50", totalCost: 753700 },
                     { title: "ساختمان‌های خدماتی", icon: "building-2", iconColor: "text-rose-500", bgColor: "bg-rose-50", totalCost: 149200 },
                     { title: "شبکه گازرسانی", icon: "fire", iconColor: "text-red-500", bgColor: "bg-red-50", totalCost: 115400 },
@@ -390,7 +492,7 @@
                     { title: "شبکه آبرسانی", icon: "water", iconColor: "text-blue-500", bgColor: "bg-blue-50", totalCost: 78800 },
                 ];
 
-                const totalCostSum = 5188600;
+                const totalCostSum = projects.reduce((sum, p) => sum + p.totalCost, 0);
                 const formatNumber = (num) => new Intl.NumberFormat('fa-IR').format(Math.ceil(num));
 
                 let cardsHTML = '';
@@ -429,7 +531,7 @@
                 `;
                 
                 container.innerHTML = `
-                    <h3 class="text-xl font-bold text-center text-indigo-900 mb-4 mt-10">داشبورد برآورد هزینه های زیرساختی کل شهرک</h3>
+                    <h3 class="text-xl font-bold text-center text-indigo-900 mb-4 mt-10">داشبورد برآورد هزینه‌های زیرساختی کل شهرک</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         ${cardsHTML}
                         ${totalCardHTML}
@@ -437,14 +539,12 @@
                 `;
             }
             
-            // --- MODIFIED: Function to get color based on value (red for high, green for low) ---
             function getCostColor(value, min, max) {
                 const range = max - min;
-                if (range === 0) return 'rgba(34, 197, 94, 0.8)'; // Green if all values are same
+                if (range === 0) return 'rgba(34, 197, 94, 0.8)';
 
-                const percent = (value - min) / range; // 0 for min, 1 for max
+                const percent = (value - min) / range;
 
-                // Colors: Green (low) to Red (high)
                 const green = { r: 34, g: 197, b: 94 };
                 const red = { r: 239, g: 68, b: 68 };
 
@@ -731,7 +831,6 @@
                 `;
             }
             
-            // Function to create cost comparison chart
             function createCostComparisonChart() {
                 const container = document.getElementById('cost-comparison-container');
                 container.innerHTML = `
@@ -748,7 +847,6 @@
                     return { name, totalCost };
                 });
 
-                // Sort from highest to lowest cost for display
                 neighborhoodCosts.sort((a, b) => b.totalCost - a.totalCost);
 
                 const labels = neighborhoodCosts.map(item => item.name);
@@ -775,7 +873,7 @@
                         }]
                     },
                     options: {
-                        indexAxis: 'y', // This makes the bar chart horizontal
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
@@ -954,17 +1052,52 @@
                 });
                 container.innerHTML = cardsHTML;
             }
+
+             function populateResidentialProjects() {
+                const container = document.getElementById('residential-cards-container');
+                const formatNumber = (num) => new Intl.NumberFormat('fa-IR').format(Math.ceil(num));
+                
+                let cardsHTML = '';
+                residentialProjectsData.forEach(project => {
+                     let detailsHTML = project.details.map(d => 
+                        `<p class="text-xs text-slate-600 flex justify-between"><span>${d.label}:</span> <span>${d.value}</span></p>`
+                     ).join('');
+
+                    cardsHTML += `
+                        <div class="infra-card bg-white p-6 rounded-xl shadow-md border border-slate-200/80 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-start justify-between">
+                                    <h3 class="text-lg font-semibold text-slate-800">${project.name}</h3>
+                                    <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${project.bgColor}">
+                                        <i data-lucide="${project.icon}" class="w-6 h-6 ${project.iconColor}"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <p class="text-sm text-slate-500 mb-1">هزینه کل برآوردی (میلیون تومان)</p>
+                                    <p class="text-3xl font-bold text-slate-900">${formatNumber(project.totalCost)}</p>
+                                </div>
+                                <div class="mt-3 pt-3 border-t border-dashed space-y-2">
+                                     ${detailsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = cardsHTML;
+            }
             
             // --- Initial Load ---
             populateTownKPIs();
             populateInfrastructureDashboard(); 
+            populateDetailedInfrastructureDashboard();
             populateLandUseTable();
-            createComparisonTable(); // Moved this call
+            createComparisonTable();
             populateContent();
             populateAnalysisAndKPIs();
             createCostComparisonChart();
             populateSupraLocal();
             populateServiceProjects(); 
+            populateResidentialProjects();
             createInteractiveBarChart();
             
             let neighborhoodIndex = 1;
@@ -973,10 +1106,8 @@
                 neighborhoodIndex++;
             }
 
-            // --- Initialize all icons at the end ---
             lucide.createIcons();
 
-            // --- PDF Download Logic ---
             document.getElementById('download-btn').addEventListener('click', () => {
                 const btn = document.getElementById('download-btn');
                 const spinner = document.getElementById('loading-spinner');
@@ -989,7 +1120,7 @@
 
                 const opt = {
                     margin: [0.4, 0.2, 0.4, 0.2],
-                    filename: 'گزارش-مدیریتی-تحلیلی-نمک‌آبرود.pdf',
+                    filename: 'گزارش-مدیریتی-تحلیلی-نمک‌آبرود-آپدیت.pdf',
                     image: { type: 'jpeg', quality: 1.0 },
                     html2canvas: { scale: 3, useCORS: true, logging: false },
                     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -1012,5 +1143,4 @@
     </script>
 </body>
 </html>
-
 
