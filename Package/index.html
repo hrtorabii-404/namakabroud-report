@@ -578,6 +578,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     backButton.addEventListener('click', goBack);
 
+    // مدیریت Backspace
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Backspace') {
             event.preventDefault(); // Prevent default browser back navigation
@@ -585,6 +586,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const isEditable = tag === 'input' || tag === 'textarea' || event.target.isContentEditable;
 
             if (!isEditable) {
+                console.log('Backspace detected in iframe');
                 // اگر iframeContainer فعاله (یعنی داخل iframe داخلی هستیم)، به mainContent برگرد
                 if (!iframeContainer.classList.contains('hidden')) {
                     goBack();
@@ -593,6 +595,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.parent.postMessage({ type: 'NAVIGATE_BACK' }, 'https://hrtorabii-404.github.io');
                 }
             }
+        }
+    });
+
+    // مدیریت پیام از iframeهای داخلی‌تر (در صورت وجود)
+    window.addEventListener('message', function(e) {
+        if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
+            goBack();
         }
     });
 });
