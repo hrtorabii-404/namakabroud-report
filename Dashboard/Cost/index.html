@@ -394,6 +394,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+window.focus();
             // --- DOM Elements ---
             const sliders = {
                 telecabin1Tickets: document.getElementById('telecabin1-tickets'),
@@ -809,22 +810,17 @@
             }
 
             initialSetup();
+window.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace') {
+        const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+        if (!isEditable) {
+            e.preventDefault();
+            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+        }
+    }
+});
         });
     </script>
-<script>
-window.addEventListener('keydown', function(e){
-  if (e.key === 'Backspace') {
-    const el = e.target;
-    const tag = el && el.tagName;
-    const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
-    if (!isEditable) {
-      e.preventDefault();
-      // پیام به والد بفرست (داشبورد اصلی)
-      window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-    }
-  }
-});
-</script>
 
 </body>
 </html>
