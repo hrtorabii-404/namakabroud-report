@@ -229,100 +229,93 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('areaChart').getContext('2d');
-            const data = {
-                labels: ['فضای باز و گردشگری', 'تفریحات ساحلی', 'پذیرایی و استراحت', 'خدماتی و پشتیبانی'],
-                datasets: [{
-                    label: 'مساحت عرصه (مترمربع)',
-                    data: [180191, 116000, 25000, 3500],
-                    backgroundColor: [
-                        '#10B981', // Emerald 500
-                        '#0EA5E9', // Sky 500
-                        '#F59E0B', // Amber 500
-                        '#6B7280'  // Gray 500
-                    ],
-                    borderColor: [
-                        '#059669',
-                        '#0284C7',
-                        '#D97706',
-                        '#4B5563'
-                    ],
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            };
 
-            const config = {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Makes the bar chart horizontal for better readability
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return new Intl.NumberFormat('fa-IR').format(value);
-                                },
-                                font: { family: 'Vazirmatn' }
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                font: { family: 'Vazirmatn', size: 12 }
-                            }
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // =======================================================
+        // بخش ۱: راه‌اندازی نمودار
+        // =======================================================
+        const ctx = document.getElementById('areaChart').getContext('2d');
+        const data = {
+            labels: ['فضای باز و گردشگری', 'تفریحات ساحلی', 'پذیرایی و استراحت', 'خدماتی و پشتیبانی'],
+            datasets: [{
+                label: 'مساحت عرصه (مترمربع)',
+                data: [180191, 116000, 25000, 3500],
+                backgroundColor: ['#10B981', '#0EA5E9', '#F59E0B', '#6B7280'],
+                borderColor: ['#059669', '#0284C7', '#D97706', '#4B5563'],
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('fa-IR').format(value);
+                            },
+                            font: { family: 'Vazirmatn' }
                         }
                     },
-                    plugins: {
-                        legend: {
-                           display: false
-                        },
-                        tooltip: {
-                            rtl: true,
-                            bodyFont: { family: 'Vazirmatn' },
-                            titleFont: { family: 'Vazirmatn' },
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.x !== null) {
-                                        label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
-                                    }
-                                    return label;
+                    y: {
+                        ticks: {
+                            font: { family: 'Vazirmatn', size: 12 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        rtl: true,
+                        bodyFont: { family: 'Vazirmatn' },
+                        titleFont: { family: 'Vazirmatn' },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
                                 }
+                                if (context.parsed.x !== null) {
+                                    label += new Intl.NumberFormat('fa-IR').format(context.parsed.x) + ' مترمربع';
+                                }
+                                return label;
                             }
                         }
                     }
                 }
-            };
-
-            new Chart(ctx, config);
-        });
-    </script>
-
-<script>
-    // این اسکریپت باید در تمام صفحات جزئیات پروژه قرار گیرد
-
-    window.addEventListener('keydown', function(e) {
-        if (e.key === 'Backspace') {
-            // مطمئن شو که کاربر در حال تایپ در یک فیلد متنی نیست
-            const isEditable = e.target.isContentEditable || 
-                               e.target.tagName === 'INPUT' || 
-                               e.target.tagName === 'TEXTAREA';
-            
-            if (!isEditable) {
-                e.preventDefault(); // جلوگیری از بازگشت پیش‌فرض مرورگر
-                
-                // به والد مستقیم خود (یعنی داشبورد لیست کارت‌ها) پیام بده
-                window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
             }
-        }
+        };
+
+        new Chart(ctx, config);
+
+        // =======================================================
+        // بخش ۲: مدیریت کلید Backspace برای بازگشت
+        // =======================================================
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                // مطمئن شو که کاربر در حال تایپ در یک فیلد متنی نیست
+                const isEditable = e.target.isContentEditable || 
+                                   e.target.tagName === 'INPUT' || 
+                                   e.target.tagName === 'TEXTAREA';
+                
+                if (!isEditable) {
+                    e.preventDefault(); // جلوگیری از بازگشت پیش‌فرض مرورگر
+                    
+                    // به والد مستقیم خود (یعنی داشبورد لیست کارت‌ها) پیام بده
+                    window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
+                }
+            }
+        });
     });
 </script>
 
