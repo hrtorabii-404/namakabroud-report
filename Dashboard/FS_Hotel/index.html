@@ -3,214 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد تعاملی FS - هتل 5 ستاره</title>
-    <!-- Tailwind CSS -->
+    <title>داشبورد تعاملی FS - هتل ۵ ستاره</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ApexCharts JS -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- Google Fonts: Vazirmatn -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #f7f8fc;
-        }
-        .card {
-            background-color: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-            padding: 24px;
-            transition: all 0.3s ease-in-out;
-            border-top: 4px solid transparent;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-        }
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1a202c;
-            transition: color 0.3s;
-        }
-        .kpi-label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #718096;
-            display: flex;
-            align-items: center;
-        }
-        .kpi-icon {
-            margin-left: 10px;
-            width: 24px;
-            height: 24px;
-        }
-        .rtl-apexcharts tspan {
-            font-family: 'Vazirmatn', sans-serif !important;
-        }
-        .sensitivity-table td, .sensitivity-table th {
-            padding: 0.75rem;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-        .sensitivity-table th {
-            background-color: #f8fafc;
-        }
-        .text-critical {
-            color: #E53E3E; /* Red color */
-        }
-        .tooltip-container .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip-container:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-        /* Custom Slider Styles */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px;
-            cursor: pointer;
-            border-radius: 5px;
-            background-color: var(--track-bg, #e5e7eb);
-            transition: background 0.3s;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid var(--thumb-color, #6b7280);
-            cursor: pointer;
-            margin-top: -6px; /* Center thumb on track */
-            transition: border-color 0.3s;
-        }
-        .card-border-blue { border-color: #3b82f6; }
-        .card-border-green { border-color: #10b981; }
-        .card-border-yellow { border-color: #f59e0b; }
-        .card-border-purple { border-color: #8b5cf6; }
-        .card-border-red { border-color: #ef4444; }
-        .card-border-sky { border-color: #0ea5e9; }
-        .card-border-indigo { border-color: #6366f1; }
-        .card-border-pink { border-color: #ec4899; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f7f8fc; }
+        .card { background-color: white; border-radius: 16px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05); padding: 24px; transition: all 0.3s ease-in-out; border-top: 4px solid transparent; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08); }
+        .kpi-value { font-size: 2rem; font-weight: 700; color: #1a202c; transition: color 0.3s; }
+        .kpi-label { font-size: 0.9rem; font-weight: 500; color: #718096; display: flex; align-items: center; }
+        .kpi-icon { margin-left: 10px; width: 24px; height: 24px; }
+        .rtl-apexcharts tspan { font-family: 'Vazirmatn', sans-serif !important; }
+        .sensitivity-table td, .sensitivity-table th { padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; }
+        .sensitivity-table th { background-color: #f8fafc; }
+        .text-critical { color: #E53E3E; }
+        .tooltip-container .tooltip { visibility: hidden; opacity: 0; transition: opacity 0.3s; }
+        .tooltip-container:hover .tooltip { visibility: visible; opacity: 1; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; border-radius: 5px; background-color: var(--track-bg, #e5e7eb); transition: background-color 0.3s; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #ffffff; border: 2px solid var(--thumb-color, #6b7280); cursor: pointer; margin-top: -6px; transition: border-color 0.3s; }
+        .card-border-blue { border-color: #3b82f6; } .card-border-green { border-color: #10b981; } .card-border-yellow { border-color: #f59e0b; } .card-border-purple { border-color: #8b5cf6; } .card-border-red { border-color: #ef4444; } .card-border-sky { border-color: #0ea5e9; } .card-border-indigo { border-color: #6366f1; } .card-border-pink { border-color: #ec4899; }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
         <header class="mb-10 text-center">
             <div class="flex justify-between items-center w-full">
-                <!-- Left Side Logos -->
-                <div class="flex items-center gap-x-4">
-                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-20" 
-                         onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+OMS';">
-                </div>
-                 <!-- Center Logo -->
-                <div class="flex flex-col items-center">
-                     <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28"
-                         onerror="this.onerror=null; this.src='https://placehold.co/150x100/e2e8f0/334155?text=Logo+NA';">
-                </div>
-                <!-- Right Side Logo -->
-                <div>
-                     <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی IMPco" class="h-20"
-                         onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+IMPco';">
-                </div>
+                <div class="flex items-center gap-x-4"><img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-14"></div>
+                <div class="flex flex-col items-center"><img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28"></div>
+                <div><img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی IMPco" class="h-14"></div>
             </div>
-             <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: هتل 5 ستاره</h1>
+             <h1 class="text-3xl font-bold text-gray-800 -mt-4">داشبورد تحلیل مالی: هتل ۵ ستاره</h1>
              <p class="text-lg text-gray-500 mt-2">شهرک توریستی نمک آبرود</p>
         </header>
 
-        <!-- Project Info Section -->
         <div class="card mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
-                <!-- Project Description -->
                 <div class="lg:col-span-3">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-3">درباره پروژه</h2>
                     <p class="text-gray-600 leading-relaxed mt-4">
-                        <span class="relative inline-block tooltip-container">
-                            <a href="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline">
-                                پروژه هتل ۵ ستاره ساحلی
-                                <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 shadow-lg">
-                                    برای اطلاع از جزییات فنی پروژه ها کلیک کنید
-                                </span>
-                            </a>
-                        </span>
-                        با هدف ایجاد یک مرکز اقامتی و توریستی لوکس در زمینی به مساحت ۶۰٬۷۷۹ متر مربع طراحی شده است. این پروژه با زیربنای کل ۱۵۱٬۹۴۸ متر مربع در ۲۵ طبقه، شامل مجموعه‌های اقامتی متنوع، رستوران‌ها، مراکز همایش و امکانات تندرستی کامل می‌باشد تا تجربه‌ای بی‌نظیر برای میهمانان فراهم آورد.
+                        <a href="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" target="_blank" class="relative inline-block tooltip-container font-semibold text-blue-600 hover:underline">
+                            پروژه هتل ۵ ستاره
+                            <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 text-center leading-relaxed shadow-lg">برای اطلاع از جزییات فنی پروژه کلیک کنید</span>
+                        </a>
+                        در زمینی به مساحت ۶۰٬۷۷۹ متر مربع و با زیربنای کل ۱۵۱٬۹۴۸ متر مربع تعریف شده است. این هتل شامل ۷۸۱ اتاق و سوئیت به همراه امکانات کامل رفاهی، پذیرایی، تندرستی و سالن‌های همایش برای ارائه خدمات لوکس و جامع به میهمانان شهرک توریستی نمک آبرود می‌باشد.
                     </p>
                 </div>
-                <!-- Project Stats in Frames -->
                 <div class="lg:col-span-2 grid grid-cols-2 gap-4">
-                    <div class="bg-sky-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
-                        <h3 class="text-sm font-medium text-sky-800">مساحت عرصه</h3>
-                        <p class="text-xl font-bold text-sky-900 mt-1">۶۰٬۷۷۹</p>
-                        <span class="text-xs text-sky-700">متر مربع</span>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
-                        <h3 class="text-sm font-medium text-green-800">زیربنای کل</h3>
-                        <p class="text-xl font-bold text-green-900 mt-1">۱۵۱٬۹۴۸</p>
-                        <span class="text-xs text-green-700">متر مربع</span>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
-                        <h3 class="text-sm font-medium text-yellow-800">تعداد طبقات</h3>
-                        <p class="text-xl font-bold text-yellow-900 mt-1">۲۵</p>
-                        <span class="text-xs text-yellow-700">طبقه</span>
-                    </div>
-                    <div class="bg-purple-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
-                        <h3 class="text-sm font-medium text-purple-800">نوع پروژه</h3>
-                        <p class="text-xl font-bold text-purple-900 mt-1">هتل</p>
-                        <span class="text-xs text-purple-700">اقامتی-تفریحی</span>
-                    </div>
+                    <div class="bg-sky-50 p-4 rounded-xl text-center"><h3 class="text-sm font-medium text-sky-800">مساحت عرصه</h3><p class="text-xl font-bold text-sky-900 mt-1">۶۰٬۷۷۹</p><span class="text-xs text-sky-700">متر مربع</span></div>
+                    <div class="bg-green-50 p-4 rounded-xl text-center"><h3 class="text-sm font-medium text-green-800">زیربنای کل</h3><p class="text-xl font-bold text-green-900 mt-1">۱۵۱٬۹۴۸</p><span class="text-xs text-green-700">متر مربع</span></div>
+                    <div class="bg-yellow-50 p-4 rounded-xl text-center"><h3 class="text-sm font-medium text-yellow-800">تعداد اتاق</h3><p class="text-xl font-bold text-yellow-900 mt-1">۷۸۱</p><span class="text-xs text-yellow-700">واحد اقامتی</span></div>
+                    <div class="bg-purple-50 p-4 rounded-xl text-center"><h3 class="text-sm font-medium text-purple-800">نوع پروژه</h3><p class="text-xl font-bold text-purple-900 mt-1">هتل</p><span class="text-xs text-purple-700">اقامتی-پذیرایی</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Interactive Controls Section -->
         <div class="card mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-semibold text-gray-800">پارامترهای تعاملی (آنالیز حساسیت)</h2>
-                <button id="resetButton" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors text-sm">بازنشانی</button>
-            </div>
+            <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-semibold text-gray-800">پارامترهای تعاملی (آنالیز حساسیت)</h2><button id="resetButton" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors text-sm">بازنشانی</button></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-                <!-- Discount Rate Slider -->
-                <div class="flex flex-col space-y-2">
-                    <label for="discountRate" class="flex justify-between font-medium text-gray-700">
-                        <span>نرخ تنزیل</span>
-                        <span id="discountRateValue" class="font-bold text-blue-600">18%</span>
-                    </label>
-                    <input type="range" id="discountRate" min="5" max="30" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
-                </div>
-                <!-- Revenue Change Slider -->
-                <div class="flex flex-col space-y-2">
-                    <label for="revenueChange" class="flex justify-between font-medium text-gray-700">
-                        <span>تغییر در درآمدها</span>
-                        <span id="revenueChangeValue" class="font-bold text-gray-700">+0%</span>
-                    </label>
-                    <input type="range" id="revenueChange" min="-30" max="30" value="0" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
-                </div>
-                <!-- Cost Change Slider -->
-                <div class="flex flex-col space-y-2">
-                    <label for="costChange" class="flex justify-between font-medium text-gray-700">
-                        <span>تغییر در هزینه‌ها</span>
-                        <span id="costChangeValue" class="font-bold text-gray-700">+0%</span>
-                    </label>
-                    <input type="range" id="costChange" min="-30" max="30" value="0" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
-                </div>
+                <div class="flex flex-col space-y-2"><label for="discountRate" class="flex justify-between font-medium text-gray-700"><span>نرخ تنزیل</span><span id="discountRateValue" class="font-bold text-blue-600">18%</span></label><input type="range" id="discountRate" min="5" max="40" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer"></div>
+                <div class="flex flex-col space-y-2"><label for="revenueChange" class="flex justify-between font-medium text-gray-700"><span>تغییر در درآمدها</span><span id="revenueChangeValue" class="font-bold text-gray-700">+0%</span></label><input type="range" id="revenueChange" min="-30" max="30" value="0" class="w-full h-2 rounded-lg appearance-none cursor-pointer"></div>
+                <div class="flex flex-col space-y-2"><label for="costChange" class="flex justify-between font-medium text-gray-700"><span>تغییر در هزینه‌ها</span><span id="costChangeValue" class="font-bold text-gray-700">+0%</span></label><input type="range" id="costChange" min="-30" max="30" value="0" class="w-full h-2 rounded-lg appearance-none cursor-pointer"></div>
             </div>
         </div>
 
-        <!-- Main Grid Layout -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-             <!-- KPI Cards -->
             <div class="card card-border-green"><h3 class="kpi-label"><span class="kpi-icon text-green-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m-3.5 7.5l1 1m0 0l1-1m-1 1v-2.5m3.5 5l-1-1m0 0l-1 1m1-1v-2.5"></path></svg></span>خالص ارزش فعلی (NPV)</h3><p id="npvValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">میلیون ریال</span></div>
             <div class="card card-border-blue"><h3 class="kpi-label"><span class="kpi-icon text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></span>نرخ بازده داخلی (IRR)</h3><p id="irrValue" class="kpi-value mt-2"></p><span id="irrStatus" class="text-sm font-medium"></span></div>
             <div class="card card-border-yellow"><h3 class="kpi-label"><span class="kpi-icon text-yellow-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>دوره بازگشت سرمایه (PP)</h3><p id="ppValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">سال</span></div>
@@ -221,364 +81,259 @@
             <div class="card card-border-pink"><h3 class="kpi-label"><span class="kpi-icon text-pink-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>دوره بازگشت تنزیل شده</h3><p id="pbpValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">سال</span></div>
         </div>
 
-        <!-- Charts and Matrix Section -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-8">
-            <div class="card lg:col-span-3">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">نقشه راه زمانی پروژه</h3>
-                <div id="timelineChart" class="rtl-apexcharts overflow-hidden"></div>
-            </div>
-            <div class="card lg:col-span-2">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">نمودار NPV در برابر نرخ تنزیل</h3>
-                <div id="npvProfileChart" class="rtl-apexcharts overflow-hidden"></div>
-            </div>
-            <div class="card lg:col-span-5">
-                 <h3 class="text-xl font-semibold text-gray-800 mb-4">ماتریس آنالیز حساسیت نرخ بازده داخلی (IRR)</h3>
-                 <div class="overflow-x-auto">
-                    <table class="w-full sensitivity-table">
-                        <thead id="sensitivity-head"></thead>
-                        <tbody id="sensitivity-body"></tbody>
-                    </table>
-                 </div>
-            </div>
+            <div class="card lg:col-span-3"><h3 class="text-xl font-semibold text-gray-800 mb-4">نقشه راه زمانی پروژه</h3><div id="timelineChart" class="rtl-apexcharts overflow-hidden"></div></div>
+            <div class="card lg:col-span-2"><h3 class="text-xl font-semibold text-gray-800 mb-4">نمودار NPV در برابر نرخ تنزیل</h3><div id="npvProfileChart" class="rtl-apexcharts overflow-hidden"></div></div>
+            <div class="card lg:col-span-5"><h3 class="text-xl font-semibold text-gray-800 mb-4">ماتریس آنالیز حساسیت نرخ بازده داخلی (IRR)</h3><div class="overflow-x-auto"><table class="w-full sensitivity-table"><thead id="sensitivity-head"></thead><tbody id="sensitivity-body"></tbody></table></div></div>
         </div>
     </div>
     
-    <!-- Footer -->
     <footer class="text-center mt-12 py-6 border-t border-gray-200">
         <div class="text-sm text-gray-600">
-            <p>
-                تهیه شده توسط
-                <span class="relative inline-block tooltip-container font-semibold cursor-pointer">
-                    مهندسین مشاور ایده پرداز محیط
-                    <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 text-right leading-relaxed shadow-lg">
-                        تحلیل و طراحی : حمیدرضا ترابی<br>hr.torabii@gmail.com
-                    </span>
-                </span>
-            </p>
+            <p>تهیه شده توسط <span class="relative inline-block tooltip-container font-semibold cursor-pointer"> مهندسین مشاور ایده پرداز محیط <span class="tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-3 text-right leading-relaxed shadow-lg"> تحلیل و طراحی : حمیدرضا ترابی<br>hr.torabii@gmail.com</span></span></p>
             <p class="mt-1">شهریورماه ۱۴۰۴</p>
         </div>
     </footer>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- INITIAL DATA & CONFIG for Project 4: Hotel ---
-        const baseCashFlows = [
-            -39615882, -29711912, -29711912, // 3 years construction
-            15879600, 19849500, 23819400,     // years 1 to 3 operation
-            23819400, 23819400, 23819400,     // years 4 to 6 operation
-            23819400, 23819400, 23819400,     // years 7 to 9 operation
-            23819400, 23819400, 23819400,     // years 10 to 12 operation
-            23819400, 23819400, 23819400,     // years 13 to 15 operation
-            23819400, 23819400, 23819400,     // years 16 to 18 operation
-            23819400, 23819400, 23819400,     // years 19 to 21 operation
-            23819400, 23819400, 23819400,     // years 22 to 24 operation
-            23819400, 23819400, 23819400,     // years 25 to 27 operation
-            23819400, 23819400, 23819400      // years 28 to 30 operation
-        ];
-        const initialData = { constructionYears: 3, operationYears: 30 };
+document.addEventListener('DOMContentLoaded', function () {
+    // --- INITIAL DATA & CONFIG for 5-Star Hotel Project (Corrected) ---
+    const baseCashFlows = [
+        -39615882, -29711912, -29711912, // 3 سال ساخت
+        15879600, 19849500, 23819400,    // سال های 1 تا 3 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 4 تا 6 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 7 تا 9 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 10 تا 12 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 13 تا 15 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 16 تا 18 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 19 تا 21 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 22 تا 24 بهره برداری
+        23819400, 23819400, 23819400,    // سال های 25 تا 27 بهره برداری
+        23819400, 23819400, 23819400     // سال های 28 تا 30 بهره برداری
+    ];
+    const initialData = {
+        constructionYears: 3
+    };
+
+    // --- DOM ELEMENTS ---
+    const sliders = { discountRate: document.getElementById('discountRate'), revenueChange: document.getElementById('revenueChange'), costChange: document.getElementById('costChange'), };
+    const values = { discountRate: document.getElementById('discountRateValue'), revenueChange: document.getElementById('revenueChangeValue'), costChange: document.getElementById('costChangeValue'), npv: document.getElementById('npvValue'), irr: document.getElementById('irrValue'), pp: document.getElementById('ppValue'), bc: document.getElementById('bcValue'), investment: document.getElementById('investmentValue'), inflow: document.getElementById('inflowValue'), outflow: document.getElementById('outflowValue'), pbp: document.getElementById('pbpValue'), irrStatus: document.getElementById('irrStatus'), };
+    const resetButton = document.getElementById('resetButton');
+    const apexChartOptions = { chart: { fontFamily: 'Vazirmatn, sans-serif', toolbar: { show: false }, zoom: { enabled: false } }, tooltip: { style: { fontFamily: 'Vazirmatn, sans-serif' } } };
+
+    // --- CALCULATION FUNCTIONS (Corrected) ---
+    const calculateNPV = (rate, flows) => {
+        return flows.reduce((accumulator, cashFlow, index) => {
+            return accumulator + cashFlow / Math.pow(1 + rate, index);
+        }, 0);
+    };
+    const calculateIRR = (flows, tolerance = 1e-7, maxIterations = 100) => {
+        let low = 0, high = 1.0;
+        if (calculateNPV(low, flows) * calculateNPV(high, flows) > 0) { low = -0.99; high = 5.0; if (calculateNPV(low, flows) * calculateNPV(high, flows) > 0) return NaN; }
+        for (let i = 0; i < maxIterations; i++) {
+            let mid = (low + high) / 2;
+            let npv = calculateNPV(mid, flows);
+            if (Math.abs(npv) < tolerance) return mid;
+            if (calculateNPV(low, flows) * npv < 0) high = mid; else low = mid;
+        }
+        return (low + high) / 2;
+    };
+    const calculateBCRatio = (rate, flows) => {
+        let pvInflows = 0, pvOutflows = 0;
+        flows.forEach((cashFlow, index) => {
+            if (cashFlow > 0) pvInflows += cashFlow / Math.pow(1 + rate, index);
+            else pvOutflows += Math.abs(cashFlow) / Math.pow(1 + rate, index);
+        });
+        return pvOutflows > 0 ? pvInflows / pvOutflows : Infinity;
+    };
+    const calculatePaybackPeriod = (flows) => {
+        const totalInvestment = Math.abs(flows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+        let cumulativeOperationalFlows = 0;
+        for (let i = initialData.constructionYears; i < flows.length; i++) {
+            const lastCumulative = cumulativeOperationalFlows;
+            cumulativeOperationalFlows += flows[i];
+            if (cumulativeOperationalFlows >= totalInvestment) {
+                const yearsInOperation = (i - initialData.constructionYears);
+                const unrecoveredAmount = totalInvestment - lastCumulative;
+                return initialData.constructionYears + yearsInOperation + (unrecoveredAmount / flows[i]);
+            }
+        }
+        return Infinity;
+    };
+    const calculateDiscountedPaybackPeriod = (rate, flows) => {
+        if (calculateNPV(rate, flows) < 0) return Infinity;
+        let cumulativeDiscounted = 0;
+        for (let i = 0; i < flows.length; i++) {
+            const lastCumulative = cumulativeDiscounted;
+            const discountedFlow = flows[i] / Math.pow(1 + rate, i);
+            cumulativeDiscounted += discountedFlow;
+            if (cumulativeDiscounted > 0) {
+                return i + (Math.abs(lastCumulative) / discountedFlow);
+            }
+        }
+        return Infinity;
+    };
+
+    // --- MAIN DASHBOARD LOGIC (Corrected) ---
+    function updateDashboard() {
+        const discountRate = parseFloat(sliders.discountRate.value) / 100;
+        const revenueChange = parseFloat(sliders.revenueChange.value) / 100;
+        const costChange = parseFloat(sliders.costChange.value) / 100;
+        values.discountRate.textContent = `${(discountRate * 100).toFixed(0)}%`;
+        values.revenueChange.textContent = `${revenueChange >= 0 ? '+' : ''}${(revenueChange * 100).toFixed(0)}%`;
+        values.costChange.textContent = `${costChange >= 0 ? '+' : ''}${(costChange * 100).toFixed(0)}%`;
         
-        // --- DOM ELEMENTS ---
-        const sliders = {
-            discountRate: document.getElementById('discountRate'),
-            revenueChange: document.getElementById('revenueChange'),
-            costChange: document.getElementById('costChange'),
-        };
-        const values = {
-            discountRate: document.getElementById('discountRateValue'),
-            revenueChange: document.getElementById('revenueChangeValue'),
-            costChange: document.getElementById('costChangeValue'),
-            npv: document.getElementById('npvValue'),
-            irr: document.getElementById('irrValue'),
-            pp: document.getElementById('ppValue'),
-            bc: document.getElementById('bcValue'),
-            investment: document.getElementById('investmentValue'),
-            inflow: document.getElementById('inflowValue'),
-            outflow: document.getElementById('outflowValue'),
-            pbp: document.getElementById('pbpValue'),
-            irrStatus: document.getElementById('irrStatus'),
-        };
-        const resetButton = document.getElementById('resetButton');
-
-        const apexChartOptions = {
-            chart: { 
-                fontFamily: 'Vazirmatn, sans-serif', 
-                toolbar: { show: false },
-                zoom: { enabled: false }
-            },
-            tooltip: { 
-                enabled: true,
-                style: { fontFamily: 'Vazirmatn, sans-serif' } 
-            }
-        };
-
-        // --- CALCULATION FUNCTIONS ---
-        const calculateNPV = (rate, flows) => flows.reduce((acc, val, i) => acc + val / Math.pow(1 + rate, i + 1), 0);
-        const calculateIRR = (flows, tolerance = 1e-6, maxIterations = 100) => {
-            let low = -0.99, high = 1.0;
-            for (let i = 0; i < maxIterations; i++) {
-                let mid = (low + high) / 2;
-                if (mid === low || mid === high) return mid;
-                let npv = calculateNPV(mid, flows);
-                if (Math.abs(npv) < tolerance) return mid;
-                (npv > 0) ? low = mid : high = mid;
-            }
-            return (low + high) / 2;
-        };
-         const calculatePaybackPeriod = (flows) => {
-            let cumulativeCashFlow = 0;
-            for (let i = 0; i < flows.length; i++) {
-                const lastCumulative = cumulativeCashFlow;
-                cumulativeCashFlow += flows[i];
-                if (cumulativeCashFlow > 0 && lastCumulative <= 0) {
-                    const fraction = -lastCumulative / flows[i];
-                    return i + fraction;
-                }
-            }
-            return Infinity;
-        };
-        const calculateDiscountedPaybackPeriod = (rate, flows) => {
-             let cumulativeDiscounted = 0;
-             for (let i = 0; i < flows.length; i++) {
-                const discountedFlow = flows[i] / Math.pow(1 + rate, i + 1);
-                cumulativeDiscounted += discountedFlow;
-                if (cumulativeDiscounted > 0) {
-                    const year = i;
-                    const lastNegative = cumulativeDiscounted - discountedFlow;
-                    return year + (-lastNegative / discountedFlow);
-                }
-            }
-            return Infinity;
-        };
-        const calculateBCRatio = (rate, flows) => {
-            const pvInflows = flows.filter(f => f > 0).reduce((acc, val, i) => acc + val / Math.pow(1 + rate, i + 1), 0);
-            const pvOutflows = flows.filter(f => f < 0).reduce((acc, val, i) => acc + (-val) / Math.pow(1 + rate, i + 1), 0);
-            return pvOutflows > 0 ? pvInflows / pvOutflows : Infinity;
-        };
-
-        // --- UI UPDATE FUNCTIONS ---
-        function updateSliderAppearance() {
-            const revenueVal = parseFloat(sliders.revenueChange.value);
-            const costVal = parseFloat(sliders.costChange.value);
-            
-            const revenueColor = revenueVal > 0 ? '#10B981' : (revenueVal < 0 ? '#EF4444' : '#6B7280');
-            values.revenueChange.style.color = revenueColor;
-            sliders.revenueChange.style.setProperty('--track-bg', revenueColor + '33');
-            sliders.revenueChange.style.setProperty('--thumb-color', revenueColor);
-
-            const costColor = costVal > 0 ? '#EF4444' : (costVal < 0 ? '#10B981' : '#6B7280');
-            values.costChange.style.color = costColor;
-            sliders.costChange.style.setProperty('--track-bg', costColor + '33');
-            sliders.costChange.style.setProperty('--thumb-color', costColor);
-            
-            const discountColor = '#3B82F6';
-            sliders.discountRate.style.setProperty('--track-bg', discountColor + '33');
-            sliders.discountRate.style.setProperty('--thumb-color', discountColor);
+        // --- SLIDER COLOR LOGIC ---
+        // Revenue Slider
+        if (revenueChange > 0) {
+            sliders.revenueChange.style.setProperty('--track-bg', '#d1fae5'); // light green
+            sliders.revenueChange.style.setProperty('--thumb-color', '#10b981'); // dark green
+        } else if (revenueChange < 0) {
+            sliders.revenueChange.style.setProperty('--track-bg', '#fee2e2'); // light red
+            sliders.revenueChange.style.setProperty('--thumb-color', '#ef4444'); // dark red
+        } else {
+            sliders.revenueChange.style.setProperty('--track-bg', '#e5e7eb'); // default gray
+            sliders.revenueChange.style.setProperty('--thumb-color', '#6b7280'); // default dark gray
         }
 
-        // --- MAIN DASHBOARD LOGIC ---
-        function updateDashboard() {
-            const discountRate = parseFloat(sliders.discountRate.value) / 100;
-            const revenueChange = parseFloat(sliders.revenueChange.value) / 100;
-            const costChange = parseFloat(sliders.costChange.value) / 100;
+        // Cost Slider
+        if (costChange < 0) { // Negative cost change is GOOD
+            sliders.costChange.style.setProperty('--track-bg', '#d1fae5');
+            sliders.costChange.style.setProperty('--thumb-color', '#10b981');
+        } else if (costChange > 0) { // Positive cost change is BAD
+            sliders.costChange.style.setProperty('--track-bg', '#fee2e2');
+            sliders.costChange.style.setProperty('--thumb-color', '#ef4444');
+        } else {
+            sliders.costChange.style.setProperty('--track-bg', '#e5e7eb');
+            sliders.costChange.style.setProperty('--thumb-color', '#6b7280');
+        }
 
-            values.discountRate.textContent = `${(discountRate * 100).toFixed(0)}%`;
-            values.revenueChange.textContent = `${revenueChange >= 0 ? '+' : ''}${(revenueChange * 100).toFixed(0)}%`;
-            values.costChange.textContent = `${costChange >= 0 ? '+' : ''}${(costChange * 100).toFixed(0)}%`;
-            
-            updateSliderAppearance();
+        const adjustedCashFlows = baseCashFlows.map((cf) => {
+            if (cf < 0) return cf * (1 + costChange);
+            return cf * (1 + revenueChange);
+        });
 
-            const adjustedCashFlows = baseCashFlows.map((cf, index) => {
-                if(index < initialData.constructionYears) return cf * (1 + costChange);
-                return cf * (1 + revenueChange);
-            });
-            
-            const fullAdjustedOutflows = baseCashFlows.map(cf => cf < 0 ? cf : 0).map(cf => cf * (1+costChange));
-            const fullAdjustedInflows = baseCashFlows.map(cf => cf > 0 ? cf : 0).map(cf => cf * (1+revenueChange));
-
-            const npv = calculateNPV(discountRate, adjustedCashFlows);
-            const irr = calculateIRR(adjustedCashFlows);
-            const pp = calculatePaybackPeriod(adjustedCashFlows);
-            const bc = calculateBCRatio(discountRate, adjustedCashFlows);
-            const pbp = calculateDiscountedPaybackPeriod(discountRate, adjustedCashFlows);
-            const totalInflows = fullAdjustedInflows.reduce((a, b) => a + b, 0);
-            const totalOutflows = Math.abs(fullAdjustedOutflows.reduce((a, b) => a + b, 0));
-            const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a,b) => a+b, 0));
-            const formatNum = (num) => num.toLocaleString('fa-IR', { maximumFractionDigits: 0 });
-            
-            values.npv.textContent = formatNum(npv / 1000000);
-            values.irr.textContent = `${(irr * 100).toFixed(2)}%`;
-            values.pp.textContent = isFinite(pp) ? pp.toFixed(2) : "N/A";
-            values.bc.textContent = isFinite(bc) ? bc.toFixed(2) : 'نامشخص';
-            values.inflow.textContent = formatNum(totalInflows / 1000000);
-            values.outflow.textContent = formatNum(totalOutflows/ 1000000);
-            values.investment.textContent = formatNum(totalInvestment/ 1000000);
-            
-            values.pbp.textContent = isFinite(pbp) ? pbp.toFixed(2) : 'نامشخص';
-            values.npv.classList.toggle('text-critical', npv < 0);
-            values.irr.classList.toggle('text-critical', irr < discountRate);
-            values.bc.classList.toggle('text-critical', bc < 1);
-            
-            const irrSpread = Math.abs(irr - discountRate) * 100;
-            if (irr > discountRate) {
-                values.irrStatus.textContent = `${irrSpread.toFixed(2)}% بالاتر از نرخ تنزیل`;
+        const npv = calculateNPV(discountRate, adjustedCashFlows);
+        const irr = calculateIRR(adjustedCashFlows);
+        const bc = calculateBCRatio(discountRate, adjustedCashFlows);
+        const pp = calculatePaybackPeriod(adjustedCashFlows);
+        const pbp = calculateDiscountedPaybackPeriod(discountRate, adjustedCashFlows);
+        const totalInflows = adjustedCashFlows.filter(cf => cf > 0).reduce((a, b) => a + b, 0);
+        const totalInvestment = Math.abs(adjustedCashFlows.slice(0, initialData.constructionYears).reduce((a, b) => a + b, 0));
+        const totalOutflows = Math.abs(adjustedCashFlows.filter(cf => cf < 0).reduce((a, b) => a + b, 0));
+        const formatNum = (num) => Math.round(num).toLocaleString('fa-IR');
+        
+        values.npv.textContent = formatNum(npv);
+        values.irr.textContent = isNaN(irr) ? 'نامشخص' : `${(irr * 100).toFixed(2)}%`;
+        values.pp.textContent = isFinite(pp) ? pp.toFixed(2) : 'نامشخص';
+        values.bc.textContent = isFinite(bc) ? bc.toFixed(2) : 'نامشخص';
+        values.inflow.textContent = formatNum(totalInflows);
+        values.outflow.textContent = formatNum(totalOutflows);
+        values.investment.textContent = formatNum(totalInvestment);
+        values.pbp.textContent = isFinite(pbp) ? pbp.toFixed(2) : 'نامشخص';
+        values.npv.classList.toggle('text-critical', npv < 0);
+        values.irr.classList.toggle('text-critical', isNaN(irr) || irr < discountRate);
+        values.bc.classList.toggle('text-critical', bc < 1);
+        
+        if (isNaN(irr)) { 
+            values.irrStatus.textContent = 'غیر قابل محاسبه'; 
+            values.irrStatus.className = 'text-sm font-medium text-gray-500'; 
+        } else {
+            const diff = (irr - discountRate) * 100;
+            if (diff > 0) {
+                values.irrStatus.textContent = `+${diff.toFixed(2)}% بالاتر از نرخ تنزیل`;
                 values.irrStatus.className = 'text-sm font-medium text-green-600';
             } else {
-                values.irrStatus.textContent = `${irrSpread.toFixed(2)}% پایین‌تر از نرخ تنزیل`;
+                values.irrStatus.textContent = `${diff.toFixed(2)}% پایین‌تر از نرخ تنزیل`;
                 values.irrStatus.className = 'text-sm font-medium text-red-600';
             }
-            
-            updateTimelineChart(pp);
-            updateNpvProfileChart(adjustedCashFlows, discountRate);
-            updateSensitivityMatrix(revenueChange, costChange, discountRate);
         }
         
-        // --- CHARTING & MATRIX FUNCTIONS ---
-        const timelineChart = new ApexCharts(document.querySelector("#timelineChart"), {
-            ...apexChartOptions,
-            series: [{ name: 'دوره زمانی', data: [] }],
-            chart: { ...apexChartOptions.chart, type: 'rangeBar', height: 350 },
-            plotOptions: { bar: { horizontal: true, distributed: true, dataLabels: { hideOverflowingLabels: false } } },
-            dataLabels: { 
-                enabled: true, 
-                style: { 
-                    colors: ['#373d3f'], 
-                    fontWeight: '600', 
-                    fontFamily: 'Vazirmatn, sans-serif' 
-                }
-            },
-            tooltip: {
-                enabled: true,
-                y: {
-                    formatter: function(value, { series, seriesIndex, dataPointIndex, w }) {
-                        const data = w.globals.series[seriesIndex][dataPointIndex];
-                        const startYear = new Date(data.y[0]).getFullYear();
-                        const endYear = new Date(data.y[1]).getFullYear();
-                        return `${startYear} - ${endYear}`;
-                    }
-                }
-            },
-            xaxis: { type: 'datetime', labels: { style: { fontFamily: 'Vazirmatn, sans-serif' }}},
-            yaxis: { labels: { style: { fontFamily: 'Vazirmatn, sans-serif' }}},
-            legend: { show: false },
-            responsive: [{ breakpoint: 768, options: { dataLabels: { style: { fontSize: '12px' } } }}, { breakpoint: 480, options: { dataLabels: { enabled: false }, yaxis: { labels: { style: { fontSize: '11px' } } } } }]
-        });
-        timelineChart.render();
-        
-        function updateTimelineChart(paybackPeriod) {
-            if (!isFinite(paybackPeriod)) return;
+        if (typeof updateCharts === 'function') updateCharts(pp, pbp);
+        if (typeof updateNpvProfileChart === 'function') updateNpvProfileChart(adjustedCashFlows, discountRate);
+        if (typeof updateSensitivityMatrix === 'function') updateSensitivityMatrix(revenueChange, costChange, discountRate);
+    }
+    
+    // --- CHARTING & MATRIX FUNCTIONS ---
+    const npvProfileChart = new ApexCharts(document.querySelector("#npvProfileChart"), { ...apexChartOptions, chart: { ...apexChartOptions.chart, type: 'line', height: 350 }, series: [{ name: 'NPV', data: [] }], xaxis: { title: { text: 'نرخ تنزیل' , style: { fontFamily: 'Vazirmatn, sans-serif' }}, labels: { formatter: val => `${(val * 100).toFixed(0)}%`, style: { fontFamily: 'Vazirmatn, sans-serif' }}}, yaxis: { title: { text: 'خالص ارزش فعلی (NPV)', style: { fontFamily: 'Vazirmatn, sans-serif' }}, labels: { formatter: val => val.toLocaleString('fa-IR'), style: { fontFamily: 'Vazirmatn, sans-serif' }}}, stroke: { curve: 'smooth', width: 3 }, grid: { borderColor: '#e7e7e7', row: { colors: ['#f3f3f3', 'transparent'], opacity: 0.5 }}, annotations: { yaxis: [{ y: 0, borderColor: '#F44336', label: { borderColor: '#F44336', style: { color: '#fff', background: '#F44336' }, text: 'نقطه سر به سر (IRR)' } }] } });
+    if(document.querySelector("#npvProfileChart")) npvProfileChart.render();
+    const timelineChart = new ApexCharts(document.querySelector("#timelineChart"), { ...apexChartOptions, series: [{ name: 'دوره زمانی', data: [] }], chart: { ...apexChartOptions.chart, type: 'rangeBar', height: 350 }, plotOptions: { bar: { horizontal: true, distributed: true, dataLabels: { hideOverflowingLabels: false } } }, dataLabels: { enabled: true, formatter: (val, opts) => opts.w.globals.labels[opts.dataPointIndex], style: { colors: ['#000000'], fontWeight: '600', fontFamily: 'Vazirmatn, sans-serif' } }, xaxis: { type: 'datetime', labels: { style: { fontFamily: 'Vazirmatn, sans-serif' }}}, yaxis: { labels: { style: { fontFamily: 'Vazirmatn, sans-serif' }}}, legend: { show: false } });
+    if(document.querySelector("#timelineChart")) timelineChart.render();
+    
+    function updateCharts(pp, pbp) {
+        const seriesData = [
+            { x: 'دوران ساخت', y: [new Date('2024-01-01').getTime(), new Date('2026-12-31').getTime()], fillColor: '#E91E63' },
+            { x: 'دوران بهره‌برداری', y: [new Date('2027-01-01').getTime(), new Date('2056-12-31').getTime()], fillColor: '#008FFB' }
+        ];
+        const startDate = new Date('2024-01-01');
 
-            const startDate = new Date('2024-01-01').getTime();
-            const paybackEndDate = new Date(startDate);
-            paybackEndDate.setDate(paybackEndDate.getDate() + (paybackPeriod * 365.25));
-
-            timelineChart.updateSeries([{
-                data: [
-                    { x: 'دوران ساخت', y: [new Date('2024-01-01').getTime(), new Date('2026-12-31').getTime()], fillColor: '#E91E63' },
-                    { x: `دوران بهره‌برداری`, y: [new Date('2027-01-01').getTime(), new Date('2056-12-31').getTime()], fillColor: '#008FFB' },
-                    { x: 'دوره بازگشت سرمایه', y: [startDate, paybackEndDate.getTime()], fillColor: '#FEB019'}
-                ]
-            }]);
-
-            timelineChart.updateOptions({
-                dataLabels: {
-                    formatter: (val, opts) => {
-                        const label = opts.w.globals.labels[opts.dataPointIndex];
-                        let durationText = '';
-                        if (label === 'دوران ساخت') durationText = ': ۳ سال';
-                        if (label === `دوران بهره‌برداری`) durationText = `: ۳۰ سال`;
-                        if (label === 'دوره بازگشت سرمایه') durationText = `: ${paybackPeriod.toFixed(2)} سال`;
-                        return label + durationText;
-                    }
-                }
-            });
-        }
-
-        const npvProfileChart = new ApexCharts(document.querySelector("#npvProfileChart"), {
-             ...apexChartOptions,
-            chart: { ...apexChartOptions.chart, type: 'line', height: 350 },
-            series: [{ name: 'NPV', data: [] }],
-            xaxis: { title: { text: 'نرخ تنزیل' , style: { fontFamily: 'Vazirmatn, sans-serif' }}, labels: { formatter: val => `${(val * 100).toFixed(0)}%`, style: { fontFamily: 'Vazirmatn, sans-serif' }}},
-            yaxis: { title: { text: 'خالص ارزش فعلی (NPV)', style: { fontFamily: 'Vazirmatn, sans-serif' }}, labels: { formatter: val => val.toLocaleString('fa-IR'), style: { fontFamily: 'Vazirmatn, sans-serif' }}},
-            stroke: { curve: 'smooth', width: 3 },
-            grid: { borderColor: '#e7e7e7', row: { colors: ['#f3f3f3', 'transparent'], opacity: 0.5 }},
-            annotations: {
-                xaxis: [],
-                yaxis: [{ y: 0, borderColor: '#F44336', label: { borderColor: '#F44336', style: { color: '#fff', background: '#F44336' }, text: 'نقطه سر به سر (IRR)' } }]
-            },
-            responsive: [{ breakpoint: 640, options: { yaxis: { labels: { style: { fontSize: '10px' } }, title: { style: { fontSize: '12px' } } }, xaxis: { labels: { style: { fontSize: '10px' } }, title: { style: { fontSize: '12px' } } } } }]
-        });
-        npvProfileChart.render();
-
-        function updateNpvProfileChart(cashFlows, currentRate) {
-            const rates = Array.from({length: 15}, (_, i) => (i * 2.0) / 100 + 0.05);
-            const npvData = rates.map(rate => ({ x: rate, y: parseFloat(calculateNPV(rate, cashFlows).toFixed(2)) }));
-            const irr = calculateIRR(cashFlows);
-
-            npvProfileChart.updateSeries([{ data: npvData }]);
-            npvProfileChart.updateOptions({
-                annotations: {
-                    xaxis: [
-                        { x: irr, borderColor: '#00E396', label: { style: { background: '#00E396' }, text: `IRR: ${(irr*100).toFixed(2)}%` } },
-                        { x: currentRate, borderColor: '#008FFB', label: { text: 'نرخ فعلی' } }
-                    ],
-                     yaxis: [{ y: 0, borderColor: '#F44336', label: { borderColor: '#F44336', style: { color: '#fff', background: '#F44336', fontFamily: 'Vazirmatn, sans-serif' }, text: 'نقطه سر به سر' } }]
-                }
-            });
+        if (isFinite(pp)) {
+            const ppDate = new Date(startDate.getTime());
+            const ppFullYears = Math.floor(pp);
+            const ppFractionalMonth = Math.round((pp % 1) * 12);
+            ppDate.setFullYear(startDate.getFullYear() + ppFullYears);
+            ppDate.setMonth(startDate.getMonth() + ppFractionalMonth);
+            seriesData.push({ x: `بازگشت سرمایه: ${pp.toFixed(2)} سال`, y: [startDate.getTime(), ppDate.getTime()], fillColor: '#FEB019'});
         }
         
-        function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate) {
-            const head = document.getElementById('sensitivity-head');
-            const body = document.getElementById('sensitivity-body');
-            const costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
-            const revenueChanges = [-0.2, -0.1, 0, 0.1, 0.2];
+        if (isFinite(pbp)) {
+            const pbpDate = new Date(startDate.getTime());
+            const pbpFullYears = Math.floor(pbp);
+            const pbpFractionalMonth = Math.round((pbp % 1) * 12);
+            pbpDate.setFullYear(startDate.getFullYear() + pbpFullYears);
+            pbpDate.setMonth(startDate.getMonth() + pbpFractionalMonth);
+            seriesData.push({ x: `بازگشت تنزیل شده: ${pbp.toFixed(2)} سال`, y: [startDate.getTime(), pbpDate.getTime()], fillColor: '#00E396'});
+        }
 
-            head.innerHTML = `<tr><th class="bg-gray-100">درآمد / هزینه</th>${costChanges.map(c => `<th>${c >= 0 ? '+' : ''}${Math.round(c*100)}%</th>`).join('')}</tr>`;
-            
-            body.innerHTML = '';
-            revenueChanges.forEach(revChange => {
-                let rowHtml = `<tr><td class="font-bold bg-gray-50">${revChange >= 0 ? '+' : ''}${Math.round(revChange*100)}%</td>`;
-                costChanges.forEach(cstChange => {
-                    const tempFlows = baseCashFlows.map((cf, index) => {
-                        if(index < initialData.constructionYears) return cf * (1 + sliderCostChange + cstChange);
-                        return cf * (1 + sliderRevChange + revChange);
-                    });
-
-                    const irr = calculateIRR(tempFlows);
-                    const irrPercent = (irr * 100).toFixed(2);
-                    
-                    let bgColor = 'bg-white';
-                    if (irr < discountRate) bgColor = 'bg-red-100';
-                    else if (irr > discountRate + 0.05) bgColor = 'bg-green-100';
-
-                    let specialClass = '';
-                    if (revChange === 0 && cstChange === 0) {
-                         specialClass = ' bg-blue-100 font-bold border-2 border-blue-400';
-                    }
-
-                    rowHtml += `<td class="${bgColor}${specialClass}">${irrPercent}%</td>`;
+        timelineChart.updateSeries([{ data: seriesData }]);
+    }
+    function updateNpvProfileChart(cashFlows, currentRate) {
+        const rates = Array.from({length: 15}, (_, i) => (i * 2.5) / 100 + 0.05);
+        const npvData = rates.map(rate => ({ x: rate, y: parseFloat(calculateNPV(rate, cashFlows).toFixed(2)) }));
+        const irr = calculateIRR(cashFlows);
+        npvProfileChart.updateSeries([{ data: npvData }]);
+        npvProfileChart.updateOptions({ annotations: { xaxis: [ { x: irr, borderColor: '#00E396', label: { style: { background: '#00E396' }, text: `IRR: ${(irr*100).toFixed(2)}%` } }, { x: currentRate, borderColor: '#008FFB', label: { text: 'نرخ فعلی' } } ], yaxis: [{ y: 0, borderColor: '#F44336', label: { borderColor: '#F44336', style: { color: '#fff', background: '#F44336', fontFamily: 'Vazirmatn, sans-serif' }, text: 'نقطه سر به سر' } }] } });
+    }
+    function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate) {
+        const head = document.getElementById('sensitivity-head');
+        const body = document.getElementById('sensitivity-body');
+        if(!head || !body) return;
+        const costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
+        const revenueChanges = [-0.2, -0.1, 0, 0.1, 0.2];
+        head.innerHTML = `<tr><th class="bg-gray-100">درآمد / هزینه</th>${costChanges.map(c => `<th>${c >= 0 ? '+' : ''}${Math.round(c*100)}%</th>`).join('')}</tr>`;
+        body.innerHTML = '';
+        revenueChanges.forEach(revChange => {
+            let rowHtml = `<tr><td class="font-bold bg-gray-50">${revChange >= 0 ? '+' : ''}${Math.round(revChange*100)}%</td>`;
+            costChanges.forEach(cstChange => {
+                const tempFlows = baseCashFlows.map(cf => {
+                    if (cf > 0) return cf * (1 + sliderRevChange + revChange);
+                    return cf * (1 + sliderCostChange + cstChange);
                 });
-                rowHtml += '</tr>';
-                body.innerHTML += rowHtml;
+                const irr = calculateIRR(tempFlows);
+                const irrPercent = isNaN(irr) ? "N/A" : `${(irr * 100).toFixed(2)}%`;
+                let bgColor = 'bg-white';
+                if (!isNaN(irr)) { if (irr < discountRate) bgColor = 'bg-red-100'; else if (irr > discountRate + 0.05) bgColor = 'bg-green-100'; }
+                let specialClass = (revChange === 0 && cstChange === 0) ? ' bg-blue-100 font-bold border-2 border-blue-400' : '';
+                rowHtml += `<td class="${bgColor}${specialClass}">${irrPercent}</td>`;
             });
-        }
-
-        // --- INITIALIZATION & EVENT LISTENERS ---
-        Object.values(sliders).forEach(slider => {
-            slider.addEventListener('input', updateDashboard);
+            rowHtml += '</tr>';
+            body.innerHTML += rowHtml;
         });
-        
-        resetButton.addEventListener('click', () => {
-            sliders.discountRate.value = 18;
-            sliders.revenueChange.value = 0;
-            sliders.costChange.value = 0;
-            updateDashboard();
-        });
+    }
 
-        // Initial calls to populate the dashboard
+    // --- EVENT LISTENERS & INITIALIZATION ---
+    Object.values(sliders).forEach(slider => slider.addEventListener('input', updateDashboard));
+    resetButton.addEventListener('click', () => {
+        sliders.discountRate.value = 18;
+        sliders.revenueChange.value = 0;
+        sliders.costChange.value = 0;
         updateDashboard();
     });
+    updateDashboard();
+});
 </script>
+
+
 <script>
     // این اسکریپت را به تمام صفحات جزئیات پروژه اضافه کنید
 
