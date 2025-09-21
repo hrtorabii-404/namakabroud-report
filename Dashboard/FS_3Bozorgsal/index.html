@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد مالی: مرکز محله 3 ( تم بازی بزرگسالان)</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ApexCharts JS -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- Google Fonts: Vazirmatn -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -107,20 +104,16 @@
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
         <header class="mb-10 text-center">
              <div class="flex justify-between items-center w-full">
-                <!-- Left Side Logos -->
                 <div class="flex items-center gap-x-4">
                     <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگوی OMS" class="h-20" 
                          onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+OMS';">
                 </div>
-                 <!-- Center Logo -->
-                <div class="flex flex-col items-center">
+                 <div class="flex flex-col items-center">
                      <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28"
                          onerror="this.onerror=null; this.src='https://placehold.co/150x100/e2e8f0/334155?text=Logo+NA';">
                 </div>
-                <!-- Right Side Logo -->
                 <div>
                      <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگوی IMPco" class="h-20"
                          onerror="this.onerror=null; this.src='https://placehold.co/100x80/e2e8f0/334155?text=Logo+IMPco';">
@@ -130,10 +123,8 @@
             <p class="text-lg text-gray-500 mt-2">تحلیل شاخص‌های کلیدی مالی پروژه</p>
         </header>
 
-        <!-- Project Info Section -->
         <div class="card mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
-                <!-- Project Description -->
                 <div class="lg:col-span-3">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-3">درباره پروژه</h2>
                     <p class="text-gray-600 leading-relaxed mt-4">
@@ -148,7 +139,6 @@
                         یک مرکز سرگرمی جامع برای بزرگسالان است که شامل مجموعه‌ای از بازی‌های مدرن و کلاسیک مانند بولینگ، بیلیارد، آرنای واقعیت مجازی (VR)، و اتاق‌های فرار است و برای ایجاد فضایی پرهیجان و اجتماعی طراحی شده است.
                     </p>
                 </div>
-                <!-- Project Stats in Frames -->
                 <div class="lg:col-span-2 grid grid-cols-2 gap-4">
                     <div class="bg-sky-50 p-4 rounded-xl text-center transition-transform hover:scale-105 duration-300">
                         <h3 class="text-sm font-medium text-sky-800">مساحت عرصه</h3>
@@ -174,14 +164,12 @@
             </div>
         </div>
 
-        <!-- Interactive Controls Section -->
         <div class="card mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold text-gray-800">پارامترهای تعاملی (آنالیز حساسیت)</h2>
                 <button id="resetButton" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors text-sm">بازنشانی</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
-                <!-- Discount Rate Slider -->
                 <div class="flex flex-col space-y-2">
                     <label for="discountRate" class="flex justify-between font-medium text-gray-700">
                         <span>نرخ تنزیل</span>
@@ -189,7 +177,6 @@
                     </label>
                     <input type="range" id="discountRate" min="5" max="40" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
                 </div>
-                <!-- Revenue Change Slider -->
                 <div class="flex flex-col space-y-2">
                     <label for="revenueChange" class="flex justify-between font-medium text-gray-700">
                         <span>تغییر در درآمدها</span>
@@ -197,7 +184,6 @@
                     </label>
                     <input type="range" id="revenueChange" min="-30" max="30" value="0" class="w-full h-2 rounded-lg appearance-none cursor-pointer">
                 </div>
-                <!-- Cost Change Slider -->
                 <div class="flex flex-col space-y-2">
                     <label for="costChange" class="flex justify-between font-medium text-gray-700">
                         <span>تغییر در هزینه‌ها</span>
@@ -208,10 +194,8 @@
             </div>
         </div>
 
-        <!-- Main Grid Layout -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-             <!-- KPI Cards -->
-            <div class="card card-border-green"><h3 class="kpi-label"><span class="kpi-icon text-green-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m-3.5 7.5l1 1m0 0l1-1m-1 1v-2.5m3.5 5l-1-1m0 0l-1 1m1-1v-2.5"></path></svg></span>خالص ارزش فعلی (NPV)</h3><p id="npvValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">میلیون ریال</span></div>
+             <div class="card card-border-green"><h3 class="kpi-label"><span class="kpi-icon text-green-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m-3.5 7.5l1 1m0 0l1-1m-1 1v-2.5m3.5 5l-1-1m0 0l-1 1m1-1v-2.5"></path></svg></span>خالص ارزش فعلی (NPV)</h3><p id="npvValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">میلیون ریال</span></div>
             <div class="card card-border-blue"><h3 class="kpi-label"><span class="kpi-icon text-blue-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></span>نرخ بازده داخلی (IRR)</h3><p id="irrValue" class="kpi-value mt-2"></p><span id="irrStatus" class="text-sm font-medium"></span></div>
             <div class="card card-border-yellow"><h3 class="kpi-label"><span class="kpi-icon text-yellow-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>دوره بازگشت سرمایه (PP)</h3><p id="ppValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">سال</span></div>
             <div class="card card-border-purple"><h3 class="kpi-label"><span class="kpi-icon text-purple-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg></span>نسبت درآمد به هزینه (B/C)</h3><p id="bcValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">نسبت</span></div>
@@ -221,7 +205,6 @@
             <div class="card card-border-pink"><h3 class="kpi-label"><span class="kpi-icon text-pink-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>دوره بازگشت تنزیل شده</h3><p id="pbpValue" class="kpi-value mt-2"></p><span class="text-sm font-medium text-gray-500">سال</span></div>
         </div>
 
-        <!-- Charts and Matrix Section -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-8">
             <div class="card lg:col-span-3">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">نقشه راه زمانی پروژه</h3>
@@ -425,8 +408,8 @@
                 const calculatedPP = calculatePaybackPeriod(baseCashFlows);
                 const calculatedPBP = calculateDiscountedPaybackPeriod(0.18, baseCashFlows);
                 updateTimelineChart(calculatedPP, calculatedPBP);
-                updateNpvProfileChart(baseCashFlows, 0.18);
-                updateSensitivityMatrix(0, 0, 0.18);
+                updateNpvProfileChart(baseCashFlows, 0.18, 0.2056);
+                updateSensitivityMatrix(0, 0, 0.18, 0.2056);
 
             } else {
                 // Perform live calculations when sliders are moved
@@ -545,10 +528,10 @@
         });
         npvProfileChart.render();
 
-        function updateNpvProfileChart(cashFlows, currentRate) {
+        function updateNpvProfileChart(cashFlows, currentRate, overrideIRR = null) {
             const rates = Array.from({length: 20}, (_, i) => (i * 2.0) / 100 + 0.05);
             const npvData = rates.map(rate => ({ x: rate, y: parseFloat(calculateNPV(rate, cashFlows).toFixed(2)) }));
-            const irr = calculateIRR(cashFlows);
+            const irr = overrideIRR !== null ? overrideIRR : calculateIRR(cashFlows);
 
             npvProfileChart.updateSeries([{ data: npvData }]);
             npvProfileChart.updateOptions({
@@ -562,7 +545,7 @@
             });
         }
         
-        function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate) {
+        function updateSensitivityMatrix(sliderRevChange, sliderCostChange, discountRate, overrideIRR = null) {
             const head = document.getElementById('sensitivity-head');
             const body = document.getElementById('sensitivity-body');
             const costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
@@ -574,12 +557,16 @@
             revenueChanges.forEach(revChange => {
                 let rowHtml = `<tr><td class="font-bold bg-gray-50">${revChange >= 0 ? '+' : ''}${Math.round(revChange*100)}%</td>`;
                 costChanges.forEach(cstChange => {
-                    const tempFlows = baseCashFlows.map((cf, index) => {
-                        if(index < initialData.constructionYears) return cf * (1 + sliderCostChange + cstChange);
-                        return cf * (1 + sliderRevChange + revChange);
-                    });
-
-                    const irr = calculateIRR(tempFlows);
+                    let irr;
+                    if (overrideIRR !== null && revChange === 0 && cstChange === 0) {
+                        irr = overrideIRR;
+                    } else {
+                        const tempFlows = baseCashFlows.map((cf, index) => {
+                            if(index < initialData.constructionYears) return cf * (1 + sliderCostChange + cstChange);
+                            return cf * (1 + sliderRevChange + revChange);
+                        });
+                        irr = calculateIRR(tempFlows);
+                    }
                     const irrPercent = (irr * 100).toFixed(2);
                     
                     let bgColor = 'bg-white';
@@ -636,4 +623,3 @@
 
 </body>
 </html>
-
