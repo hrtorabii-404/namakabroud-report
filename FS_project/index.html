@@ -213,8 +213,13 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-document.body.setAttribute('tabindex', '-1');
-document.body.focus();
+        
+        // --- اضافه کردن این دو خط برای حل مشکل فوکوس در صفحه والد ---
+        // این کد باعث می‌شود صفحه داشبورد به محض بارگذاری، فوکوس را دریافت کند.
+        document.body.setAttribute('tabindex', '-1');
+        document.body.focus();
+        // -----------------------------------------------------------------
+
         const projects = [
             { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
             { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
@@ -247,20 +252,27 @@ document.body.focus();
         function goBack() {
             pageContainer.classList.remove('view-hidden');
             projectViewContainer.classList.add('view-hidden');
-            projectIframe.src = 'about:blank'; // Stop loading the previous page
+            projectIframe.src = 'about:blank';
         }
         
         // =================================================================
-        // START: معماری جدید و اصلاح‌شده برای مدیریت Backspace
+        // START: معماری نهایی با PostMessage برای مدیریت Backspace
         // =================================================================
 
-        // ۱. گوش دادن به دکمه Backspace در صفحه اصلی (داشبورد)
-        // این تنها زمانی اجرا می‌شود که داشبورد کارت‌ها فعال باشد.
+        // ۱. گوش دادن به پیام بازگشت از iframe (صفحه فرزند)
+        window.addEventListener('message', function(event) {
+            // اطمینان از اینکه پیام معتبر است و از فرزند آمده
+            if (event.data && event.data.type === 'CHILD_WANTS_TO_GO_BACK') {
+                goBack();
+            }
+        });
+
+        // ۲. گوش دادن به Backspace فقط در صفحه داشبورد اصلی
         window.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace') {
                 const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
                 if (!isEditable) {
-                    // اگر داشبورد نمایش داده می‌شود، به صفحه بالاتر (فهرست) پیام بازگشت می‌فرستیم
+                    // فقط زمانی که در صفحه داشبورد هستیم، به صفحه بالاتر (فهرست) پیام بفرست
                     if (projectViewContainer.classList.contains('view-hidden')) {
                         e.preventDefault();
                         window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
@@ -269,33 +281,8 @@ document.body.focus();
             }
         });
 
-        // ۲. مدیریت هوشمند Backspace برای iframe
-        // این تابع هر بار که محتوای جدیدی در iframe لود شود، اجرا می‌گردد.
-        projectIframe.onload = function() {
-            try {
-                const iframeWindow = projectIframe.contentWindow;
-                // فوکوس را به صورت خودکار به iframe منتقل می‌کنیم تا بلافاصله به کیبورد واکنش نشان دهد
-                iframeWindow.focus();
-
-                // یک event listener به پنجره داخلی iframe اضافه می‌کنیم
-                iframeWindow.addEventListener('keydown', function(e) {
-                    if (e.key === 'Backspace') {
-                        const target = e.target;
-                        const isEditable = target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
-                        if (!isEditable) {
-                            e.preventDefault();
-                            // تابع goBack را از صفحه اصلی فراخوانی می‌کنیم
-                            goBack();
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error("خطا در اتصال event listener به iframe:", error);
-            }
-        };
-
         // =================================================================
-        // END: معماری جدید
+        // END: معماری نهایی
         // =================================================================
 
         projects.forEach(project => {
