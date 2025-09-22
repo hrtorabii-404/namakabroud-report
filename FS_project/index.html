@@ -1,364 +1,753 @@
 <!DOCTYPE html>
+
 <html lang="fa" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارزیابی مالی پروژه‌های شهرک توریستی نمک آبرود</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #f8f9fa;
-            color: #212529;
-            overflow-x: hidden;
-        }
 
-        .logo-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-        }
+    <meta charset="UTF-8">
 
-        .logo {
-            height: 70px;
-            width: auto;
-            object-fit: contain;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .logo.center {
-            height: 150px;
-        }
+    <title>ارزیابی مالی پروژه‌های شهرک توریستی نمک آبرود</title>
 
-        /* Project Card Styling */
-        .project-card {
-            background-color: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        }
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-        .project-card .card-content {
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .card-icon-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            font-size: 40px;
-            line-height: 1;
-        }
-        
-        .project-card:hover .card-icon-wrapper {
-            transform: scale(1.1);
-            background-color: #0d948830;
-        }
-        
-        .card-icon-wrapper.neighborhood-center {
-             background-color: #fffbeb;
-        }
-        
-        .project-card:hover .card-icon-wrapper.neighborhood-center {
-            background-color: #fde68a;
-        }
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        .project-card .hover-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1.5rem;
-            background: rgba(248, 250, 252, 0.85);
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-            color: #495057;
-            transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 3;
-            border-top: 1px solid rgba(226, 232, 240, 0.7);
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-        .project-card:hover .hover-info {
-            transform: translateY(0);
-        }
-        
-        /* Highlighting for non-viable projects */
-        .project-card.not-viable { border-color: #fca5a5; }
-        .project-card.not-viable .card-icon-wrapper { background-color: #fee2e2; }
-        .project-card.not-viable:hover .card-icon-wrapper { background-color: #fecaca; }
-        .project-card.not-viable .hover-info { background: rgba(254, 226, 226, 0.85); color: #991b1b; }
-        .project-card.not-viable .hover-info .font-semibold { color: #b91c1c; }
-        .project-card.not-viable .hover-info .font-mono { color: #dc2626; }
-        .project-card.not-viable .hover-info .block { color: #dc2626; }
+    <style>
 
-        /* Styles for split hover */
-        .hover-info.split {
-            display: flex;
-            padding: 1.25rem 0.5rem;
-            align-items: center;
-        }
-        .hover-info .split-section {
-            width: 50%;
-            padding: 0 0.75rem;
-        }
-        .hover-info .split-section:first-of-type { /* Divider for RTL */
-            border-left: 1px solid rgba(156, 163, 175, 0.4);
-        }
-        /* Override for split non-viable cards background */
-        .project-card.not-viable .hover-info.split {
-            background-image: linear-gradient(to left, rgba(254, 226, 226, 0.85) 50%, rgba(248, 250, 252, 0.85) 50.5%);
-        }
-        /* Override text color for the viable 'تفکیکی' section on non-viable cards */
-        .project-card.not-viable .hover-info.split .viable-section {
-            color: #495057;
-        }
-        .project-card.not-viable .hover-info.split .viable-section .text-teal-700 { color: #0f766e; }
-        .project-card.not-viable .hover-info.split .viable-section .font-semibold { color: #495057; }
-        .project-card.not-viable .hover-info.split .viable-section .text-teal-600 { color: #0d9488; }
+        body {
 
-        /* Tooltip */
-        .tooltip-container { position: relative; display: inline-block; }
-        .tooltip-text { visibility: hidden; width: 220px; background-color: #343a40; color: #f8f9fa; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; border: 1px solid #495057; }
-        .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #343a40 transparent transparent transparent; }
-        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
-        
-        /* Interactive Header Chart */
-        #header-chart-icon { display: flex; align-items: flex-end; gap: 4px; height: 40px; width: 40px; margin-top: 24px; opacity: 0.6; transition: opacity 0.3s ease; }
-        #header-chart-icon .bar { width: 6px; background-color: #0d9488; border-radius: 2px; transition: height 0.2s ease-out; }
+            font-family: 'Vazirmatn', sans-serif;
 
-        /* View-switching Logic */
-        #page-container, #project-view-container {
-            transition: opacity 0.4s ease-in-out;
-        }
-        .view-hidden {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
-        }
-        #project-view-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 50;
-        }
-        #back-to-dashboard-btn {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 100;
-        }
-    </style>
+            background-color: #f8f9fa;
+
+            color: #212529;
+
+            overflow-x: hidden;
+
+        }
+
+
+
+        .logo-container {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            padding: 1rem 2rem;
+
+        }
+
+
+
+        .logo {
+
+            height: 70px;
+
+            width: auto;
+
+            object-fit: contain;
+
+        }
+
+
+
+        .logo.center {
+
+            height: 150px;
+
+        }
+
+
+
+        /* Project Card Styling */
+
+        .project-card {
+
+            background-color: #ffffff;
+
+            border: 1px solid #dee2e6;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            position: relative;
+
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            cursor: pointer;
+
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+        }
+
+
+
+        .project-card:hover {
+
+            transform: translateY(-10px);
+
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+        }
+
+
+
+        .project-card .card-content {
+
+            padding: 1.5rem;
+
+            text-align: center;
+
+        }
+
+        
+
+        .card-icon-wrapper {
+
+            width: 80px;
+
+            height: 80px;
+
+            margin: 0 auto 1.5rem auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background-color: #e9ecef;
+
+            transition: transform 0.3s ease, background-color 0.3s ease;
+
+            font-size: 40px;
+
+            line-height: 1;
+
+        }
+
+        
+
+        .project-card:hover .card-icon-wrapper {
+
+            transform: scale(1.1);
+
+            background-color: #0d948830;
+
+        }
+
+        
+
+        .card-icon-wrapper.neighborhood-center {
+
+             background-color: #fffbeb;
+
+        }
+
+        
+
+        .project-card:hover .card-icon-wrapper.neighborhood-center {
+
+            background-color: #fde68a;
+
+        }
+
+
+
+        .project-card .hover-info {
+
+            position: absolute;
+
+            bottom: 0;
+
+            left: 0;
+
+            right: 0;
+
+            padding: 1.5rem;
+
+            background: rgba(248, 250, 252, 0.85);
+
+            -webkit-backdrop-filter: blur(4px);
+
+            backdrop-filter: blur(4px);
+
+            color: #495057;
+
+            transform: translateY(100%);
+
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+            z-index: 3;
+
+            border-top: 1px solid rgba(226, 232, 240, 0.7);
+
+        }
+
+
+
+        .project-card:hover .hover-info {
+
+            transform: translateY(0);
+
+        }
+
+        
+
+        /* Highlighting for non-viable projects */
+
+        .project-card.not-viable { border-color: #fca5a5; }
+
+        .project-card.not-viable .card-icon-wrapper { background-color: #fee2e2; }
+
+        .project-card.not-viable:hover .card-icon-wrapper { background-color: #fecaca; }
+
+        .project-card.not-viable .hover-info { background: rgba(254, 226, 226, 0.85); color: #991b1b; }
+
+        .project-card.not-viable .hover-info .font-semibold { color: #b91c1c; }
+
+        .project-card.not-viable .hover-info .font-mono { color: #dc2626; }
+
+        .project-card.not-viable .hover-info .block { color: #dc2626; }
+
+
+
+        /* Styles for split hover */
+
+        .hover-info.split {
+
+            display: flex;
+
+            padding: 1.25rem 0.5rem;
+
+            align-items: center;
+
+        }
+
+        .hover-info .split-section {
+
+            width: 50%;
+
+            padding: 0 0.75rem;
+
+        }
+
+        .hover-info .split-section:first-of-type { /* Divider for RTL */
+
+            border-left: 1px solid rgba(156, 163, 175, 0.4);
+
+        }
+
+        /* Override for split non-viable cards background */
+
+        .project-card.not-viable .hover-info.split {
+
+            background-image: linear-gradient(to left, rgba(254, 226, 226, 0.85) 50%, rgba(248, 250, 252, 0.85) 50.5%);
+
+        }
+
+        /* Override text color for the viable 'تفکیکی' section on non-viable cards */
+
+        .project-card.not-viable .hover-info.split .viable-section {
+
+            color: #495057;
+
+        }
+
+        .project-card.not-viable .hover-info.split .viable-section .text-teal-700 { color: #0f766e; }
+
+        .project-card.not-viable .hover-info.split .viable-section .font-semibold { color: #495057; }
+
+        .project-card.not-viable .hover-info.split .viable-section .text-teal-600 { color: #0d9488; }
+
+
+
+        /* Tooltip */
+
+        .tooltip-container { position: relative; display: inline-block; }
+
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #343a40; color: #f8f9fa; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; font-size: 0.875rem; border: 1px solid #495057; }
+
+        .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #343a40 transparent transparent transparent; }
+
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        
+
+        /* Interactive Header Chart */
+
+        #header-chart-icon { display: flex; align-items: flex-end; gap: 4px; height: 40px; width: 40px; margin-top: 24px; opacity: 0.6; transition: opacity 0.3s ease; }
+
+        #header-chart-icon .bar { width: 6px; background-color: #0d9488; border-radius: 2px; transition: height 0.2s ease-out; }
+
+
+
+        /* View-switching Logic */
+
+        #page-container, #project-view-container {
+
+            transition: opacity 0.4s ease-in-out;
+
+        }
+
+        .view-hidden {
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            position: absolute;
+
+        }
+
+        #project-view-container {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100vw;
+
+            height: 100vh;
+
+            z-index: 50;
+
+        }
+
+        #back-to-dashboard-btn {
+
+            position: fixed;
+
+            top: 1.5rem;
+
+            right: 1.5rem;
+
+            z-index: 100;
+
+        }
+
+    </style>
+
 </head>
+
 <body class="antialiased">
 
-    <!-- Main Dashboard View -->
-    <div id="page-container">
-        <header class="py-6 md:py-8 container mx-auto px-4">
-             <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-                <div class="logo-container">
-                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
-                    <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
-                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
-                </div>
-                <div class="flex justify-center items-center gap-4">
-                    <h1 class="text-3xl md:text-4xl font-bold text-center mt-6 text-gray-800">ارزیابی مالی پروژه های پیشنهادی</h1>
-                     <div id="header-chart-icon">
-                        <div class="bar" style="height: 40%;"></div><div class="bar" style="height: 70%;"></div><div class="bar" style="height: 50%;"></div><div class="bar" style="height: 85%;"></div>
-                    </div>
-                </div>
-                <p class="text-center mt-3 text-lg text-gray-600">داشبورد جامع امکان‌سنجی مالی شهرک توریستی نمک آبرود</p>
-            </div>
-        </header>
-        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
-        </main>
-        <footer class="text-center py-8 mt-12 border-t border-gray-200">
-            <p class="text-gray-600">تهیه شده توسط <span class="font-semibold text-teal-600 tooltip-container">مهندسین مشاور ایده پرداز محیط<span class="tooltip-text"><span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>hr.torabii@gmail.com</span></span></p>
-            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
-        </footer>
-    </div>
 
-    <!-- Project Detail View (Iframe) -->
-    <div id="project-view-container" class="view-hidden">
-        <button id="back-to-dashboard-btn" class="bg-white/70 backdrop-blur-sm text-gray-800 font-semibold py-2 px-5 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" /></svg>
-            بازگشت
-        </button>
-        <iframe id="project-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
-    </div>
+
+    <!-- Main Dashboard View -->
+
+    <div id="page-container">
+
+        <header class="py-6 md:py-8 container mx-auto px-4">
+
+             <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
+
+                <div class="logo-container">
+
+                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
+
+                    <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
+
+                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo right">
+
+                </div>
+
+                <div class="flex justify-center items-center gap-4">
+
+                    <h1 class="text-3xl md:text-4xl font-bold text-center mt-6 text-gray-800">ارزیابی مالی پروژه های پیشنهادی</h1>
+
+                     <div id="header-chart-icon">
+
+                        <div class="bar" style="height: 40%;"></div><div class="bar" style="height: 70%;"></div><div class="bar" style="height: 50%;"></div><div class="bar" style="height: 85%;"></div>
+
+                    </div>
+
+                </div>
+
+                <p class="text-center mt-3 text-lg text-gray-600">داشبورد جامع امکان‌سنجی مالی شهرک توریستی نمک آبرود</p>
+
+            </div>
+
+        </header>
+
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+            <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+
+        </main>
+
+        <footer class="text-center py-8 mt-12 border-t border-gray-200">
+
+            <p class="text-gray-600">تهیه شده توسط <span class="font-semibold text-teal-600 tooltip-container">مهندسین مشاور ایده پرداز محیط<span class="tooltip-text"><span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>hr.torabii@gmail.com</span></span></p>
+
+            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
+
+        </footer>
+
+    </div>
+
+
+
+    <!-- Project Detail View (Iframe) -->
+
+    <div id="project-view-container" class="view-hidden">
+
+        <button id="back-to-dashboard-btn" class="bg-white/70 backdrop-blur-sm text-gray-800 font-semibold py-2 px-5 border border-gray-300 rounded-lg shadow-lg hover:bg-gray-100 transition-colors duration-300 flex items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" /></svg>
+
+            بازگشت
+
+        </button>
+
+        <iframe id="project-iframe" class="w-full h-full border-0" src="about:blank"></iframe>
+
+    </div>
+
+
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        
-        // --- اضافه کردن این دو خط برای حل مشکل فوکوس در صفحه والد ---
-        // این کد باعث می‌شود صفحه داشبورد به محض بارگذاری، فوکوس را دریافت کند.
-        document.body.setAttribute('tabindex', '-1');
-        document.body.focus();
-        // -----------------------------------------------------------------
 
-        const projects = [
-            { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
-            { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
-            { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
-            { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
-            { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
-            { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
-            { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
-            { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
-            { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
-            { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
-            { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
-            { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
-            { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
-            { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
-            { title: "مسکونی باغ کیوی", englishTitle: "Kiwi Garden Residential", icon: "🥝", irr: "-۰.۳۲%", payback: "بازگشت ندارد", isNotViable: true, hasSubdivision: true, subdivisionIrr: "۱۹.۷۱%", subdivisionPayback: "۳.۳۶ سال" },
-            { title: "مسکونی محله ۸", englishTitle: "Neighborhood 8 Residential", icon: "🏘️", irr: "۲۶.۹۹%", payback: "۳.۱۹ سال", hasSubdivision: true, subdivisionIrr: "۱۹.۸۰%", subdivisionPayback: "۳.۳۶ سال" },
-            { title: "پروژه اکواوایلد شمشاد (بوستان شمشاد)", englishTitle: "Aquawild Shamshad Project (Shamshad Park)", icon: "🌊", irr: "۲۶.۷۶%", payback: "۶.۰۵ سال" },
-            { title: "مرکز نوآوری و فناوری گردشگری", englishTitle: "Tourism Innovation & Technology Center", icon: "💡", irr: "۱۸.۹۳%", payback: "۷.۴۷ سال" },
-            { title: "مسکونی محله ۷", englishTitle: "Neighborhood 7 Residential", icon: "🏘️", irr: "-۱.۴۹%", payback: "غیرقابل بازگشت", isNotViable: true, hasSubdivision: true, subdivisionIrr: "۲۰.۰۱%", subdivisionPayback: "۳.۳۶ سال" },
-            { title: "پروژه دهکده هنر و صنایع دستی", englishTitle: "Art and Handicrafts Village Project", icon: "🧵", irr: "۲۰.۹۲%", payback: "۳.۳۶ سال"},
-        ];
+    document.addEventListener('DOMContentLoaded', function () {
 
-        const grid = document.getElementById('projects-grid');
-        const pageContainer = document.getElementById('page-container');
-        const projectViewContainer = document.getElementById('project-view-container');
-        const projectIframe = document.getElementById('project-iframe');
-        const backBtn = document.getElementById('back-to-dashboard-btn');
+document.body.setAttribute('tabindex', '-1');
 
-        function goBack() {
-            pageContainer.classList.remove('view-hidden');
-            projectViewContainer.classList.add('view-hidden');
-            projectIframe.src = 'about:blank';
-        }
-        
-        // =================================================================
-        // START: معماری نهایی با PostMessage برای مدیریت Backspace
-        // =================================================================
+document.body.focus();
 
-        // ۱. گوش دادن به پیام بازگشت از iframe (صفحه فرزند)
-        window.addEventListener('message', function(event) {
-            // اطمینان از اینکه پیام معتبر است و از فرزند آمده
-            if (event.data && event.data.type === 'CHILD_WANTS_TO_GO_BACK') {
-                goBack();
-            }
-        });
+        const projects = [
 
-        // ۲. گوش دادن به Backspace فقط در صفحه داشبورد اصلی
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace') {
-                const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-                if (!isEditable) {
-                    // فقط زمانی که در صفحه داشبورد هستیم، به صفحه بالاتر (فهرست) پیام بفرست
-                    if (projectViewContainer.classList.contains('view-hidden')) {
-                        e.preventDefault();
-                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-                    }
-                }
-            }
-        });
+            { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
 
-        // =================================================================
-        // END: معماری نهایی
-        // =================================================================
+            { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
 
-        projects.forEach(project => {
-            const card = document.createElement('div');
-            card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
-            const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
+            { title: "هتل 5 ستاره", englishTitle: "5-Star Hotel", icon: "🏨", irr: "۱۸.۲۳%", payback: "۷.۶۶ سال" },
 
-            card.innerHTML = `
-                <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
-                    <div class="${iconWrapperClass}">${project.icon}</div>
-                    <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
-                    <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
-                </div>
-                ${ project.hasSubdivision ?
-                    `<div class="hover-info split">
-                        <div class="split-section">
-                            <p class="font-bold text-sm mb-2">فروش</p>
-                            <div class="flex justify-between text-[11px] py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی</span><span class="font-mono font-bold">${project.irr}</span></div>
-                            <div class="flex justify-between text-[11px] py-1"><span class="font-semibold">دوره بازگشت</span><span class="font-mono font-bold">${project.payback}</span></div>
-                        </div>
-                        <div class="split-section viable-section">
-                            <p class="font-bold text-sm mb-2 text-teal-700">تفکیکی</p>
-                            <div class="flex justify-between text-[11px] py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی</span><span class="font-mono font-bold text-teal-600">${project.subdivisionIrr}</span></div>
-                            <div class="flex justify-between text-[11px] py-1"><span class="font-semibold">دوره بازگشت</span><span class="font-mono font-bold text-teal-600">${project.subdivisionPayback}</span></div>
-                        </div>
-                    </div>`
-                    :
-                    `<div class="hover-info">
-                        <div class="w-full text-center">
-                            <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
-                            <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
-                            <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
-                        </div>
-                    </div>`
-                }`;
-            
-            card.addEventListener('click', function(e) {
-                e.preventDefault();
-                const projectLinkMap = {
-                    "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
-                };
-                const linkKey = projectLinkMap[project.title];
-                const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
-                
-                projectIframe.src = destination;
-                pageContainer.classList.add('view-hidden');
-                projectViewContainer.classList.remove('view-hidden');
-            });
-            grid.appendChild(card);
-        });
+            { title: "دهکده گردشگری خوراک", englishTitle: "Culinary Tourism Village", icon: "🍽️", irr: "۱۹.۰۳%", payback: "۷.۴۴ سال" },
 
-        backBtn.addEventListener('click', goBack);
+            { title: "مرکز محله ۱ (تم فرهنگی)", englishTitle: "Neighborhood Center 1 (Cultural Theme)", icon: "🎭", irr: "۱۹.۲۲%", payback: "۷.۴۰ سال", isNeighborhoodCenter: true },
 
-        // Interactive header chart logic
-        const headerBox = document.querySelector('header > div');
-        const chartIcon = document.getElementById('header-chart-icon');
-        const bars = chartIcon.querySelectorAll('.bar');
-        const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
-        headerBox.addEventListener('mousemove', (e) => {
-            const rect = headerBox.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const mouseX = x / rect.width;
-            bars.forEach((bar, index) => {
-                const barX = (index + 0.5) / bars.length;
-                const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
-                const newHeight = 20 + proximity * 80;
-                bar.style.height = `${newHeight}%`;
-            });
-            chartIcon.style.opacity = '1';
-        });
-        headerBox.addEventListener('mouseleave', () => {
-            bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
-            chartIcon.style.opacity = '0.6';
-        });
-    });
+            { title: "مرکز محله ۲ (فود پلازا)", englishTitle: "Neighborhood Center 2 (Food Plaza)", icon: "🍕", irr: "۲۳.۱۲%", payback: "۶.۵۹ سال", isNeighborhoodCenter: true },
+
+            { title: "مرکز محله ۳ (بازی بزرگسالان)", englishTitle: "Neighborhood Center 3 (Adults’ Play Theme)", icon: "🎯", irr: "۲۰.۵۶%", payback: "۷.۰۸ سال", isNeighborhoodCenter: true },
+
+            { title: "مرکز محله ۴ (بازی کودکان)", englishTitle: "Neighborhood Center 4 (Children’s Play Theme)", icon: "🪁", irr: "۲۰.۹۳%", payback: "۷.۰۰ سال", isNeighborhoodCenter: true },
+
+            { title: "اکوکمپ لینورا", englishTitle: "Lenora Eco-Camp", icon: "🏕️", irr: "۱۹.۰۱%", payback: "۷.۴۵ سال" },
+
+            { title: "پل سبز آبی", englishTitle: "Green-Blue Bridge", icon: "🌉", irr: "۳۲.۸۸%", payback: "۵.۴۲ سال" },
+
+            { title: "مجموعه ورزشی و شهربازی مدرن", englishTitle: "Modern Sports and Amusement Complex", icon: "🎢", irr: "۱۸.۵۷%", payback: "۷.۶۱ سال" },
+
+            { title: "سوئیت‌های ساحلی", englishTitle: "Beachfront Suites", icon: "🌴", irr: "۲۸.۴۷%", payback: "۴.۲۸ سال" },
+
+            { title: "تجاری و پارکینگ تله کابین", englishTitle: "Cable Car Commercial and Parking Area", icon: "🚠", irr: "۱۸.۷۵%", payback: "۴.۵۶ سال" },
+
+            { title: "ویلاهای لوکس ساحلی", englishTitle: "Luxury Beach Villas", icon: "🏡", irr: "۱۹.۲۵%", payback: "۴.۷۵ سال" },
+
+            { title: "مسکونی باغ کیوی", englishTitle: "Kiwi Garden Residential", icon: "🥝", irr: "-۰.۳۲%", payback: "بازگشت ندارد", isNotViable: true, hasSubdivision: true, subdivisionIrr: "۱۹.۷۱%", subdivisionPayback: "۳.۳۶ سال" },
+
+            { title: "مسکونی محله ۸", englishTitle: "Neighborhood 8 Residential", icon: "🏘️", irr: "۲۶.۹۹%", payback: "۳.۱۹ سال", hasSubdivision: true, subdivisionIrr: "۱۹.۸۰%", subdivisionPayback: "۳.۳۶ سال" },
+
+            { title: "پروژه اکواوایلد شمشاد (بوستان شمشاد)", englishTitle: "Aquawild Shamshad Project (Shamshad Park)", icon: "🌊", irr: "۲۶.۷۶%", payback: "۶.۰۵ سال" },
+
+            { title: "مرکز نوآوری و فناوری گردشگری", englishTitle: "Tourism Innovation & Technology Center", icon: "💡", irr: "۱۸.۹۳%", payback: "۷.۴۷ سال" },
+
+            { title: "مسکونی محله ۷", englishTitle: "Neighborhood 7 Residential", icon: "🏘️", irr: "-۱.۴۹%", payback: "غیرقابل بازگشت", isNotViable: true, hasSubdivision: true, subdivisionIrr: "۲۰.۰۱%", subdivisionPayback: "۳.۳۶ سال" },
+
+            { title: "پروژه دهکده هنر و صنایع دستی", englishTitle: "Art and Handicrafts Village Project", icon: "🧵", irr: "۲۰.۹۲%", payback: "۳.۳۶ سال"},
+
+        ];
+
+
+
+        const grid = document.getElementById('projects-grid');
+
+        const pageContainer = document.getElementById('page-container');
+
+        const projectViewContainer = document.getElementById('project-view-container');
+
+        const projectIframe = document.getElementById('project-iframe');
+
+        const backBtn = document.getElementById('back-to-dashboard-btn');
+
+
+
+        function goBack() {
+
+            pageContainer.classList.remove('view-hidden');
+
+            projectViewContainer.classList.add('view-hidden');
+
+            projectIframe.src = 'about:blank'; // Stop loading the previous page
+
+        }
+
+        
+
+        // =================================================================
+
+        // START: معماری جدید و اصلاح‌شده برای مدیریت Backspace
+
+        // =================================================================
+
+
+
+        // ۱. گوش دادن به دکمه Backspace در صفحه اصلی (داشبورد)
+
+        // این تنها زمانی اجرا می‌شود که داشبورد کارت‌ها فعال باشد.
+
+        window.addEventListener('keydown', function(e) {
+
+            if (e.key === 'Backspace') {
+
+                const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+
+                if (!isEditable) {
+
+                    // اگر داشبورد نمایش داده می‌شود، به صفحه بالاتر (فهرست) پیام بازگشت می‌فرستیم
+
+                    if (projectViewContainer.classList.contains('view-hidden')) {
+
+                        e.preventDefault();
+
+                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+
+                    }
+
+                }
+
+            }
+
+        });
+
+
+
+        // ۲. مدیریت هوشمند Backspace برای iframe
+
+        // این تابع هر بار که محتوای جدیدی در iframe لود شود، اجرا می‌گردد.
+
+        projectIframe.onload = function() {
+
+            try {
+
+                const iframeWindow = projectIframe.contentWindow;
+
+                // فوکوس را به صورت خودکار به iframe منتقل می‌کنیم تا بلافاصله به کیبورد واکنش نشان دهد
+
+                iframeWindow.focus();
+
+
+
+                // یک event listener به پنجره داخلی iframe اضافه می‌کنیم
+
+                iframeWindow.addEventListener('keydown', function(e) {
+
+                    if (e.key === 'Backspace') {
+
+                        const target = e.target;
+
+                        const isEditable = target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+                        if (!isEditable) {
+
+                            e.preventDefault();
+
+                            // تابع goBack را از صفحه اصلی فراخوانی می‌کنیم
+
+                            goBack();
+
+                        }
+
+                    }
+
+                });
+
+            } catch (error) {
+
+                console.error("خطا در اتصال event listener به iframe:", error);
+
+            }
+
+        };
+
+
+
+        // =================================================================
+
+        // END: معماری جدید
+
+        // =================================================================
+
+
+
+        projects.forEach(project => {
+
+            const card = document.createElement('div');
+
+            card.className = project.isNotViable ? 'project-card not-viable' : 'project-card';
+
+            const iconWrapperClass = project.isNeighborhoodCenter ? 'card-icon-wrapper neighborhood-center' : 'card-icon-wrapper';
+
+
+
+            card.innerHTML = `
+
+                <div class="card-content flex flex-col justify-center items-center h-full min-h-[250px]">
+
+                    <div class="${iconWrapperClass}">${project.icon}</div>
+
+                    <h3 class="text-lg font-semibold text-gray-800 leading-snug">${project.title}</h3>
+
+                    <p class="text-xs text-gray-500 mt-1">${project.englishTitle}</p>
+
+                </div>
+
+                ${ project.hasSubdivision ?
+
+                    `<div class="hover-info split">
+
+                        <div class="split-section">
+
+                            <p class="font-bold text-sm mb-2">فروش</p>
+
+                            <div class="flex justify-between text-[11px] py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی</span><span class="font-mono font-bold">${project.irr}</span></div>
+
+                            <div class="flex justify-between text-[11px] py-1"><span class="font-semibold">دوره بازگشت</span><span class="font-mono font-bold">${project.payback}</span></div>
+
+                        </div>
+
+                        <div class="split-section viable-section">
+
+                            <p class="font-bold text-sm mb-2 text-teal-700">تفکیکی</p>
+
+                            <div class="flex justify-between text-[11px] py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی</span><span class="font-mono font-bold text-teal-600">${project.subdivisionIrr}</span></div>
+
+                            <div class="flex justify-between text-[11px] py-1"><span class="font-semibold">دوره بازگشت</span><span class="font-mono font-bold text-teal-600">${project.subdivisionPayback}</span></div>
+
+                        </div>
+
+                    </div>`
+
+                    :
+
+                    `<div class="hover-info">
+
+                        <div class="w-full text-center">
+
+                            <div class="flex justify-between text-sm py-1 border-b border-gray-300/50"><span class="font-semibold">نرخ بازده داخلی (IRR)</span><span class="font-mono font-bold">${project.irr}</span></div>
+
+                            <div class="flex justify-between text-sm py-1"><span class="font-semibold">دوره بازگشت سرمایه</span><span class="font-mono font-bold">${project.payback}</span></div>
+
+                            <span class="block text-teal-600 mt-4 text-xs font-semibold">مشاهده داشبورد تحلیل مالی &larr;</span>
+
+                        </div>
+
+                    </div>`
+
+                }`;
+
+            
+
+            card.addEventListener('click', function(e) {
+
+                e.preventDefault();
+
+                const projectLinkMap = {
+
+                    "مرکز سلامت و تندرستی": "FS_Salamat", "پارک ماجراجویی ابرها": "FS_Abr", "هتل 5 ستاره": "FS_Hotel", "دهکده گردشگری خوراک": "FS_Khorak", "مرکز محله ۱ (تم فرهنگی)": "FS_1Farhangi", "مرکز محله ۲ (فود پلازا)": "FS_2Foodplaza", "مرکز محله ۳ (بازی بزرگسالان)": "FS_3Bozorgsal", "مرکز محله ۴ (بازی کودکان)": "FS_4Koodak", "اکوکمپ لینورا": "FS_Linora", "پل سبز آبی": "FS_Pol", "مجموعه ورزشی و شهربازی مدرن": "FS_ShahrBazi", "سوئیت‌های ساحلی": "FS_Sueet", "تجاری و پارکینگ تله کابین": "FS_Telekabin", "ویلاهای لوکس ساحلی": "FS_Villa", "مسکونی باغ کیوی": "FS_Kivi", "مسکونی محله ۸": "FS_8Maskooni", "پروژه اکواوایلد شمشاد (بوستان شمشاد)": "FS_Shemshad", "مرکز نوآوری و فناوری گردشگری": "FS_Noavari", "مسکونی محله ۷": "FS_7Maskooni", "پروژه دهکده هنر و صنایع دستی": "FS_Sanayedasti"
+
+                };
+
+                const linkKey = projectLinkMap[project.title];
+
+                const destination = `https://hrtorabii-404.github.io/namakabroud-report/Dashboard/${linkKey}`;
+
+                
+
+                projectIframe.src = destination;
+
+                pageContainer.classList.add('view-hidden');
+
+                projectViewContainer.classList.remove('view-hidden');
+
+            });
+
+            grid.appendChild(card);
+
+        });
+
+
+
+        backBtn.addEventListener('click', goBack);
+
+
+
+        // Interactive header chart logic
+
+        const headerBox = document.querySelector('header > div');
+
+        const chartIcon = document.getElementById('header-chart-icon');
+
+        const bars = chartIcon.querySelectorAll('.bar');
+
+        const baseHeights = Array.from(bars).map(bar => parseFloat(bar.style.height));
+
+        headerBox.addEventListener('mousemove', (e) => {
+
+            const rect = headerBox.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+
+            const mouseX = x / rect.width;
+
+            bars.forEach((bar, index) => {
+
+                const barX = (index + 0.5) / bars.length;
+
+                const proximity = Math.max(0, 1 - Math.abs(mouseX - barX) * 4);
+
+                const newHeight = 20 + proximity * 80;
+
+                bar.style.height = `${newHeight}%`;
+
+            });
+
+            chartIcon.style.opacity = '1';
+
+        });
+
+        headerBox.addEventListener('mouseleave', () => {
+
+            bars.forEach((bar, index) => { bar.style.height = `${baseHeights[index]}%`; });
+
+            chartIcon.style.opacity = '0.6';
+
+        });
+
+    });
+
 </script>
+
 </body>
+
 </html>
+
 
