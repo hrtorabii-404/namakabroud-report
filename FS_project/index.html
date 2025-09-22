@@ -213,7 +213,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        
+document.body.setAttribute('tabindex', '-1');
+document.body.focus();
         const projects = [
             { title: "مرکز سلامت و تندرستی", englishTitle: "Health and Wellness Center", icon: "🩺", irr: "۱۹.۰۵%", payback: "۷.۴۴ سال" },
             { title: "پارک ماجراجویی ابرها", englishTitle: "Clouds Adventure Park", icon: "⛰️", irr: "۳۵.۲۰%", payback: "۵.۲۴ سال" },
