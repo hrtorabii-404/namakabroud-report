@@ -358,6 +358,14 @@
             });
 
             // Backspace key to go back - REMOVED OLD LOGIC
+// Give focus to body or a hidden input so keyboard events fire without click
+setTimeout(() => {
+    if (typeof document.body.focus === 'function') {
+        document.body.setAttribute('tabindex', '-1'); // Ensure it's focusable
+        document.body.focus();
+    }
+}, 100);
+
         });
     </script>
 </body>
