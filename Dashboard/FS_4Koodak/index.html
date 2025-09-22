@@ -608,20 +608,13 @@
     });
 </script>
 <script>
-    // این اسکریپت را به تمام صفحات جزئیات پروژه اضافه کنید
-
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Backspace') {
-            // مطمئن شو که کاربر در حال تایپ در یک فیلد متنی نیست
-            const isEditable = e.target.isContentEditable || 
-                               e.target.tagName === 'INPUT' || 
-                               e.target.tagName === 'TEXTAREA';
-            
+            const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
             if (!isEditable) {
-                e.preventDefault(); // جلوگیری از بازگشت مرورگر
-                
-                // به والد مستقیم خود (یعنی لیست کارت‌ها) پیام بده
-                window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
+                e.preventDefault();
+                // به صفحه والد پیام می‌فرستیم که قصد بازگشت داریم
+                window.parent.postMessage({ type: 'CHILD_WANTS_TO_GO_BACK' }, '*');
             }
         }
     });
