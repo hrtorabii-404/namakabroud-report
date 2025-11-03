@@ -541,16 +541,23 @@
         </p>
     </footer>
 <script>
+    // 1. به محض بارگذاری محتوای صفحه، فوکوس را به این iframe منتقل کن
+    document.addEventListener('DOMContentLoaded', function () {
+        window.focus();
+    });
+
+    // 2. به کلید Backspace گوش بده
     window.addEventListener('keydown', function(event) {
         if (event.key === 'Backspace') {
             const isEditable = event.target.isContentEditable || event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
             
             if (!isEditable) {
-                // جلوگیری از بازگشت پیش‌فرض مرورگر
+                // 3. جلوی بازگشت مرورگر را بگیر
                 event.preventDefault();
                 
-                // ارسال پیام به صفحه والد (لیست کارت‌ها) تا این iframe را ببندد
-                window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
+                // 4. دقیقا "همان" پیامی را بفرست که داشبورد می‌فرستد (NAVIGATE_BACK)
+                // این پیام به صفحه اصلی اطلس می‌رود و آن را به فهرست برمی‌گرداند.
+                window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
             }
         }
     });
