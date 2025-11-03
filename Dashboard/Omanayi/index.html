@@ -541,68 +541,18 @@
         </p>
     </footer>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const mainContent = document.getElementById('main-content');
-        const iframeContainer = document.getElementById('iframe-container');
-        const projectIframe = document.getElementById('project-iframe');
-        const backButton = document.getElementById('back-button');
-        const projectLinks = document.querySelectorAll('.project-link');
-
-        // تابع برای بازگشت از جزئیات پروژه به لیست کارت‌ها
-        const goBack = () => {
-            projectIframe.src = 'about:blank'; // توقف بارگذاری محتوای iframe
-            mainContent.classList.remove('hidden');
-            iframeContainer.classList.add('hidden');
-            backButton.classList.add('hidden');
-            // بسیار مهم: فوکوس را به این صفحه برمی‌گرداند تا Backspace بعدی کار کند
-            window.focus();
-        };
-
-        // مدیریت کلیک روی کارت‌ها برای باز کردن iframe (بدون تغییر)
-        projectLinks.forEach(link => {
-            link.addEventListener('click', function (event) {
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Backspace') {
+            const isEditable = event.target.isContentEditable || event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+            
+            if (!isEditable) {
+                // جلوگیری از بازگشت پیش‌فرض مرورگر
                 event.preventDefault();
-                const url = this.getAttribute('href');
                 
-                projectIframe.src = url;
-                mainContent.classList.add('hidden');
-                iframeContainer.classList.remove('hidden');
-                backButton.classList.remove('hidden');
-            });
-        });
-
-        backButton.addEventListener('click', goBack);
-
-        // =================================================================
-        // START: معماری صحیح و یکپارچه برای مدیریت Backspace
-        // =================================================================
-
-        // ۱. گوش دادن به پیام از iframe فرزند (صفحات جزئیات)
-        // مسئولیت: بستن جزئیات و بازگشت به لیست کارت‌ها
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'CHILD_NAVIGATE_BACK') {
-                goBack();
+                // ارسال پیام به صفحه والد (لیست کارت‌ها) تا این iframe را ببندد
+                window.parent.postMessage({ type: 'CHILD_NAVIGATE_BACK' }, '*');
             }
-        });
-
-        // ۲. ارسال پیام به والد اصلی (صفحه فهرست)
-        // مسئولیت: بازگشت از لیست کارت‌ها به فهرست اصلی
-        window.addEventListener('keydown', function(event) {
-            if (event.key === 'Backspace') {
-                const isEditable = event.target.isContentEditable || event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
-                if (!isEditable) {
-                    event.preventDefault();
-                    // فقط زمانی پیام بفرست که در حال نمایش لیست کارت‌ها هستیم (iframe مخفی است)
-                    if (iframeContainer.classList.contains('hidden')) {
-                        window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
-                    }
-                }
-            }
-        });
-        
-        // =================================================================
-        // END: معماری صحیح
-        // =================================================================
+        }
     });
 </script>
 </body>
