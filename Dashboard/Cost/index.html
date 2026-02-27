@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد جامع راهبری مالی و تخصیص بودجه زیرساخت نمک‌آبرود | افق ۱۴۰۵-۱۴۰۹</title>
+    <title>داشبورد جامع راهبری مالی و اجرایی نمک‌آبرود | افق ۱۴۰۵-۱۴۰۹</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Vazirmatn', sans-serif; background-color: #f4f7f9; color: #0f172a; overflow-x: hidden; }
         
@@ -16,17 +19,17 @@
         .custom-tooltip::before { content: ""; position: absolute; bottom: 100%; right: 50%; margin-right: -6px; border-width: 6px; border-style: solid; border-color: transparent transparent #0f172a transparent; }
         .has-tooltip:hover .custom-tooltip { visibility: visible; opacity: 1; top: 140%; }
         
-        /* Premium Neumorphic KPI Cards */
-        .kpi-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; z-index: 1; }
+        /* Premium Neumorphic KPI Cards with FontAwesome Watermark */
+        .kpi-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; z-index: 1; cursor: default; }
         .kpi-card::before { content: ''; position: absolute; inset: 0; border-radius: 1.25rem; padding: 2px; background: transparent; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; transition: background 0.4s; z-index: -1; }
         .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1); }
         .kpi-card.hover-blue:hover::before { background: linear-gradient(135deg, transparent, #3b82f6, transparent); }
         .kpi-card.hover-green:hover::before { background: linear-gradient(135deg, transparent, #10b981, transparent); }
         .kpi-card.hover-amber:hover::before { background: linear-gradient(135deg, transparent, #f59e0b, transparent); }
         
-        /* Watermark Icons */
-        .watermark-icon { position: absolute; left: -1rem; top: -1rem; width: 8rem; height: 8rem; opacity: 0.03; transition: all 0.5s ease-out; pointer-events: none; color: currentColor; z-index: -1; }
-        .kpi-card:hover .watermark-icon { opacity: 0.15; transform: scale(1.15) rotate(-10deg); }
+        /* Modern FontAwesome Watermark Icons */
+        .watermark-icon { position: absolute; left: -1.5rem; bottom: -2rem; font-size: 8rem; opacity: 0.04; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; z-index: 0; }
+        .kpi-card:hover .watermark-icon { opacity: 0.15; transform: scale(1.15) rotate(-15deg); }
 
         /* Smooth Accordion Magic */
         .accordion-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease-in-out; }
@@ -37,15 +40,16 @@
         .graphical-table th { padding: 12px 8px; font-weight: 800; font-size: 0.75rem; }
         .graphical-table td { padding: 12px 8px; font-size: 0.85rem; border-top: 1px solid #f1f5f9; }
 
-        /* Swimlanes & Kanban */
+        /* Swimlanes & Kanban Modernized */
         .lane-wrapper { transition: all 0.3s ease; border-right: 4px solid transparent; }
         .lane-wrapper:hover { border-right-color: #cbd5e1; }
         .drop-zone-active { background-color: #f8fafc !important; border: 2px dashed #3b82f6 !important; border-right-color: #3b82f6 !important; }
         
-        .project-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: grab; display: flex; align-items: stretch; border-right: 4px solid var(--accent-color); position: relative; overflow: hidden; }
+        /* Modern Project Card Widget */
+        .project-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: grab; display: flex; align-items: stretch; position: relative; overflow: hidden; }
         .project-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); z-index: 10; border-color: #cbd5e1; }
-        .project-card:active { cursor: grabbing; transform: scale(0.98); }
-        .grip-handle { display: flex; flex-direction: column; justify-content: center; padding: 0 6px; color: #94a3b8; font-size: 14px; line-height: 0.6; cursor: grab; background: #f8fafc; }
+        .project-card:active { cursor: grabbing; transform: scale(0.96); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); z-index: 50; }
+        .grip-handle { display: flex; flex-direction: column; justify-content: center; padding: 0 8px; color: #94a3b8; cursor: grab; background: #f8fafc; border-right: 1px solid #f1f5f9; transition: background 0.2s; }
         
         /* Phase Dots & Progress */
         .phase-dots { display: flex; gap: 3px; width: 100%; }
@@ -69,7 +73,7 @@
         .dimmed { opacity: 0.3; filter: grayscale(70%); transition: all 0.4s; pointer-events: none; }
         .focused { transform: scale(1.01); box-shadow: 0 0 0 2px #3b82f6; z-index: 20; border-color: transparent; }
 
-        /* Roadmap */
+        /* Roadmap Capsules */
         .roadmap-line { position: absolute; top: 20px; left: 0; right: 0; height: 3px; background: #e2e8f0; z-index: 0; }
         .roadmap-node { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; width: 20%; }
         .roadmap-dot { width: 16px; height: 16px; border-radius: 50%; background: white; border: 3px solid #3b82f6; box-shadow: 0 0 0 4px #eff6ff; margin-bottom: 12px; }
@@ -103,7 +107,7 @@
             <div class="p-5 xl:p-0">
                 <div class="flex justify-between items-center xl:hidden mb-6 border-b pb-3">
                     <h2 class="font-black text-lg text-slate-800">پنل تنظیمات و اهرم‌ها</h2>
-                    <button onclick="toggleSettings()" class="text-slate-400 hover:text-rose-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                    <button onclick="toggleSettings()" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
                 
                 <div class="space-y-5 pb-10">
@@ -169,8 +173,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-4" id="housing-sliders-container">
-                                </div>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-4" id="housing-sliders-container"></div>
                         </div>
                     </div>
                 </div>
@@ -182,7 +185,7 @@
                     <div class="absolute -right-20 -top-20 w-64 h-64 bg-sky-500 rounded-full blur-[80px] opacity-20 pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col md:flex-row gap-5 items-start">
                         <div class="bg-white/10 p-4 rounded-2xl shrink-0 backdrop-blur-sm hidden md:block border border-white/10">
-                            <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <i class="fa-solid fa-layer-group text-sky-400 text-2xl"></i>
                         </div>
                         <div>
                             <h2 class="text-lg md:text-xl font-black mb-2 text-sky-300">راهنمای داشبورد: از داده تا تصمیم</h2>
@@ -198,7 +201,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-container">
                     
                     <div class="kpi-card hover-blue p-5 group">
-                        <svg class="watermark-icon text-sky-500" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"></path></svg>
+                        <i class="fa-solid fa-sack-dollar watermark-icon text-sky-500"></i>
                         <div class="relative z-10">
                             <p class="text-[11px] font-bold text-slate-500 uppercase mb-4" id="lbl-kpi-1">درآمد کل پیش‌بینی شده ۵ ساله</p>
                             <p class="text-3xl font-black text-slate-800 mb-1 transition-colors group-hover:text-sky-600" id="kpi-total-revenue">0 <span class="text-sm font-bold text-slate-400">همت</span></p>
@@ -207,7 +210,7 @@
                     </div>
 
                     <div class="kpi-card hover-green p-5 group">
-                        <svg class="watermark-icon text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></svg>
+                        <i class="fa-solid fa-vault watermark-icon text-emerald-500"></i>
                         <div class="relative z-10">
                             <p class="text-[11px] font-bold text-slate-500 uppercase mb-4" id="lbl-kpi-2">بودجه مجاز زیرساخت (۳۰٪)</p>
                             <p class="text-3xl font-black text-slate-800 mb-1 transition-colors group-hover:text-emerald-600" id="kpi-infra-budget">0 <span class="text-sm font-bold text-slate-400 group-hover:text-emerald-400">همت</span></p>
@@ -216,7 +219,7 @@
                     </div>
 
                     <div class="kpi-card hover-amber p-5 group">
-                        <svg class="watermark-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"></path></svg>
+                        <i class="fa-solid fa-chart-pie watermark-icon text-amber-500"></i>
                         <div class="relative z-10">
                             <p class="text-[11px] font-bold text-slate-500 uppercase mb-4" id="lbl-kpi-3">برآورد هزینه کل پروژه‌ها</p>
                             <p class="text-3xl font-black text-slate-800 mb-1 transition-colors group-hover:text-amber-600" id="kpi-used">0 <span class="text-sm font-bold text-slate-400 group-hover:text-amber-400">همت</span></p>
@@ -225,7 +228,7 @@
                     </div>
 
                     <div class="kpi-card p-5 group" id="kpi-balance-card">
-                        <svg class="watermark-icon transition-all duration-300" id="kpi-balance-watermark" fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></svg>
+                        <i class="fa-solid fa-scale-balanced watermark-icon transition-all duration-300" id="kpi-balance-watermark"></i>
                         <div class="relative z-10">
                             <p class="text-[11px] font-bold text-slate-500 uppercase mb-4" id="lbl-kpi-4">مانده نقدینگی نهایی</p>
                             <p class="text-3xl font-black mb-1" id="kpi-balance">0 <span class="text-sm font-bold">همت</span></p>
@@ -240,8 +243,8 @@
                             <span class="w-1.5 h-5 bg-emerald-500 rounded-sm ml-2"></span>
                             جدول و نمودار گرافیکی جریان نقدی کل (۱۴۰۴ تا ۱۴۰۹)
                         </span>
-                        <div class="bg-white p-1 rounded shadow-sm border border-slate-200">
-                            <svg id="accordion-arrow" class="w-5 h-5 text-slate-600 transform transition-transform duration-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <div class="bg-white p-1 rounded shadow-sm border border-slate-200 text-slate-500">
+                            <i id="accordion-arrow" class="fa-solid fa-chevron-down transform transition-transform duration-400 text-sm px-1"></i>
                         </div>
                     </button>
                     
@@ -262,8 +265,7 @@
                                                     <th id="th-infra" class="bg-emerald-50/50 text-emerald-800 border-r border-slate-100">بودجه مجاز</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="cash-flow-tbody" class="divide-y divide-slate-100 text-slate-700">
-                                                </tbody>
+                                            <tbody id="cash-flow-tbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
                                         </table>
                                     </div>
                                     
@@ -280,21 +282,64 @@
                     <h3 class="text-sm font-black text-slate-800 mb-6 flex items-center">
                         <span class="w-1.5 h-4 bg-blue-500 rounded-sm ml-2"></span>نقشه راه توزیع مگاپروژه‌ها (پیش‌نیاز برنامه‌ریزی)
                     </h3>
-                    <div class="relative min-w-[700px] py-4">
+                    <div class="relative min-w-[750px] py-4">
                         <div class="roadmap-line"></div>
                         <div class="flex justify-between relative z-10 w-full">
-                            <div class="roadmap-node"><div class="roadmap-dot"></div><div class="text-[11px] font-bold text-slate-700 mb-2 bg-white px-2 rounded border border-slate-100 shadow-sm">سال ۱۴۰۵</div><div class="flex flex-col gap-1.5 items-center"><span class="text-[9px] bg-slate-50 text-slate-600 px-2.5 py-1 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">🛣️</span>پل ورودی + معبر غربی</span></div></div>
-                            <div class="roadmap-node"><div class="roadmap-dot"></div><div class="text-[11px] font-bold text-slate-700 mb-2 bg-white px-2 rounded border border-slate-100 shadow-sm">سال ۱۴۰۶</div><div class="flex flex-col gap-1.5 items-center"><span class="text-[9px] bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">🏗️</span>زیرساخت محله (فاز۱)</span><span class="text-[9px] bg-rose-50 text-rose-700 px-2.5 py-1 rounded-full border border-rose-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">🏢</span>ساختمان خدماتی</span></div></div>
-                            <div class="roadmap-node"><div class="roadmap-dot"></div><div class="text-[11px] font-bold text-slate-700 mb-2 bg-white px-2 rounded border border-slate-100 shadow-sm">سال ۱۴۰۷</div><div class="flex flex-col gap-1.5 items-center"><span class="text-[9px] bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full border border-blue-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">♻️</span>تصفیه‌خانه (فاز۱)</span><span class="text-[9px] bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">⚡</span>نیروگاه (فاز۱)</span><span class="text-[9px] bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">🌊</span>زهکشی (فاز۱)</span></div></div>
-                            <div class="roadmap-node"><div class="roadmap-dot"></div><div class="text-[11px] font-bold text-slate-700 mb-2 bg-white px-2 rounded border border-slate-100 shadow-sm">سال ۱۴۰۸</div><div class="flex flex-col gap-1.5 items-center"><span class="text-[9px] bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full border border-blue-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">♻️</span>تصفیه‌خانه (فاز۲)</span><span class="text-[9px] bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">⚡</span>نیروگاه (فاز۲)</span><span class="text-[9px] bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">🌊</span>زهکشی (فاز۲)</span></div></div>
-                            <div class="roadmap-node"><div class="roadmap-dot"></div><div class="text-[11px] font-bold text-slate-700 mb-2 bg-white px-2 rounded border border-slate-100 shadow-sm">سال ۱۴۰۹</div><div class="flex flex-col gap-1.5 items-center"><span class="text-[9px] bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full border border-blue-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">♻️</span>تصفیه‌خانه (فاز۳)</span><span class="text-[9px] bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200 shadow-sm font-bold flex items-center gap-1"><span class="text-[10px]">⚡</span>نیروگاه (فاز۳)</span></div></div>
+                            
+                            <div class="roadmap-node">
+                                <div class="roadmap-dot"></div>
+                                <div class="text-[11px] font-bold text-slate-700 mb-3 bg-white px-3 py-0.5 rounded border border-slate-200 shadow-sm">سال ۱۴۰۵</div>
+                                <div class="flex flex-col gap-2 items-center w-full px-2">
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-bridge text-emerald-500"></i> پل ورودی</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-road text-slate-500"></i> معبر غربی</span>
+                                </div>
+                            </div>
+
+                            <div class="roadmap-node">
+                                <div class="roadmap-dot"></div>
+                                <div class="text-[11px] font-bold text-slate-700 mb-3 bg-white px-3 py-0.5 rounded border border-slate-200 shadow-sm">سال ۱۴۰۶</div>
+                                <div class="flex flex-col gap-2 items-center w-full px-2">
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-map-location-dot text-purple-500"></i> زیرساخت (فاز۱)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-truck-medical text-rose-500"></i> ابنیه خدماتی</span>
+                                </div>
+                            </div>
+
+                            <div class="roadmap-node">
+                                <div class="roadmap-dot"></div>
+                                <div class="text-[11px] font-bold text-slate-700 mb-3 bg-white px-3 py-0.5 rounded border border-slate-200 shadow-sm">سال ۱۴۰۷</div>
+                                <div class="flex flex-col gap-2 items-center w-full px-2">
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-water text-blue-500"></i> تصفیه (فاز۱)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-bolt text-amber-500"></i> نیروگاه (فاز۱)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-cloud-showers-heavy text-sky-500"></i> زهکشی (فاز۱)</span>
+                                </div>
+                            </div>
+
+                            <div class="roadmap-node">
+                                <div class="roadmap-dot"></div>
+                                <div class="text-[11px] font-bold text-slate-700 mb-3 bg-white px-3 py-0.5 rounded border border-slate-200 shadow-sm">سال ۱۴۰۸</div>
+                                <div class="flex flex-col gap-2 items-center w-full px-2">
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-water text-blue-500"></i> تصفیه (فاز۲)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-bolt text-amber-500"></i> نیروگاه (فاز۲)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-cloud-showers-heavy text-sky-500"></i> زهکشی (فاز۲)</span>
+                                </div>
+                            </div>
+
+                            <div class="roadmap-node">
+                                <div class="roadmap-dot"></div>
+                                <div class="text-[11px] font-bold text-slate-700 mb-3 bg-white px-3 py-0.5 rounded border border-slate-200 shadow-sm">سال ۱۴۰۹</div>
+                                <div class="flex flex-col gap-2 items-center w-full px-2">
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-water text-blue-500"></i> تصفیه (فاز۳)</span>
+                                    <span class="text-[10px] bg-white text-slate-700 px-3 py-1.5 rounded-full border border-slate-200 shadow-sm font-bold flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition cursor-default w-full justify-center"><i class="fa-solid fa-bolt text-amber-500"></i> نیروگاه (فاز۳)</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <div id="filter-banner" class="hidden bg-sky-600 text-white px-5 py-3 rounded-xl flex justify-between items-center shadow-md">
-                    <span class="text-sm font-bold flex items-center"><svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg><span id="filter-text">فیلتر اعمال شده</span></span>
-                    <button onclick="clearFilter()" class="text-xs bg-white text-sky-700 font-bold px-3 py-1.5 rounded-lg shadow-sm hover:bg-slate-100 transition">نمایش کل ۵ سال ✖</button>
+                    <span class="text-sm font-bold flex items-center"><i class="fa-solid fa-filter ml-2"></i><span id="filter-text">فیلتر اعمال شده</span></span>
+                    <button onclick="clearFilter()" class="text-xs bg-white text-sky-700 font-bold px-3 py-1.5 rounded-lg shadow-sm hover:bg-slate-100 transition"><i class="fa-solid fa-xmark ml-1"></i>نمایش کل ۵ سال</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -322,16 +367,15 @@
                                 <span class="w-2 h-6 bg-indigo-500 rounded-sm ml-2"></span>
                                 شبیه‌ساز هوشمند پروژه‌ها (سطرهای سالانه)
                             </h3>
-                            <p class="text-xs font-bold text-slate-500 mt-2">کارت‌ها را گرفته و بین سطرهای افقیِ سال‌ها جابجا کنید. نوارهای وضعیت، به صورت زنده کسری/مازاد را نشان می‌دهند.</p>
+                            <p class="text-xs font-bold text-slate-500 mt-2"><i class="fa-solid fa-hand-pointer text-slate-300 ml-1"></i>کارت‌ها را گرفته و بین سطرهای افقیِ سال‌ها جابجا کنید. نوارهای وضعیت، به صورت زنده کسری/مازاد را نشان می‌دهند.</p>
                         </div>
-                        <button onclick="resetProjects()" class="mt-3 md:mt-0 text-xs font-bold bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 px-4 py-2 rounded-lg transition shadow-sm">بازنشانی فازها</button>
+                        <button onclick="resetProjects()" class="mt-3 md:mt-0 text-xs font-bold bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:text-sky-600 text-slate-600 px-4 py-2 rounded-lg transition shadow-sm"><i class="fa-solid fa-rotate-left ml-1"></i>بازنشانی فازها</button>
                     </div>
                     <div class="flex flex-col gap-4" id="swimlane-board"></div>
                 </div>
 
             </main>
         </div>
-    </div>
 
     <footer class="w-full bg-slate-800 text-slate-400 text-center py-5 text-xs font-medium relative z-[100] border-t border-slate-700">
         تهیه شده توسط 
@@ -348,7 +392,7 @@
     </footer>
 
     <button onclick="toggleSettings()" class="xl:hidden fixed bottom-6 left-6 z-40 bg-sky-600 text-white p-4 rounded-full shadow-[0_10px_20px_rgba(2,132,199,0.4)] hover:bg-sky-700 transition transform hover:scale-105 flex items-center gap-2">
-        <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        <i class="fa-solid fa-sliders animate-pulse"></i>
         <span class="font-bold hidden sm:inline">تنظیمات مالی</span>
     </button>
 
@@ -374,27 +418,26 @@
         }
 
         // --- 1. CONFIG & DATA ---
-        // UPDATED EXACT DATA FROM REVENUE DASHBOARD:
         const TOTAL_HOUSING_POOL = 87256; 
         const TOURISM_BASE_1404 = 1423.7;
         const HOUSING_1404 = 3874;
 
-        // UPDATED ICONS (♻️, 🏗️, 🛣️)
+        // FontAwesome Icons mapping
         const defaultProjects = [
-            { id: 1, name: "تصفیه‌خانه", phase: 1, totalPhase: 3, cost: 1000, year: 1407, icon: "♻️", color: "#3b82f6", bg: "bg-blue-50" },
-            { id: 2, name: "تصفیه‌خانه", phase: 2, totalPhase: 3, cost: 1500, year: 1408, icon: "♻️", color: "#3b82f6", bg: "bg-blue-50" },
-            { id: 3, name: "تصفیه‌خانه", phase: 3, totalPhase: 3, cost: 1500, year: 1409, icon: "♻️", color: "#3b82f6", bg: "bg-blue-50" },
-            { id: 4, name: "نیروگاه DG", phase: 1, totalPhase: 3, cost: 1000, year: 1407, icon: "⚡", color: "#f59e0b", bg: "bg-amber-50" },
-            { id: 5, name: "نیروگاه DG", phase: 2, totalPhase: 3, cost: 1350, year: 1408, icon: "⚡", color: "#f59e0b", bg: "bg-amber-50" },
-            { id: 6, name: "نیروگاه DG", phase: 3, totalPhase: 3, cost: 1000, year: 1409, icon: "⚡", color: "#f59e0b", bg: "bg-amber-50" },
-            { id: 7, name: "زهکشی سیلاب", phase: 1, totalPhase: 2, cost: 1200, year: 1407, icon: "🌊", color: "#0ea5e9", bg: "bg-sky-50" },
-            { id: 8, name: "زهکشی سیلاب", phase: 2, totalPhase: 2, cost: 1250, year: 1408, icon: "🌊", color: "#0ea5e9", bg: "bg-sky-50" },
-            { id: 9, name: "زیرساخت ۸ محله", phase: 1, totalPhase: 3, cost: 750, year: 1406, icon: "🏗️", color: "#8b5cf6", bg: "bg-purple-50" },
-            { id: 10, name: "زیرساخت ۸ محله", phase: 2, totalPhase: 3, cost: 800, year: 1407, icon: "🏗️", color: "#8b5cf6", bg: "bg-purple-50" },
-            { id: 11, name: "زیرساخت ۸ محله", phase: 3, totalPhase: 3, cost: 800, year: 1408, icon: "🏗️", color: "#8b5cf6", bg: "bg-purple-50" },
-            { id: 12, name: "ساختمان خدماتی", phase: 1, totalPhase: 1, cost: 350, year: 1406, icon: "🏢", color: "#f43f5e", bg: "bg-rose-50" },
-            { id: 13, name: "پل ورودی", phase: 1, totalPhase: 1, cost: 280, year: 1405, icon: "🌉", color: "#10b981", bg: "bg-emerald-50" },
-            { id: 14, name: "معبر غربی", phase: 1, totalPhase: 1, cost: 220, year: 1405, icon: "🛣️", color: "#64748b", bg: "bg-slate-50" }
+            { id: 1, name: "تصفیه‌خانه", phase: 1, totalPhase: 3, cost: 1000, year: 1407, icon: "fa-water", color: "#3b82f6", bg: "bg-blue-50" },
+            { id: 2, name: "تصفیه‌خانه", phase: 2, totalPhase: 3, cost: 1500, year: 1408, icon: "fa-water", color: "#3b82f6", bg: "bg-blue-50" },
+            { id: 3, name: "تصفیه‌خانه", phase: 3, totalPhase: 3, cost: 1500, year: 1409, icon: "fa-water", color: "#3b82f6", bg: "bg-blue-50" },
+            { id: 4, name: "نیروگاه DG", phase: 1, totalPhase: 3, cost: 1000, year: 1407, icon: "fa-bolt", color: "#f59e0b", bg: "bg-amber-50" },
+            { id: 5, name: "نیروگاه DG", phase: 2, totalPhase: 3, cost: 1350, year: 1408, icon: "fa-bolt", color: "#f59e0b", bg: "bg-amber-50" },
+            { id: 6, name: "نیروگاه DG", phase: 3, totalPhase: 3, cost: 1000, year: 1409, icon: "fa-bolt", color: "#f59e0b", bg: "bg-amber-50" },
+            { id: 7, name: "زهکشی سیلاب", phase: 1, totalPhase: 2, cost: 1200, year: 1407, icon: "fa-cloud-showers-heavy", color: "#0ea5e9", bg: "bg-sky-50" },
+            { id: 8, name: "زهکشی سیلاب", phase: 2, totalPhase: 2, cost: 1250, year: 1408, icon: "fa-cloud-showers-heavy", color: "#0ea5e9", bg: "bg-sky-50" },
+            { id: 9, name: "زیرساخت ۸ محله", phase: 1, totalPhase: 3, cost: 750, year: 1406, icon: "fa-map-location-dot", color: "#8b5cf6", bg: "bg-purple-50" },
+            { id: 10, name: "زیرساخت ۸ محله", phase: 2, totalPhase: 3, cost: 800, year: 1407, icon: "fa-map-location-dot", color: "#8b5cf6", bg: "bg-purple-50" },
+            { id: 11, name: "زیرساخت ۸ محله", phase: 3, totalPhase: 3, cost: 800, year: 1408, icon: "fa-map-location-dot", color: "#8b5cf6", bg: "bg-purple-50" },
+            { id: 12, name: "ساختمان خدماتی", phase: 1, totalPhase: 1, cost: 350, year: 1406, icon: "fa-truck-medical", color: "#f43f5e", bg: "bg-rose-50" },
+            { id: 13, name: "پل ورودی", phase: 1, totalPhase: 1, cost: 280, year: 1405, icon: "fa-bridge", color: "#10b981", bg: "bg-emerald-50" },
+            { id: 14, name: "معبر غربی", phase: 1, totalPhase: 1, cost: 220, year: 1405, icon: "fa-road", color: "#64748b", bg: "bg-slate-50" }
         ];
 
         let state = { inflation: 35, realization: 100, infraShare: 30, allocations: [0, 10, 20, 20, 10] };
@@ -467,13 +510,13 @@
             if(netBalance < 0) {
                 balEl.className = "text-3xl font-black mb-1 text-rose-600";
                 balCard.className = "kpi-card p-5 group bg-rose-50 border-rose-200";
-                balWatermark.classList.add('text-rose-500'); balWatermark.classList.remove('text-emerald-500', 'text-slate-200');
+                balWatermark.className = "fa-solid fa-scale-balanced watermark-icon text-rose-500 transition-all duration-300";
                 subKpi4.innerText = "هشدار: کسری بودجه استراتژیک!";
                 subKpi4.className = "text-[10px] font-bold text-rose-500 mt-1";
             } else {
                 balEl.className = "text-3xl font-black mb-1 text-slate-800 transition-colors group-hover:text-emerald-600";
                 balCard.className = "kpi-card p-5 group hover-green";
-                balWatermark.classList.add('text-emerald-500', 'opacity-10'); balWatermark.classList.remove('text-rose-500');
+                balWatermark.className = "fa-solid fa-scale-balanced watermark-icon text-slate-300 group-hover:text-emerald-500 group-hover:opacity-10 transition-all duration-300";
                 subKpi4.innerText = isFiltered ? "مازاد نقدینگی در این سال" : "نقدینگی رسوب‌کرده در پایان پروژه";
                 subKpi4.className = "text-[10px] text-slate-500 font-medium mt-1";
             }
@@ -483,7 +526,7 @@
             renderSwimlanes();
         }
 
-        // --- NEW: Graphical Table & Chart with NEW COLORS ---
+        // --- 4. GRAPHICAL TABLE ---
         function renderCashFlowData() {
             document.getElementById('th-shareholder').innerText = `سهم شرکا (${100 - state.infraShare}٪)`;
             document.getElementById('th-infra').innerText = `بودجه زیرساخت (${state.infraShare}٪)`;
@@ -518,22 +561,9 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { 
-                            label: 'بودجه مجاز زیرساخت', 
-                            data: infraData, 
-                            type: 'line', 
-                            borderColor: '#10b981', 
-                            borderWidth: 3, 
-                            pointBackgroundColor: '#ffffff',
-                            pointBorderColor: '#10b981',
-                            pointBorderWidth: 2,
-                            pointRadius: 5,
-                            fill: false,
-                            order: 0, // Forces line to render on top
-                            tension: 0.3
-                        },
-                        { label: 'مسکونی (همت)', data: housingData, backgroundColor: '#a855f7', stack: 'Stack 0', order: 1, borderRadius: 4 }, // Purple
-                        { label: 'گردشگری (همت)', data: tourismData, backgroundColor: '#fb7185', stack: 'Stack 0', order: 1, borderRadius: 4 } // Peach/Rose
+                        { label: 'بودجه مجاز زیرساخت', data: infraData, type: 'line', borderColor: '#10b981', borderWidth: 3, pointBackgroundColor: '#ffffff', pointBorderColor: '#10b981', pointBorderWidth: 2, pointRadius: 5, fill: false, order: 0, tension: 0.3 },
+                        { label: 'مسکونی (همت)', data: housingData, backgroundColor: '#a855f7', stack: 'Stack 0', order: 1, borderRadius: 4 },
+                        { label: 'گردشگری (همت)', data: tourismData, backgroundColor: '#fb7185', stack: 'Stack 0', order: 1, borderRadius: 4 }
                     ]
                 },
                 options: {
@@ -545,7 +575,7 @@
             });
         }
 
-        // --- 4. SWIMLANES KANBAN ---
+        // --- 5. MODERN KANBAN SWIMLANES ---
         function renderSwimlanes() {
             const board = document.getElementById('swimlane-board');
             board.innerHTML = '';
@@ -587,8 +617,10 @@
                     if(p.totalPhase > 1) { for(let i=1; i<=p.totalPhase; i++) { dotsHtml += `<div class="phase-dot ${i<=p.phase ? 'active' : ''}"></div>`; } }
 
                     rowHtml += `
-                        <div class="project-card w-full sm:w-[260px] group" style="--accent-color: ${p.color}" id="proj-${p.id}" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)">
-                            <div class="grip-handle group-hover:text-slate-600 transition-colors"><span>⋮</span><span>⋮</span><span>⋮</span></div>
+                        <div class="project-card w-full sm:w-[260px] group bg-white hover:bg-slate-50" style="--accent-color: ${p.color}" id="proj-${p.id}" draggable="true" ondragstart="drag(event)" ondragend="dragEnd(event)">
+                            <div class="w-14 ${p.bg} flex items-center justify-center text-2xl shrink-0 border-l border-slate-100 transition-colors group-hover:bg-white">
+                                <i class="fa-solid ${p.icon} group-hover:scale-125 transition-transform duration-300" style="color: ${p.color}"></i>
+                            </div>
                             <div class="flex-1 p-3 flex flex-col justify-between">
                                 <div class="text-sm font-black text-slate-800 mb-2">${p.name}</div>
                                 <div class="flex items-center justify-between mt-auto">
@@ -596,7 +628,9 @@
                                     ${p.totalPhase > 1 ? `<div class="flex flex-col items-end w-14"><span class="text-[8px] text-slate-400 font-bold mb-0.5">فاز ${p.phase}</span><div class="phase-dots w-full">${dotsHtml}</div></div>` : ''}
                                 </div>
                             </div>
-                            <div class="w-16 ${p.bg} flex items-center justify-center text-3xl shrink-0 border-r border-slate-100"><span class="group-hover:scale-110 transition-transform">${p.icon}</span></div>
+                            <div class="grip-handle group-hover:text-slate-600 transition-colors bg-slate-50 group-hover:bg-slate-100">
+                                <i class="fa-solid fa-grip-vertical text-xs opacity-50"></i>
+                            </div>
                         </div>
                     `;
                 });
@@ -605,10 +639,10 @@
             });
         }
 
-        // --- 5. DRAG & DROP EVENTS ---
+        // --- 6. DRAG & DROP EVENTS ---
         function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drop-zone-active'); }
         function leaveDrop(ev) { ev.currentTarget.classList.remove('drop-zone-active'); }
-        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.currentTarget.id); }
         function dragEnd(ev) { document.querySelectorAll('.lane-wrapper').forEach(el => { el.classList.remove('drop-zone-active'); }); }
         function drop(ev) {
             ev.preventDefault();
@@ -623,7 +657,7 @@
         }
         function resetProjects() { projects = JSON.parse(JSON.stringify(defaultProjects)); calculateFinancials(); }
 
-        // --- 6. CHARTS ---
+        // --- 7. CHARTS ---
         Chart.defaults.font.family = 'Vazirmatn';
         
         function renderCharts() {
@@ -688,7 +722,7 @@
 
         function clearFilter() { activeFilterYear = null; updateUI(); }
 
-        // --- 7. SLIDERS & LOCK LOGIC ---
+        // --- 8. SLIDERS & LOCK LOGIC ---
         function setupHousingSliders() {
             const container = document.getElementById('housing-sliders-container');
             container.innerHTML = '';
@@ -738,6 +772,20 @@
         document.getElementById('sl-infrashare').addEventListener('input', (e) => { state.infraShare = parseInt(e.target.value); document.getElementById('val-infrashare').innerText = state.infraShare + '%'; calculateFinancials(); });
 
         setupHousingSliders(); calculateFinancials();
+    </script>
+    
+    <script>
+    window.addEventListener('keydown', function(e){
+      if (e.key === 'Backspace') {
+        const el = e.target;
+        const tag = el && el.tagName;
+        const isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || (el && el.isContentEditable);
+        if (!isEditable) {
+          e.preventDefault();
+          window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
+        }
+      }
+    });
     </script>
 </body>
 </html>
