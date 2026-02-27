@@ -3,437 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مدیریتی تحلیل درآمد</title>
-    <!-- Tailwind CSS -->
+    <title>داشبورد هوش تجاری: پیش‌بینی و خلق درآمد | ۱۴۰۴-۱۴۰۹</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Google Fonts (Vazirmatn for Persian) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #f0f2f5; /* A softer, more professional background */
-        }
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
-        }
-        .card {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .kpi-card, .insight-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .icon-bg {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-        .logo-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            height: 70px;
-            width: auto;
-            object-fit: contain;
-        }
-        .logo.center {
-            height: 150px;
-        }
-        .tooltip-container {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-        .tooltip-text {
-            visibility: hidden;
-            width: 240px;
-            background-color: #374151; /* gray-700 */
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -120px;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-weight: normal;
-        }
-        .tooltip-text::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #374151 transparent transparent transparent;
-        }
-        .tooltip-container:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #a7a7a7; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #888; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f8fafc; color: #0f172a; overflow-x: hidden; }
+        
+        /* Corporate Cards */
+        .corp-card { background: #ffffff; border-radius: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03), 0 2px 4px -1px rgba(0,0,0,0.02); transition: all 0.3s ease; border: 1px solid #e2e8f0; position: relative; }
+        
+        /* Tourism Base Cards - ENHANCED (Interactive Numbers) */
+        .tourism-card { padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; z-index: 1; overflow: hidden; }
+        .tourism-icon-bg { position: absolute; left: -5%; top: -10%; font-size: 8rem; opacity: 0.05; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1; pointer-events: none; }
+        .corp-card:hover .tourism-icon-bg { opacity: 0.15; transform: scale(1.1) rotate(-5deg); }
+        .corp-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px -5px rgba(14, 165, 233, 0.15); border-color: #bae6fd; }
+
+        /* Real Estate Portfolio Cards */
+        .re-card { padding: 1.25rem; z-index: 1; border-top: 4px solid transparent; overflow: visible !important; }
+        .re-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px -5px rgba(168, 85, 247, 0.15); border-top-color: #d946ef; z-index: 50; }
+        .sparkline-box { height: 60px; width: 100%; margin-top: 10px; }
+        
+        /* Mini Donut & Custom Tooltip */
+        .mini-donut { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+        .mini-donut-inner { width: 26px; height: 26px; background-color: #ffffff; border-radius: 50%; position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 800; color: #334155; }
+        .donut-tooltip { visibility: hidden; position: absolute; top: 115%; right: -10px; width: max-content; min-width: 150px; background: #1e293b; color: white; border-radius: 8px; padding: 10px; font-size: 0.75rem; opacity: 0; transition: 0.3s; z-index: 99999; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); text-align: right; }
+        .donut-tooltip::after { content: ""; position: absolute; bottom: 100%; right: 20px; border-width: 6px; border-style: solid; border-color: transparent transparent #1e293b transparent; }
+        .group-donut:hover .donut-tooltip { visibility: visible; opacity: 1; top: 125%; }
+
+        /* Custom Elegant Sliders */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; border-radius: 3px; background: #cbd5e1; }
+        input[type=range]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #ffffff; cursor: pointer; -webkit-appearance: none; margin-top: -6px; border: 3px solid currentColor; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s transform; position: relative; z-index: 10; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .slider-cyan::-webkit-slider-thumb { color: #0ea5e9; }
+        .slider-purple::-webkit-slider-thumb { color: #d946ef; }
+        .slider-emerald::-webkit-slider-thumb { color: #10b981; }
+
+        /* General Tooltips */
+        .has-tooltip { position: relative; cursor: help; }
+        .custom-tooltip { visibility: hidden; position: absolute; top: 130%; right: 50%; transform: translateX(50%); width: 220px; background: #0f172a; color: white; border-radius: 8px; padding: 10px; font-size: 0.75rem; text-align: justify; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 9999; line-height: 1.6; }
+        .has-tooltip:hover .custom-tooltip { visibility: visible; opacity: 1; top: 140%; }
+
+        /* Sticky Sidebar */
+        .sidebar-panel { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .overlay { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); transition: opacity 0.3s; z-index: 40; }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        /* KPI Console Elements & Animations */
+        .kpi-stat-box { border-right: 1px solid #e2e8f0; padding: 1rem; transition: background-color 0.3s ease; border-radius: 1rem; cursor: default; }
+        .kpi-stat-box:first-child { border-right: none; }
+        .kpi-stat-box:hover { background-color: #f8fafc; }
+        
+        @keyframes pulse-soft { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        @keyframes float-up { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes bounce-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes rock { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+        
+        .group-kpi:hover .anim-pulse { animation: pulse-soft 1s infinite; }
+        .group-kpi:hover .anim-float { animation: float-up 1s infinite ease-in-out; }
+        .group-kpi:hover .anim-bounce { animation: bounce-soft 1s infinite ease-in-out; }
+        .group-kpi:hover .anim-rock { animation: rock 1s infinite ease-in-out; }
     </style>
 </head>
-<body class="p-4 md:p-6 lg:p-8">
-    <div class="max-w-screen-xl mx-auto">
-        <!-- Header -->
-        <header class="mb-8">
-             <div class="card mb-8">
-                <div class="logo-container">
-                    <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="logo">
-                    <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="logo center">
-                    <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="logo">
-                </div>
-            </div>
-            <div class="text-center">
-                <h1 class="text-4xl font-extrabold text-slate-800">داشبورد مدیریتی و استراتژیک درآمدهای مسکونی</h1>
-                <p class="text-slate-500 mt-2 text-lg">تحلیل جامع درآمدها برای تصمیم‌گیری‌های کلان مدیریتی</p>
-            </div>
-        </header>
+<body class="flex flex-col min-h-screen">
 
-        <main class="space-y-8">
-            <!-- Management Report Summary Card -->
-            <div class="card">
-                <h2 class="text-2xl font-bold text-slate-800 mb-4">📄 خلاصه مدیریتی (یافته‌های کلیدی)</h2>
-                <div class="prose prose-sm max-w-none text-slate-600 space-y-4">
-                     <p>
-                        تحلیل داده‌های به‌روز شده نشان می‌دهد که پورتفولیوی درآمدی شرکت بسیار بزرگ و قابل توجه است. مجموع درآمد پیش‌بینی‌شده بالغ بر <strong>۶۲ هزار میلیارد تومان</strong> است. حدود <strong>۴۲٪</strong> از این مبلغ قطعی شده، اما <strong>۵۸٪</strong> در وضعیت "فاقد قرارداد" یا "در حال انعقاد" قرار دارد که بزرگترین فرصت رشد و در عین حال مهم‌ترین ریسک سبد درآمدی شرکت است.
-                    </p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li><strong>رفع ابهام فوری:</strong> بیش از <strong>۴۱٪</strong> از درآمدها (حدود ۲۵.۷ هزار میلیارد تومان) مربوط به پروژه‌های با سرمایه‌گذار <strong>"نامشخص"</strong> است.</li>
-                        <li><strong>تمرکز بر پروژه‌های استراتژیک:</strong> تنها <strong>۴ پروژه</strong> مسئول تولید <strong>۳۳٪</strong> از کل درآمد شرکت هستند و نیازمند نظارت ویژه می‌باشند.</li>
-                        <li><strong>برنامه‌ریزی برای اوج درآمدی:</strong> اوج درآمدزایی در سال‌های <strong>۱۴۰۶ تا ۱۴۰۸</strong> خواهد بود و برنامه‌ریزی برای تحقق آن باید از هم‌اکنون آغاز شود.</li>
-                    </ul>
-                </div>
-            </div>
+    <header class="w-full bg-white shadow-sm border-b-4 border-b-indigo-600 p-4 md:py-5 md:px-8 flex flex-col md:flex-row justify-between items-center z-50 relative">
+        <div class="w-1/3 flex justify-start mb-4 md:mb-0"><img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="بنیاد مستضعفان" class="h-12 md:h-14 object-contain"></div>
+        <div class="w-full md:w-1/3 text-center mb-4 md:mb-0">
+            <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="نمک آبرود" class="h-14 md:h-16 object-contain mx-auto mb-2 drop-shadow-md">
+            <h1 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">داشبورد جامع برآورد و خلق درآمد</h1>
+            <p class="text-[11px] md:text-sm text-slate-500 font-bold mt-1 tracking-wide">مدیریت پورتفوی دارایی‌ها و جریان نقدی استراتژیک</p>
+        </div>
+        <div class="w-1/3 flex justify-end"><img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="عمران و مسکن" class="h-10 md:h-12 object-contain"></div>
+    </header>
 
-            <!-- KPI Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                 <div class="card kpi-card">
-                    <div class="icon-bg bg-green-100 text-green-600">💰</div>
-                    <div>
-                        <h3 class="text-slate-500 font-medium">مجموع درآمد برآوردی</h3>
-                        <p id="total-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+    <div id="settingsOverlay" class="fixed inset-0 overlay hidden xl:hidden" onclick="toggleSettings()"></div>
+    
+    <div class="w-full max-w-[1650px] mx-auto flex flex-col xl:flex-row gap-6 items-start relative px-4 md:px-6 py-6 flex-1">
+        
+        <aside id="settingsSidebar" class="sidebar-panel fixed inset-y-0 right-0 w-80 bg-white z-50 transform translate-x-full overflow-y-auto custom-scrollbar shadow-2xl xl:shadow-none xl:translate-x-0 xl:static xl:w-[23%] xl:bg-transparent xl:block xl:sticky xl:top-6 xl:h-[calc(100vh-2rem)]">
+            <div class="p-5 xl:p-0">
+                <div class="flex justify-between items-center xl:hidden mb-6 border-b pb-3">
+                    <h2 class="font-black text-lg text-slate-800">پنل فرمان استراتژیک</h2>
+                    <button onclick="toggleSettings()" class="text-slate-400 hover:text-rose-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                
+                <div class="space-y-5 pb-10">
+                    
+                    <div class="corp-card p-5">
+                        <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                            <h3 class="font-black text-slate-800 flex items-center text-sm">
+                                <span class="w-1.5 h-4 bg-indigo-500 rounded-sm ml-2"></span>اهرم‌های کلان مالی
+                            </h3>
+                            <button onclick="resetAll()" class="text-[10px] font-bold text-slate-500 hover:text-indigo-600 bg-slate-50 px-2 py-1 rounded border border-slate-200 transition-colors">بازنشانی</button>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="font-bold text-slate-600">رشد تورمی گردشگری</span>
+                                <span id="val-tourism" class="font-black text-cyan-600 bg-cyan-50 px-1.5 rounded">35%</span>
+                            </div>
+                            <input type="range" id="sl-tourism" class="slider-cyan" min="20" max="70" value="35">
+                            <p class="text-[9px] text-slate-400 mt-1">نرخ رشد ترکیبی سالانه (بخشنامه)</p>
+                        </div>
+
+                        <div class="mb-5">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="font-bold text-slate-600">تعدیل قیمت املاک</span>
+                                <span id="val-housing" class="font-black text-fuchsia-600 bg-fuchsia-50 px-1.5 rounded">0% (پایه)</span>
+                            </div>
+                            <input type="range" id="sl-housing" class="slider-purple" min="-30" max="100" value="0">
+                            <p class="text-[9px] text-slate-400 mt-1">تأثیر نوسانات بازار بر برآورد پایه</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="font-bold text-slate-600">نرخ تخصیص توسعه زیرساخت</span>
+                                <span id="val-infra" class="font-black text-emerald-600 bg-emerald-50 px-1.5 rounded">30%</span>
+                            </div>
+                            <input type="range" id="sl-infra" class="slider-emerald" min="10" max="50" value="30">
+                            <p class="text-[9px] text-slate-400 mt-1 leading-tight text-justify">تعیین‌کننده سهم مجاز هزینه‌های عمرانی در برابر سود خالص سهامدار (خزانه)</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800 text-white rounded-[1.25rem] p-5 shadow-lg relative border border-slate-700 z-50">
+                        <div class="absolute inset-0 overflow-hidden pointer-events-none rounded-[1.25rem] z-0">
+                            <div class="absolute -right-12 -top-12 w-32 h-32 bg-purple-500 rounded-full blur-[50px] opacity-20"></div>
+                        </div>
+                        
+                        <div class="relative z-10">
+                            <h3 class="font-black text-sm flex items-center mb-2">
+                                <span class="w-1.5 h-4 bg-purple-400 rounded-sm ml-2"></span>توزیع زمانی درآمدهای ملکی
+                            </h3>
+                            <div class="bg-slate-900/60 border border-slate-600/50 p-2.5 rounded-lg mb-4 text-[9px] leading-relaxed text-slate-300 text-justify">
+                                <span class="text-purple-300 font-bold">راهبرد نقدشوندگی:</span> با عنایت به زمان‌بندی اخذ مجوزات، طی مراحل ساخت و فازبندی پیش‌فروش، سقف تحقق درآمدهای پروژه‌های مشارکتی تا پایان افق ۱۴۰۹ معادل <b class="text-white">۶۰٪</b> برآورد گردیده است. تحقق ۴۰٪ باقی‌مانده به سنوات آتی موکول خواهد شد.
+                            </div>
+                            
+                            <div class="mb-5 bg-slate-900/50 p-3 rounded-lg border border-slate-600">
+                                <div class="flex justify-between text-[10px] mb-2 font-bold text-slate-300">
+                                    <span>مجموع افق ۵ ساله: <b id="val-total-alloc" class="text-purple-400 text-xs">60%</b></span>
+                                    <span>انتقال به آتی: <b id="val-free-alloc" class="text-slate-400 text-xs">40%</b></span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-1.5 flex overflow-hidden">
+                                    <div id="bar-alloc" class="bg-purple-400 h-full transition-all duration-300" style="width: 60%"></div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-4" id="housing-sliders-container"></div>
+                        </div>
                     </div>
                 </div>
-                 <div class="card kpi-card">
-                    <div class="icon-bg bg-cyan-100 text-cyan-600">✅</div>
-                    <div>
-                        <h3 class="text-slate-500 font-medium">درآمد قطعی شده</h3>
-                        <p id="confirmed-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+            </aside>
+
+            <main class="w-full xl:w-[77%] flex flex-col gap-6 z-10">
+                
+                <div class="bg-white border-r-4 border-r-indigo-500 rounded-xl p-4 shadow-sm text-sm text-slate-600 leading-relaxed text-justify">
+                    <strong class="text-slate-800">تحلیل‌گر استراتژیک:</strong> 
+                    این داشبورد جریان‌های نقدیِ ورودی شرکت را در دو حوزه <b>عملیاتی (گردشگری)</b> و <b>سرمایه‌گذاری (مسکونی/مشارکتی)</b> شبیه‌سازی می‌کند. با تغییر اهرم‌های سمت راست، می‌توانید استراتژی‌های مختلف تورمی و زمان‌بندی فروش را آزمایش کرده و میزان <b>خلق ثروت خالص</b> را تا سال ۱۴۰۹ مشاهده کنید.
+                </div>
+
+                <div>
+                    <h2 class="text-lg font-black mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-6 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-sm ml-2"></span>
+                        موتور درآمدهای گردشگری و عملیاتی
+                    </h2>
+                    
+                    <p class="text-xs font-bold text-slate-500 mb-3">عملکرد پایه سال ۱۴۰۴ (مبالغ به میلیارد تومان)</p>
+                    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-6">
+                        <div class="corp-card tourism-card h-32 group"><span class="tourism-icon-bg text-cyan-500">🚠</span><p class="text-sm font-black text-slate-600">تله‌کابین (خط ۱ و ۲)</p><p class="text-3xl md:text-4xl font-black text-slate-900 mt-auto transition-colors duration-300 group-hover:text-cyan-600">۴۵۸.۸</p></div>
+                        <div class="corp-card tourism-card h-32 group"><span class="tourism-icon-bg text-cyan-500">🎢</span><p class="text-sm font-black text-slate-600">سورتمه</p><p class="text-3xl md:text-4xl font-black text-slate-900 mt-auto transition-colors duration-300 group-hover:text-cyan-600">۸۷.۲</p></div>
+                        <div class="corp-card tourism-card h-32 group"><span class="tourism-icon-bg text-cyan-500">🎟️</span><p class="text-sm font-black text-slate-600">خدمات توریستی</p><p class="text-3xl md:text-4xl font-black text-slate-900 mt-auto transition-colors duration-300 group-hover:text-cyan-600">۴۹۵.۳</p></div>
+                        <div class="corp-card tourism-card h-32 group"><span class="tourism-icon-bg text-cyan-500">🏘️</span><p class="text-sm font-black text-slate-600">خدمات شهرک <span class="text-[9px] font-normal">(شارژ/پروانه)</span></p><p class="text-3xl md:text-4xl font-black text-slate-900 mt-auto transition-colors duration-300 group-hover:text-cyan-600">۲۰۹.۲</p></div>
+                        <div class="corp-card tourism-card h-32 group"><span class="tourism-icon-bg text-cyan-500">🔑</span><p class="text-sm font-black text-slate-600">اجاره‌ای و ورودی‌ها</p><p class="text-3xl md:text-4xl font-black text-slate-900 mt-auto transition-colors duration-300 group-hover:text-cyan-600">۱۷۳.۲</p></div>
+                    </div>
+
+                    <div class="corp-card p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-black text-slate-700">روند پیش‌بینی درآمدهای گردشگری (۱۴۰۵ - ۱۴۰۹)</h3>
+                            <div class="bg-cyan-50 text-cyan-700 text-xs font-bold px-3 py-1 rounded-md" id="lbl-total-tourism">مجموع: - همت</div>
+                        </div>
+                        <div class="h-60 w-full"><canvas id="tourismChart"></canvas></div>
                     </div>
                 </div>
-                <div class="card kpi-card">
-                    <div class="icon-bg bg-amber-100 text-amber-600">⏳</div>
-                    <div>
-                        <h3 class="text-slate-500 font-medium">پتانسیل (در حال انعقاد)</h3>
-                        <p id="potential-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
+
+                <div class="pt-4">
+                    <h2 class="text-lg font-black mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-sm ml-2"></span>
+                        پورتفوی پروژه‌های مسکونی و مشارکتی
+                    </h2>
+                    
+                    <p class="text-xs font-bold text-slate-500 mb-3">سبد دارایی‌ها (نمایش وزن پروژه و نمودار مساحتی نقدشوندگی)</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="portfolio-container"></div>
+
+                    <div class="corp-card p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-black text-slate-700">قله‌های درآمدی پروژه‌های مشارکتی (Stacked Area)</h3>
+                            <div class="bg-fuchsia-50 text-fuchsia-700 text-xs font-bold px-3 py-1 rounded-md" id="lbl-total-housing">مجموع: - همت</div>
+                        </div>
+                        <div class="h-80 w-full"><canvas id="housingChart"></canvas></div>
                     </div>
                 </div>
-                <div class="card kpi-card">
-                    <div class="icon-bg bg-rose-100 text-rose-600">🚩</div>
-                     <div>
-                        <h3 class="text-slate-500 font-medium">ریسک (فاقد قرارداد)</h3>
-                        <p id="risk-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
-                    </div>
-                </div>
-                <div class="card kpi-card">
-                    <div class="icon-bg bg-blue-100 text-blue-600">🏗️</div>
-                    <div>
-                        <h3 class="text-slate-500 font-medium">تعداد کل پروژه‌ها</h3>
-                        <p id="total-projects" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
-                    </div>
-                </div>
-                <div class="card kpi-card">
-                    <div class="icon-bg bg-red-100 text-red-600">❓</div>
-                    <div>
-                        <h3 class="text-slate-500 font-medium">سرمایه‌گذار نامشخص</h3>
-                        <p id="unknown-investor" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
-                    </div>
-                </div>
-                 <div class="card kpi-card">
-                    <div class="icon-bg bg-yellow-100 text-yellow-600">⚠️</div>
-                     <div>
-                        <h3 class="text-slate-500 font-medium">مجموع درآمد غیرقطعی</h3>
-                        <p id="unconfirmed-revenue" class="text-2xl font-bold text-slate-800 mt-1">درحال بارگذاری...</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Attractive Management Insight Cards -->
-             <div class="card">
-                <h2 class="text-2xl font-bold text-slate-800 mb-4">💡 نکات کلیدی مدیریتی</h2>
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="p-4 bg-orange-50 rounded-lg">
-                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">🎯</span>
-                            <div>
-                                <p class="font-bold text-lg text-orange-800">تمرکز استراتژیک</p>
-                                <p class="text-sm text-orange-600"><strong>۳۳٪</strong> کل درآمد فقط از <strong>۴ پروژه</strong> است.</p>
+
+                <div class="pt-4 mb-10">
+                    <h2 class="text-lg font-black mb-4 text-slate-800 flex items-center">
+                        <span class="w-2 h-6 bg-slate-800 rounded-sm ml-2"></span>
+                        کنسول جامع شاخص‌های کلیدی (سنتز مالی)
+                    </h2>
+                    
+                    <div class="corp-card p-6 bg-white border-t-4 border-t-slate-800">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                            
+                            <div class="lg:col-span-3 flex flex-col items-center justify-center relative border-b lg:border-b-0 lg:border-l border-slate-100 pb-6 lg:pb-0">
+                                <div class="h-44 w-full relative">
+                                    <canvas id="mixChart"></canvas>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
+                                        <span class="text-[10px] font-bold text-slate-400">ظرفیت کل</span>
+                                        <span class="text-xl font-black text-slate-800" id="donut-total">0</span>
+                                    </div>
+                                </div>
+                                <div class="w-full mt-4 bg-slate-50 rounded-full h-2.5 flex overflow-hidden shadow-inner">
+                                    <div id="bar-mix-tourism" class="bg-cyan-500 h-full transition-all duration-500" style="width: 50%"></div>
+                                    <div id="bar-mix-housing" class="bg-purple-500 h-full transition-all duration-500" style="width: 50%"></div>
+                                </div>
+                                <div class="flex justify-between w-full text-[10px] font-bold mt-1 text-slate-500 px-1">
+                                    <span id="lbl-mix-tourism" class="text-cyan-600">گردشگری</span>
+                                    <span id="lbl-mix-housing" class="text-purple-600">مسکونی</span>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="kpi-stat-box group-kpi group">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl anim-pulse text-slate-600">🏦</span>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">ظرفیت کل ۵ ساله</p>
+                                    </div>
+                                    <p class="text-2xl font-black text-slate-800 transition-colors duration-300 group-hover:text-amber-500" id="kpi-total">0 <span class="text-xs text-slate-500 font-bold group-hover:text-slate-500">همت</span></p>
+                                </div>
+                                
+                                <div class="kpi-stat-box group-kpi group">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl anim-float text-slate-600">📈</span>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">متوسط درآمد سالانه</p>
+                                    </div>
+                                    <p class="text-2xl font-black text-slate-700 transition-colors duration-300 group-hover:text-amber-500" id="kpi-avg">0 <span class="text-xs text-slate-500 font-bold group-hover:text-slate-500">همت</span></p>
+                                </div>
+                                
+                                <div class="kpi-stat-box group-kpi group">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl anim-bounce text-blue-500">💼</span>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">سود خالص سهامدار</p>
+                                    </div>
+                                    <p class="text-2xl font-black text-blue-600 transition-colors duration-300 group-hover:text-blue-500" id="kpi-shareholder">0 <span class="text-xs text-blue-400 font-bold">همت</span></p>
+                                    <p class="text-[9px] font-bold text-blue-500 bg-blue-50 inline-block px-1.5 rounded mt-1" id="lbl-shareholder-perc">70% تخصیص</p>
+                                </div>
+                                
+                                <div class="kpi-stat-box group-kpi group">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl anim-rock text-emerald-500">🏗️</span>
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">بودجه مجاز توسعه</p>
+                                    </div>
+                                    <p class="text-2xl font-black text-emerald-600 transition-colors duration-300 group-hover:text-emerald-500" id="kpi-infra">0 <span class="text-xs text-emerald-400 font-bold">همت</span></p>
+                                    <p class="text-[9px] font-bold text-emerald-600 bg-emerald-50 inline-block px-1.5 rounded mt-1" id="lbl-infra-perc">30% تخصیص</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                     <div class="p-4 bg-red-50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <span class="text-3xl">❗</span>
-                             <div>
-                                <p class="font-bold text-lg text-red-800">پتانسیل و ریسک</p>
-                                <p class="text-sm text-red-600"><strong>۵۸٪</strong> درآمد (۳۶ همت) هنوز قطعی نشده است.</p>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="p-4 bg-blue-50 rounded-lg">
-                         <div class="flex items-center gap-3">
-                            <span class="text-3xl">📈</span>
-                             <div>
-                                <p class="font-bold text-lg text-blue-800">اوج درآمدی آتی</p>
-                                <p class="text-sm text-blue-600"><strong>۸۶٪</strong> فروش آتی در سال‌های <strong>۱۴۰۶-۱۴۰۸</strong> است.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-purple-50 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <span class="text-3xl">🔍</span>
-                             <div>
-                                <p class="font-bold text-lg text-purple-800">نیاز به شفاف‌سازی</p>
-                                <p class="text-sm text-purple-600"><strong>۴۱٪</strong> درآمد از سرمایه‌گذار <strong>نامشخص</strong> است.</p>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-            </div>
+                </div>
 
-            <!-- Main Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Investor Analysis -->
-                <div class="card">
-                    <h3 class="text-xl font-bold text-slate-800 mb-1">🤝 تحلیل درآمد بر اساس سرمایه‌گذار</h3>
-                    <p class="text-slate-500 mb-4 text-sm">شناسایی شرکای استراتژیک و پروژه‌های نیازمند شفاف‌سازی</p>
-                    <div class="chart-container">
-                        <canvas id="investorRevenueChart"></canvas>
-                    </div>
-                </div>
-                 <!-- Yearly Projection Line Chart -->
-                <div class="card">
-                    <h3 class="text-xl font-bold text-slate-800 mb-4">📅 پیش‌بینی جریان درآمدی آتی</h3>
-                    <div class="chart-container">
-                        <canvas id="yearlyProjectionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                 <!-- Contract Status Doughnut Chart -->
-                <div class="card">
-                    <h3 class="text-xl font-bold text-slate-800 mb-4">📊 تفکیک درآمد بر اساس وضعیت قرارداد</h3>
-                    <div class="chart-container">
-                        <canvas id="contractStatusChart"></canvas>
-                    </div>
-                </div>
-                 <!-- Pareto (Project Class) Bar Chart -->
-                <div class="card">
-                    <h3 class="text-xl font-bold text-slate-800 mb-4">🎯 تحلیل پروژه‌های کلیدی (پارتو)</h3>
-                    <div class="chart-container">
-                        <canvas id="paretoChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-        </main>
-        <!-- Footer Section -->
-        <footer class="text-center py-8 mt-12 border-t border-gray-200">
-            <p class="text-gray-600">
-                تهیه شده توسط 
-                <span class="font-semibold text-teal-600 tooltip-container">
-                    مهندسین مشاور ایده پرداز محیط
-                    <span class="tooltip-text">
-                        <span class="font-bold block">تحلیل و طراحی : حمیدرضا ترابی</span>
-                        hr.torabii@gmail.com
-                    </span>
-                </span>
-            </p>
-            <p class="text-gray-500 mt-2">شهریورماه ۱۴۰۴</p>
-        </footer>
+            </main>
+        </div>
     </div>
 
+    <footer class="w-full bg-slate-800 text-slate-400 text-center py-5 text-xs font-medium relative z-[100] border-t border-slate-700">
+        تهیه شده توسط 
+        <span class="relative group cursor-pointer text-white font-bold inline-block mx-1">
+            مهندسین مشاور ایده پرداز محیط
+            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 hidden group-hover:block bg-slate-900 text-white text-xs p-3 rounded-xl shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] w-56 text-center border border-slate-600 transition-all z-[9999]">
+                <p class="font-black text-sky-400 mb-1">تحلیل و طراحی:</p>
+                <p class="font-bold text-base mb-1 text-white">حمیدرضا ترابی</p>
+                <p class="text-slate-400 font-mono text-[10px]">hr.torabii@gmail.com</p>
+                <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-slate-600"></div>
+            </div>
+        </span>
+        - اسفند ماه ۱۴۰۴
+    </footer>
+
+    <button onclick="toggleSettings()" class="xl:hidden fixed bottom-6 left-6 z-40 bg-indigo-600 text-white p-4 rounded-full shadow-[0_10px_20px_rgba(79,70,229,0.4)] hover:bg-indigo-700 transition transform hover:scale-105 flex items-center gap-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+        <span class="font-bold hidden sm:inline">اهرم‌های مالی</span>
+    </button>
+
     <script>
-        // --- Data from the NEW Management Report (in Billion Tomans) ---
-        const reportData = {
-            totalRevenue: 61995, // میلیارد تومان
-            contractStatus: {
-                labels: ['دارای قرارداد', 'فاقد قرارداد', 'در حال انعقاد'],
-                data: [25927, 23128, 12940],
-            },
-            investors: {
-                labels: ['نامشخص', 'شرکت آکام فولاد', 'لوتوس مهر ایرانیان', 'آتیه سازان همکاران', 'سایر شرکت‌ها'],
-                data: [25671, 5453, 5415, 4855, 20601], 
-            },
-            pareto: {
-                labels: ['A (استراتژیک)', 'B (مهم)', 'C (معمولی)'],
-                data: [20447, 39071, 2477]
-            },
-            yearly: {
-                labels: ['1405', '1406', '1407', '1408', '1409'],
-                data: [1660, 17888, 15921, 15521, 5891]
+        function toggleSettings() {
+            const sidebar = document.getElementById('settingsSidebar');
+            const overlay = document.getElementById('settingsOverlay');
+            if(sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
             }
+        }
+
+        const BASE_TOURISM_1404 = 1423.7; 
+
+        const projectsData = [
+            { id: 'p1', name: "زودبازده (مشهد و توسکا)", icon: "🏢", color: "#ec4899", baseTotal: 4527 },
+            { id: 'p2', name: "باغ کیوی", icon: "🌳", color: "#a855f7", baseTotal: 3780 },
+            { id: 'p3', name: "برج‌های لوتوس", icon: "🏙️", color: "#6366f1", baseTotal: 11107 },
+            { id: 'p4', name: "توسعه آکام فولاد", icon: "🏗️", color: "#f59e0b", baseTotal: 5949 },
+            { id: 'p5', name: "آتیه سازان مهر", icon: "🏗️", color: "#14b8a6", baseTotal: 5663 },
+            { id: 'p6', name: "محله ۷ و ۸", icon: "🏘️", color: "#8b5cf6", baseTotal: 1958 },
+            { id: 'p7', name: "قطعات فاقد شریک", icon: "🗺️", color: "#64748b", baseTotal: 32743 },
+            { id: 'p8', name: "سایر شرکا", icon: "🤝", color: "#f43f5e", baseTotal: 21520 }
+        ];
+
+        let state = {
+            tourismGrowth: 35,
+            rePriceMod: 0,
+            infraShare: 30,
+            allocations: [0, 10, 20, 20, 10] 
         };
 
-        document.addEventListener('DOMContentLoaded', function () {
-                    window.focus(); 
+        let tourismChart, housingChart, mixChart;
+        let sparklineCharts = {};
 
-            Chart.defaults.font.family = 'Vazirmatn';
-            Chart.defaults.font.size = 12;
-            Chart.defaults.color = '#64748b';
+        function updateDashboard() {
+            let tourismSeries = [];
+            let totalTourism = 0;
+            for(let i=1; i<=5; i++) {
+                let val = BASE_TOURISM_1404 * Math.pow(1 + (state.tourismGrowth / 100), i);
+                tourismSeries.push(val);
+                totalTourism += val;
+            }
 
-            const formatDynamicValue = (num_billion_toman, isCurrency = true) => {
-                if (!isCurrency) {
-                    return num_billion_toman.toLocaleString('fa-IR');
-                }
-                if (num_billion_toman >= 1000) {
-                    const hemt = num_billion_toman / 1000;
-                    return `${hemt.toFixed(1)} همت`;
-                }
-                return `${num_billion_toman.toLocaleString('fa-IR')} میلیارد تومان`;
-            };
+            let reModFactor = 1 + (state.rePriceMod / 100);
+            let totalMultiplier = state.allocations.reduce((a,b)=>a+b, 0) / 100; 
             
-            const totalProjects = 27; // From report context
-
-            // --- Update KPIs ---
-            document.getElementById('total-revenue').textContent = formatDynamicValue(reportData.totalRevenue);
-            document.getElementById('confirmed-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[0]);
-            document.getElementById('potential-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[2]);
-            document.getElementById('risk-revenue').textContent = formatDynamicValue(reportData.contractStatus.data[1]);
-            const unconfirmedRevenue = reportData.contractStatus.data[1] + reportData.contractStatus.data[2];
-            document.getElementById('unconfirmed-revenue').textContent = formatDynamicValue(unconfirmedRevenue);
-            document.getElementById('total-projects').textContent = formatDynamicValue(totalProjects, false);
-            document.getElementById('unknown-investor').textContent = formatDynamicValue(reportData.investors.data[0]);
+            let grandTotalRE_100 = projectsData.reduce((sum, p) => sum + p.baseTotal, 0) * reModFactor;
+            let grandTotalRE_Realized = grandTotalRE_100 * totalMultiplier; 
             
-            // --- Chart 1: Investor Revenue ---
-            new Chart(document.getElementById('investorRevenueChart'), {
-                type: 'bar',
-                data: {
-                    labels: reportData.investors.labels,
-                    datasets: [{
-                        data: reportData.investors.data,
-                        backgroundColor: ['#ef4444', '#8b5cf6', '#6366f1', '#3b82f6', '#14b8a6'],
-                        borderRadius: 8,
-                        barPercentage: 0.7
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => `${c.label}: ${formatDynamicValue(c.raw)}` } }
-                    },
-                    scales: {
-                        x: { title: { display: true, text: 'هزار میلیارد تومان (همت)' }, ticks: { callback: (val) => val / 1000 } },
-                        y: { ticks: { font: { size: 14 } } }
-                    }
-                }
+            const portfolioContainer = document.getElementById('portfolio-container');
+            portfolioContainer.innerHTML = '';
+            
+            projectsData.forEach(proj => {
+                let projTotal100 = proj.baseTotal * reModFactor;
+                let projSeries = state.allocations.map(pct => projTotal100 * (pct / 100));
+                let projRealized = projSeries.reduce((a,b)=>a+b, 0);
+                
+                let weightPerc = grandTotalRE_Realized > 0 ? ((projRealized / grandTotalRE_Realized) * 100).toFixed(1) : 0;
+
+                let peakVal = Math.max(...projSeries);
+                let peakIdx = projSeries.indexOf(peakVal);
+                let peakYear = 1405 + peakIdx;
+
+                let conicStyle = `conic-gradient(${proj.color} ${weightPerc}%, #f1f5f9 0)`;
+
+                // V4 FIX: Full un-truncated names & Working Tooltips
+                let cardHtml = `
+                    <div class="corp-card re-card group" style="border-top-color: ${projRealized>0 ? proj.color : '#e2e8f0'}">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2 flex-1">
+                                <span class="text-2xl">${proj.icon}</span>
+                                <h4 class="font-bold text-slate-700 text-[13px] leading-tight" title="${proj.name}">${proj.name}</h4>
+                            </div>
+                            
+                            <div class="group-donut relative ml-1 shrink-0">
+                                <div class="mini-donut" style="background: ${conicStyle}">
+                                    <div class="mini-donut-inner">${Math.round(weightPerc)}%</div>
+                                </div>
+                                <div class="donut-tooltip">
+                                    <p class="font-bold text-sky-300 mb-1 border-b border-slate-600 pb-1 text-right">${proj.name}</p>
+                                    <p class="text-right">وزن در پورتفوی: <b class="text-white">${weightPerc}٪</b></p>
+                                    <p class="mt-1 text-right">سهم ریالی: <b class="text-white">${(projRealized/1000).toFixed(2)} همت</b></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-1">
+                            <p class="text-[10px] text-slate-400 font-bold mb-1">ارزش تحقق‌یافته (افق ۵ ساله):</p>
+                            <p class="text-2xl font-black text-slate-800 transition-colors" style="color: ${proj.color}">${(projRealized/1000).toFixed(2)} <span class="text-xs font-normal text-slate-400">همت</span></p>
+                        </div>
+                        
+                        <div class="relative mt-2">
+                            ${projRealized > 0 && peakVal > 0 ? `<p class="absolute left-0 -top-2 text-[8px] font-bold px-1.5 py-0.5 rounded shadow-sm text-white z-10" style="background-color: ${proj.color}">اوج: ${peakYear}</p>` : ''}
+                            <div class="sparkline-box"><canvas id="spark-${proj.id}"></canvas></div>
+                        </div>
+                    </div>
+                `;
+                portfolioContainer.innerHTML += cardHtml;
             });
 
-            // --- Chart 2: Yearly Projection ---
-            const ctx2 = document.getElementById('yearlyProjectionChart').getContext('2d');
-            const lineGradient = ctx2.createLinearGradient(0, 0, 0, 300);
-            lineGradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
-            lineGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-            new Chart(ctx2, {
+            projectsData.forEach(proj => {
+                let projTotal100 = proj.baseTotal * reModFactor;
+                let projSeries = state.allocations.map(pct => projTotal100 * (pct / 100));
+                drawSparkline(`spark-${proj.id}`, projSeries, proj.color);
+            });
+
+            let totalCapacity = totalTourism + grandTotalRE_Realized;
+            let infraBudget = totalCapacity * (state.infraShare / 100);
+            let shareholder = totalCapacity - infraBudget;
+
+            document.getElementById('lbl-total-tourism').innerText = `مجموع ۵ ساله: ${(totalTourism/1000).toFixed(1)} همت`;
+            document.getElementById('lbl-total-housing').innerText = `مجموع ۵ ساله: ${(grandTotalRE_Realized/1000).toFixed(1)} همت`;
+            
+            document.getElementById('kpi-total').innerHTML = `${(totalCapacity/1000).toFixed(1)} <span class="text-xs text-slate-500 font-bold transition-none">همت</span>`;
+            document.getElementById('kpi-avg').innerHTML = `${((totalCapacity/5)/1000).toFixed(1)} <span class="text-xs text-slate-500 font-bold transition-none">همت</span>`;
+            document.getElementById('kpi-shareholder').innerHTML = `${(shareholder/1000).toFixed(1)} <span class="text-xs text-blue-400 font-bold transition-none">همت</span>`;
+            document.getElementById('kpi-infra').innerHTML = `${(infraBudget/1000).toFixed(1)} <span class="text-xs text-emerald-400 font-bold transition-none">همت</span>`;
+            
+            document.getElementById('lbl-shareholder-perc').innerText = `${100 - state.infraShare}٪ تخصیص`;
+            document.getElementById('lbl-infra-perc').innerText = `${state.infraShare}٪ تخصیص`;
+
+            let tPerc = totalCapacity > 0 ? (totalTourism / totalCapacity) * 100 : 0;
+            let hPerc = totalCapacity > 0 ? (grandTotalRE_Realized / totalCapacity) * 100 : 0;
+            document.getElementById('bar-mix-tourism').style.width = `${tPerc}%`;
+            document.getElementById('bar-mix-housing').style.width = `${hPerc}%`;
+            document.getElementById('lbl-mix-tourism').innerText = `گردشگری ${Math.round(tPerc)}%`;
+            document.getElementById('lbl-mix-housing').innerText = `مسکونی ${Math.round(hPerc)}%`;
+            document.getElementById('donut-total').innerText = (totalCapacity/1000).toFixed(1);
+
+            drawTourismChart(tourismSeries);
+            drawHousingChart(reModFactor);
+            drawMixChart(totalTourism, grandTotalRE_Realized);
+        }
+
+        Chart.defaults.font.family = 'Vazirmatn';
+
+        function drawSparkline(canvasId, data, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            let gradient = ctx.createLinearGradient(0, 0, 0, 60);
+            gradient.addColorStop(0, color + '66'); 
+            gradient.addColorStop(1, color + '00'); 
+            
+            let peakVal = Math.max(...data);
+            let peakIndex = peakVal > 0 ? data.indexOf(peakVal) : -1;
+            
+            let pointRadii = data.map((v, i) => i === peakIndex ? 5 : 2);
+
+            if(sparklineCharts[canvasId]) sparklineCharts[canvasId].destroy();
+            
+            sparklineCharts[canvasId] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: reportData.yearly.labels,
+                    labels: ['1405','1406','1407','1408','1409'],
                     datasets: [{
-                        label: 'درآمد', data: reportData.yearly.data,
-                        borderColor: '#3b82f6', backgroundColor: lineGradient,
-                        fill: true, tension: 0.4, pointBackgroundColor: '#3b82f6',
-                        pointRadius: 5, pointHoverRadius: 7
+                        data: data, borderColor: color, backgroundColor: gradient,
+                        borderWidth: 2, fill: true, tension: 0.4,
+                        pointRadius: pointRadii, pointBackgroundColor: color,
+                        pointBorderColor: '#fff', pointBorderWidth: 1.5, pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${formatDynamicValue(c.raw)}` } } },
-                    scales: { y: { ticks: { callback: (val) => `${formatDynamicValue(val)}` } } }
+                    layout: { padding: { top: 10, bottom: 5, left: 5, right: 5 } }, 
+                    plugins: { legend: {display:false}, tooltip: {display:false} },
+                    scales: { x: {display:false}, y: {display:false, min: 0} },
+                    animation: { duration: 600 }
+                }
+            });
+        }
+
+        function drawTourismChart(data) {
+            const ctx = document.getElementById('tourismChart').getContext('2d');
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)');
+            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.0)');
+
+            if(tourismChart) tourismChart.destroy();
+            tourismChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['سال ۱۴۰۵','سال ۱۴۰۶','سال ۱۴۰۷','سال ۱۴۰۸','سال ۱۴۰۹'],
+                    datasets: [{
+                        label: 'درآمد گردشگری (میلیارد تومان)', data: data, borderColor: '#0ea5e9', backgroundColor: gradient,
+                        borderWidth: 3, fill: true, tension: 0.4, pointBackgroundColor: '#ffffff', pointBorderColor: '#0ea5e9', pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: {display:false}, tooltip: {titleFont:{family:'Vazirmatn'}, bodyFont:{family:'Vazirmatn'}} },
+                    scales: { x: { grid: {display:false} }, y: { grid: {borderDash: [4,4], color: '#f1f5f9'}, beginAtZero: true } }
+                }
+            });
+        }
+
+        function drawHousingChart(modifier) {
+            const ctx = document.getElementById('housingChart').getContext('2d');
+            
+            let datasets = projectsData.map(proj => {
+                let projTotalVal = proj.baseTotal * modifier;
+                let pData = state.allocations.map(pct => projTotalVal * (pct / 100));
+                return {
+                    label: proj.name,
+                    data: pData,
+                    backgroundColor: proj.color + 'E6',
+                    borderColor: '#ffffff', 
+                    borderWidth: 1.5,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
                 }
             });
 
-            // --- Chart 3: Contract Status ---
-            new Chart(document.getElementById('contractStatusChart'), {
+            if(housingChart) housingChart.destroy();
+            housingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['سال ۱۴۰۵','سال ۱۴۰۶','سال ۱۴۰۷','سال ۱۴۰۸','سال ۱۴۰۹'],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: {boxWidth: 10, font:{family:'Vazirmatn', size:11, weight:'bold'}} },
+                        tooltip: { mode: 'index', intersect: false, titleFont:{family:'Vazirmatn'}, bodyFont:{family:'Vazirmatn'} }
+                    },
+                    scales: { 
+                        x: { grid: {display:false} }, 
+                        /* V5 FIX: Set to 20,000 to prevent cutting off the 17.4T peaks! */
+                        y: { stacked: true, suggestedMax: 20000, grid: {borderDash: [4,4], color: '#f1f5f9'}, beginAtZero: true } 
+                    },
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                    animation: { duration: 600 }
+                }
+            });
+        }
+
+        function drawMixChart(tourism, housing) {
+            const ctx = document.getElementById('mixChart').getContext('2d');
+            if(mixChart) mixChart.destroy();
+            mixChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: reportData.contractStatus.labels,
+                    labels: ['گردشگری', 'مسکونی/مشارکتی'],
                     datasets: [{
-                        data: reportData.contractStatus.data,
-                        backgroundColor: ['#10b981', '#ef4444', '#f97316'],
-                        borderColor: '#ffffff', borderWidth: 4, hoverOffset: 10
+                        data: [tourism, housing],
+                        backgroundColor: ['#0ea5e9', '#d946ef'],
+                        borderWidth: 2, borderColor: '#fff', hoverOffset: 4
                     }]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '70%',
-                    plugins: { legend: { position: 'bottom', labels: { padding: 20 } },
-                    tooltip: { callbacks: { label: (c) => `${c.label}: ${formatDynamicValue(c.raw)}` } } }
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
+                    plugins: { legend: { display: false }, tooltip: { bodyFont:{family:'Vazirmatn'} } }
                 }
             });
-            
-             // --- Chart 4: Pareto Analysis ---
-            new Chart(document.getElementById('paretoChart'), {
-                type: 'bar',
-                data: {
-                    labels: reportData.pareto.labels,
-                    datasets: [{
-                        data: reportData.pareto.data,
-                        backgroundColor: ['#4f46e5', '#3b82f6', '#14b8a6'],
-                        borderRadius: 8, barPercentage: 0.6
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${formatDynamicValue(c.raw)}` } } },
-                    scales: { y: { ticks: { callback: (val) => `${formatDynamicValue(val)}` } } }
-                }
-            });
-window.addEventListener('keydown', function(e) {
-    if (e.key === 'Backspace') {
-        const isEditable = e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-        if (!isEditable) {
-            e.preventDefault();
-            window.parent.postMessage({ type: 'NAVIGATE_BACK' }, '*');
         }
-    }
-});
+
+        function setupHousingSliders() {
+            const container = document.getElementById('housing-sliders-container');
+            container.innerHTML = '';
+            const years = [1405, 1406, 1407, 1408, 1409];
+            
+            years.forEach((year, index) => {
+                let col = document.createElement('div');
+                col.innerHTML = `
+                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-300 mb-1">
+                        <span>سال ${year}</span>
+                        <span id="val-alloc-${index}" class="text-purple-400 bg-slate-700 px-1 py-0.5 rounded">${state.allocations[index]}%</span>
+                    </div>
+                    <input type="range" class="slider-purple housing-slider" data-index="${index}" min="0" max="100" value="${state.allocations[index]}">
+                `;
+                container.appendChild(col);
+
+                col.querySelector('input').addEventListener('input', function(e) {
+                    let newVal = parseInt(e.target.value);
+                    let otherSum = state.allocations.reduce((sum, val, i) => i === index ? sum : sum + val, 0);
+                    if (otherSum + newVal > 100) newVal = 100 - otherSum; 
+                    
+                    e.target.value = newVal;
+                    state.allocations[index] = newVal;
+                    document.getElementById(`val-alloc-${index}`).innerText = newVal + '%';
+                    updateAllocProgressBar(); 
+                    updateDashboard();
+                });
+            });
+            updateAllocProgressBar();
+        }
+
+        function updateAllocProgressBar() {
+            let total = state.allocations.reduce((a,b)=>a+b, 0);
+            document.getElementById('val-total-alloc').innerText = total + '%';
+            document.getElementById('val-free-alloc').innerText = (100 - total) + '%';
+            document.getElementById('bar-alloc').style.width = total + '%';
+        }
+
+        function resetAll() {
+            document.getElementById('sl-tourism').value = 35;
+            document.getElementById('sl-housing').value = 0;
+            document.getElementById('sl-infra').value = 30;
+            state.tourismGrowth = 35;
+            state.rePriceMod = 0;
+            state.infraShare = 30;
+            state.allocations = [0, 10, 20, 20, 10]; 
+            
+            document.getElementById('val-tourism').innerText = '35%';
+            document.getElementById('val-housing').innerText = '0% (پایه)';
+            document.getElementById('val-infra').innerText = '30%';
+            
+            setupHousingSliders(); 
+            updateDashboard();
+        }
+
+        document.getElementById('sl-tourism').addEventListener('input', (e) => {
+            state.tourismGrowth = parseInt(e.target.value);
+            document.getElementById('val-tourism').innerText = state.tourismGrowth + '%';
+            updateDashboard();
         });
+
+        document.getElementById('sl-housing').addEventListener('input', (e) => {
+            state.rePriceMod = parseInt(e.target.value);
+            let sign = state.rePriceMod > 0 ? '+' : '';
+            document.getElementById('val-housing').innerText = `${sign}${state.rePriceMod}%`;
+            updateDashboard();
+        });
+
+        document.getElementById('sl-infra').addEventListener('input', (e) => {
+            state.infraShare = parseInt(e.target.value);
+            document.getElementById('val-infra').innerText = state.infraShare + '%';
+            updateDashboard();
+        });
+
+        setupHousingSliders();
+        updateDashboard();
+
     </script>
-
-
 </body>
 </html>
-
