@@ -3,721 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد کلان مدیریتی زیرساخت نمک‌آبرود</title>
+    <title>داشبورد شبیه‌ساز هزینه‌های زیرساختی</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 
     <style>
-        body { font-family: 'Vazirmatn', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f8fafc; color: #334155; overflow-x: hidden; }
         
-        .accordion-content {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .accordion-content.open {
-            display: block;
-            animation: fadeIn 0.5s forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .glass-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
-        .gradient-text {
-            background: linear-gradient(to right, #1e3a8a, #0284c7);
-            -webkit-background-clip: text;
-            color: transparent;
+        /* Minimalist Range Slider */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #0ea5e9; cursor: pointer; margin-top: -6px;
+            box-shadow: 0 0 8px rgba(14, 165, 233, 0.5); border: 2px solid #fff;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #cbd5e1; border-radius: 4px; }
+        input[type=range]:focus { outline: none; }
         
-        /* Animated Progress Bar */
-        .progress-bar-striped {
-            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-            background-size: 1.5rem 1.5rem;
-            animation: progress-slide 1.5s linear infinite;
+        /* Animated Summary Cards */
+        .card-glow-macro {
+            background: linear-gradient(135deg, rgba(238,242,255,1) 0%, rgba(224,231,255,1) 50%, rgba(199,210,254,0.4) 100%);
+            background-size: 200% 200%; animation: glowShift 4s ease infinite; border: 1px solid #c7d2fe;
         }
-        @keyframes progress-slide {
-            from { background-position: 1.5rem 0; }
-            to { background-position: 0 0; }
+        .card-glow-local {
+            background: linear-gradient(135deg, rgba(255,251,235,1) 0%, rgba(254,243,199,1) 50%, rgba(253,230,138,0.4) 100%);
+            background-size: 200% 200%; animation: glowShift 4s ease infinite; border: 1px solid #fde68a;
         }
+        @keyframes glowShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-        .kpi-card { transition: transform 0.2s; }
-        .kpi-card:hover { transform: translateY(-3px); }
+        /* Progress Bar Soft Animation */
+        .animate-stripes {
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+            background-size: 1.2rem 1.2rem; animation: move-stripes 1.5s linear infinite;
+        }
+        @keyframes move-stripes { from { background-position: 1.2rem 0; } to { background-position: 0 0; } }
 
-        /* SVG Ring Animation */
-        .progress-ring__circle {
-            transition: stroke-dashoffset 1s ease-in-out;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
+        /* Custom Tooltips */
+        .custom-tooltip {
+            position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+            background-color: rgba(15, 23, 42, 0.95); color: #fff; text-align: right;
+            padding: 12px; border-radius: 8px; width: max-content; min-width: 150px;
+            opacity: 0; visibility: hidden; transition: opacity 0.2s; z-index: 999;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); pointer-events: none;
+        }
+        .group\/chart:hover .custom-tooltip, .group:hover .custom-tooltip { opacity: 1; visibility: visible; }
+        .custom-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+            border-width: 6px; border-style: solid; border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
         }
 
         /* Hover animations for summary cards */
-        .summary-card:hover .watermark-icon {
-            transform: scale(1.3) translate(10px, -10px);
-            opacity: 0.15 !important;
-        }
+        .summary-card:hover .watermark-icon { transform: scale(1.3) translate(10px, -10px); opacity: 0.15 !important; }
 
-        @media print {
-            .no-print { display: none !important; }
-            .accordion-content { display: block !important; opacity: 1 !important; }
-            body { background-color: white; }
-            .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; border: 1px solid #e2e8f0 !important; }
-            .progress-bar-striped { animation: none !important; }
-        }
+        /* Tabs Styling */
+        .tab-btn { transition: all 0.2s ease; border-right: 4px solid transparent; }
+        .tab-btn.active { border-right-color: #0ea5e9; background-color: #f0f9ff; color: #0369a1; font-weight: 800; }
+        .tab-btn:hover:not(.active) { background-color: #f8fafc; border-right-color: #cbd5e1; }
+
+        @media print { .no-print { display: none !important; } body { background-color: white; } .animate-stripes, .card-glow-macro, .card-glow-local { animation: none !important;} }
     </style>
 </head>
-<body class="text-slate-800 pb-10">
+<body class="pb-16">
 
-    <div class="bg-white border-b border-slate-200 py-4 no-print">
-        <div class="max-w-7xl mx-auto px-4 flex justify-center items-center gap-8 md:gap-16">
-            <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="h-12 md:h-16 object-contain">
-            <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="h-16 md:h-20 object-contain drop-shadow-sm">
-            <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="h-12 md:h-16 object-contain"> 
-        </div>
-    </div>
-
-    <header class="bg-white shadow-sm no-print mb-8">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-chart-line text-2xl text-indigo-600"></i>
-                <div>
-                    <h1 class="text-lg font-bold text-slate-800">داشبورد مدیریتی زیرساخت نمک‌آبرود</h1>
-                    <p class="text-[11px] text-slate-500 font-bold">بروزرسانی: اسفند ۱۴۰۴ | برآورد جامع ۱۳ هزار میلیاردی</p>
-                </div>
+    <header class="bg-white py-8 border-b border-slate-200 no-print mb-10 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-6 md:gap-12 mb-6">
+                <img src="https://uploadkon.ir/uploads/c1c428_25logo-IMPcoPNG.png" alt="لوگو ایده پرداز محیط" class="h-16 md:h-20 object-contain">
+                <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگو نمک آبرود" class="h-24 md:h-32 object-contain drop-shadow-md">
+                <img src="https://uploadkon.ir/uploads/611127_25OMS-LOGO-copy.png" alt="لوگو عمران مسکن شمال" class="h-16 md:h-20 object-contain">
             </div>
-            <div class="flex flex-wrap justify-center gap-2">
-                <button onclick="toggleAll(true)" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-bold transition"><i class="fa-solid fa-folder-open ml-1"></i> باز کردن همه</button>
-                <button onclick="toggleAll(false)" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-bold transition"><i class="fa-solid fa-folder-closed ml-1"></i> بستن همه</button>
-                <button onclick="exportPDF()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-md transition flex items-center gap-2">
-                    <i class="fa-solid fa-file-pdf"></i> خروجی گزارش
-                </button>
-            </div>
+            <h1 class="text-3xl md:text-4xl font-black text-slate-800 mb-3">داشبورد شبیه‌ساز هزینه‌های زیرساختی</h1>
+            <p class="text-lg md:text-xl font-bold text-slate-500 mb-1">تحلیل جامع هزینه‌های تکمیل زیرساخت‌ها و پروژه‌های نیمه‌تمام</p>
+            <p class="text-sm md:text-base font-medium text-slate-400">تحلیل حساسیت ارزی و اولویت‌بندی سرمایه‌گذاری</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4" id="dashboard-content">
-        
-        <div class="mb-8">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="h-8 w-2 bg-slate-700 rounded-full"></div>
-                <h2 class="text-2xl font-black text-slate-800">نمای کلی شهرک نمک‌آبرود</h2>
-            </div>
-            <p class="text-sm text-slate-600 mb-5 font-medium">این بخش، شاخص‌های کلان، برآورد هزینه‌های زیرساختی و وضعیت کلی کاربری اراضی در کل شهرک را نمایش می‌دهد.</p>
-            
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 text-center flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-map text-indigo-500 text-2xl mb-2"></i>
-                    <span class="text-xl font-black text-slate-800">۷۱۹.۴۳ <span class="text-xs text-slate-500">هکتار</span></span>
-                    <span class="text-xs font-bold text-slate-400 mt-1">مساحت کل شهرک</span>
+
+        <div class="glass-panel rounded-3xl p-6 md:p-10 mb-10 text-center relative overflow-hidden">
+            <div class="relative z-10">
+                <p class="text-slate-500 font-bold mb-2 text-lg">برآورد کل بودجه مورد نیاز زیرساخت</p>
+                <h2 class="text-6xl md:text-7xl font-black text-slate-800 mb-10 transition-all duration-300" id="total-budget">
+                    ۱۳,۰۰۰ <span class="text-2xl md:text-3xl text-slate-400 font-bold">میلیارد تومان</span>
+                </h2>
+                
+                <div class="max-w-lg mx-auto bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative z-20">
+                    <div class="flex justify-between items-center mb-5">
+                        <div class="flex items-center gap-2 text-slate-700">
+                            <i class="fa-solid fa-money-bill-transfer text-emerald-500 text-xl"></i>
+                            <h3 class="font-bold text-sm">شبیه‌ساز ارزی (دلار)</h3>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="resetSlider()" title="بازنشانی به نرخ پایه" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-700 transition hover:-rotate-180 duration-300">
+                                <i class="fa-solid fa-rotate-left text-xs"></i>
+                            </button>
+                            <div class="bg-slate-50 px-3 py-1 rounded border border-slate-200">
+                                <span class="text-emerald-600 font-black text-lg" id="current-rate-display">۱۶۵,۰۰۰</span> <span class="text-[10px] font-bold text-slate-400">تومان</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="range" id="fx-slider" min="100000" max="250000" step="1000" value="165000" class="w-full" oninput="handleSliderChange(this.value)">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-bold mt-2 px-1">
+                        <span>۱۰۰ هزار تومان</span>
+                        <span>۲۵۰ هزار تومان</span>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 text-center flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-users-viewfinder text-teal-500 text-2xl mb-2"></i>
-                    <span class="text-xl font-black text-slate-800">۱۱,۶۱۹ <span class="text-xs text-slate-500">نفر</span></span>
-                    <span class="text-xs font-bold text-slate-400 mt-1">جمعیت برآوردی (۱۴۰۰)</span>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 text-center flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-people-roof text-orange-500 text-2xl mb-2"></i>
-                    <span class="text-xl font-black text-slate-800">۶۷۳ <span class="text-xs text-slate-500">نفر</span></span>
-                    <span class="text-xs font-bold text-slate-400 mt-1">جمعیت دائمی موجود</span>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 text-center flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-gears text-blue-500 text-2xl mb-2"></i>
-                    <span class="text-xl font-black text-slate-800">۷۸٪</span>
-                    <span class="text-xs font-bold text-slate-400 mt-1">پیشرفت کل زیربنایی</span>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 text-center flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-building-circle-check text-emerald-500 text-2xl mb-2"></i>
-                    <span class="text-xl font-black text-slate-800">۲۴٪</span>
-                    <span class="text-xs font-bold text-slate-400 mt-1">پیشرفت کل روبنایی</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-8">
+                    <div class="card-glow-macro p-6 rounded-2xl flex justify-between items-center transition-transform hover:scale-105 duration-300 cursor-default">
+                        <div class="text-right">
+                            <p class="text-sm font-black text-indigo-900/60 mb-1">سهم پروژه‌های فرامحله‌ای</p>
+                            <p class="text-3xl font-black text-indigo-800" id="macro-total">۱۰,۶۵۰ <span class="text-sm text-indigo-800/60">م.ت</span></p>
+                        </div>
+                        <div class="w-14 h-14 rounded-full bg-white/60 shadow-sm flex items-center justify-center text-indigo-600 text-2xl"><i class="fa-solid fa-globe"></i></div>
+                    </div>
+                    <div class="card-glow-local p-6 rounded-2xl flex justify-between items-center transition-transform hover:scale-105 duration-300 cursor-default">
+                        <div class="text-right">
+                            <p class="text-sm font-black text-amber-900/60 mb-1">سهم زیرساخت‌های محلات</p>
+                            <p class="text-3xl font-black text-amber-700" id="local-total">۲,۳۵۰ <span class="text-sm text-amber-700/60">م.ت</span></p>
+                        </div>
+                        <div class="w-14 h-14 rounded-full bg-white/60 shadow-sm flex items-center justify-center text-amber-600 text-2xl"><i class="fa-solid fa-map-location-dot"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="mb-10 text-center bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-            <p class="text-slate-500 font-bold mb-3 text-lg">مجموع سرمایه‌گذاری زیرساختی هدف‌گذاری شده</p>
-            <h2 class="text-5xl md:text-7xl font-black gradient-text mb-10 flex justify-center items-baseline gap-2">
-                ۱۳,۰۰۰ <span class="text-3xl text-slate-400 font-bold">میلیارد تومان</span>
-            </h2>
+        <div class="glass-panel rounded-3xl p-6 md:p-8 mb-10 border border-slate-200 shadow-sm">
+            <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
+                <div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center text-sky-500 shadow-inner"><i class="fa-solid fa-grip text-xl"></i></div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-800">برآورد هزینه‌های زیرساختی به تفکیک ۸ شریان کلان</h3>
+                    <p class="text-xs font-bold text-slate-400 mt-1">تجمیع هزینه‌های درون‌محله‌ای و فرامحله‌ای (پویا و وابسته به نرخ ارز)</p>
+                </div>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                <div class="bg-indigo-50/70 rounded-2xl p-6 border border-indigo-100 relative overflow-hidden text-right">
-                    <div class="absolute -left-6 -bottom-6 text-indigo-100/50"><i class="fa-solid fa-network-wired text-9xl"></i></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-sm font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">۸۱.۹٪ کل بودجه</span>
-                            <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md"><i class="fa-solid fa-globe"></i></div>
-                        </div>
-                        <h3 class="text-2xl font-black text-slate-800 mb-1">پروژه‌های فرامحله‌ای</h3>
-                        <p class="text-4xl font-black text-indigo-600 mt-2">۱۰,۶۵۰ <span class="text-lg text-slate-500 font-bold">میلیارد تومان</span></p>
+            <div id="dynamic-summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+                </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
+            <div class="lg:col-span-5 glass-panel rounded-2xl p-6 flex flex-col justify-center">
+                <h3 class="font-black text-slate-700 mb-6 text-lg border-b border-slate-100 pb-3"><i class="fa-solid fa-microscope text-teal-500 ml-2"></i>آناتومی استراتژیک هزینه‌ها</h3>
+                
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm font-bold mb-2">
+                        <span class="text-slate-700">سهم ارزی (متاثر از دلار)</span>
+                        <span class="text-teal-600" id="fx-pct-txt">0%</span>
                     </div>
+                    <div class="w-full bg-slate-100 rounded-full h-5 overflow-hidden flex border border-slate-200">
+                        <div id="fx-bar" class="bg-teal-500 h-full animate-stripes transition-all duration-500" style="width: 0%"></div>
+                        <div id="irr-bar" class="bg-slate-300 h-full transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500 font-bold mt-2">
+                        <span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded">مبلغ ارزی: <span id="fx-val-txt">0</span></span>
+                        <span class="text-slate-600 bg-slate-100 px-2 py-0.5 rounded">سهم ریالی (ثابت): <span id="irr-val-txt">0</span></span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-sm font-bold mb-2">
+                        <span class="text-slate-700">تامین کالا و تجهیزات</span>
+                        <span class="text-indigo-500" id="proc-pct-txt">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-5 overflow-hidden flex border border-slate-200">
+                        <div id="proc-bar" class="bg-indigo-400 h-full transition-all duration-500" style="width: 0%"></div>
+                        <div id="const-bar" class="bg-slate-300 h-full transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500 font-bold mt-2">
+                        <span class="text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">ارزش کالا: <span id="proc-val-txt">0</span></span>
+                        <span class="text-slate-600 bg-slate-100 px-2 py-0.5 rounded">اجرای کار: <span id="const-val-txt">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 glass-panel rounded-2xl p-6">
+                <h3 class="font-black text-slate-700 mb-4 text-lg border-b border-slate-100 pb-3"><i class="fa-solid fa-fire-flame-curved text-orange-500 ml-2"></i>۱۰ گلوگاه اصلی هزینه‌ها (Top 10 CAPEX)</h3>
+                <div id="top10-container" class="space-y-1.5 mt-2"></div>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl overflow-hidden mb-10 border border-slate-200">
+            <div class="bg-slate-100 text-slate-800 p-4 border-b border-slate-200">
+                <h2 class="text-xl font-black"><i class="fa-solid fa-layer-group text-indigo-500 ml-2"></i>تحلیل جزئیات پروژه‌های کلان (فرامحله‌ای)</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 min-h-[350px]">
+                <div class="md:col-span-4 lg:col-span-3 bg-white border-l border-slate-200" id="macro-tabs"></div>
+                <div class="md:col-span-8 lg:col-span-9 p-6 lg:p-8 bg-slate-50/50" id="macro-details"></div>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-6 md:p-8 mb-10">
+            <h2 class="text-xl font-black text-slate-800 mb-2"><i class="fa-solid fa-border-all text-amber-500 ml-2"></i>ماتریس هوشمند سرمایه‌گذاری در محلات و حوزه‌ها</h2>
+            <p class="text-xs font-bold text-slate-400 mb-6">این ماتریس بر اساس بودجه مورد نیاز مرتب شده است. برای مشاهده جزئیات پیشرفت (آب، برق، گاز و راه)، موس را روی کارت هر محله قرار دهید.</p>
+            
+            <div id="matrix-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+                </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 border-t border-slate-100 pt-8">
+                <div class="bg-indigo-50/50 p-5 rounded-2xl border border-indigo-100 flex flex-col transition hover:shadow-md">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-network-wired text-lg"></i></div>
+                        <h4 class="font-bold text-sm text-slate-700">تمرکز سرمایه فرامحله‌ای</h4>
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-slate-500 font-bold text-justify">بیش از ۸۱ درصد کل سرمایه‌گذاری شهرک، متمرکز بر احداث زیرساخت‌های پایه‌ای و پدافندی (نیروگاه اختصاصی و تصفیه‌خانه‌ها) است که ارزش افزوده قطعی برای تمام محلات ایجاد می‌کند.</p>
                 </div>
                 
-                <div class="bg-teal-50/70 rounded-2xl p-6 border border-teal-100 relative overflow-hidden text-right">
-                    <div class="absolute -left-6 -bottom-6 text-teal-100/50"><i class="fa-solid fa-map-location-dot text-9xl"></i></div>
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-sm font-bold text-teal-700 bg-teal-100 px-3 py-1 rounded-full">۱۸.۱٪ کل بودجه</span>
-                            <div class="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md"><i class="fa-solid fa-house-chimney"></i></div>
-                        </div>
-                        <h3 class="text-2xl font-black text-slate-800 mb-1">زیرساخت‌های محلات</h3>
-                        <p class="text-4xl font-black text-teal-600 mt-2">۲,۳۵۰ <span class="text-lg text-slate-500 font-bold">میلیارد تومان</span></p>
+                <div class="bg-amber-50/50 p-5 rounded-2xl border border-amber-100 flex flex-col transition hover:shadow-md">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-map-location-dot text-lg"></i></div>
+                        <h4 class="font-bold text-sm text-slate-700">اولویت‌بندی و بحران محلات</h4>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-14">
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200">
-                <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
-                    <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500"><i class="fa-solid fa-grip text-xl"></i></div>
-                    <div>
-                        <h3 class="text-lg md:text-xl font-black text-slate-800">برآورد هزینه‌های زیرساختی کل شهرک</h3>
-                        <p class="text-xs font-bold text-slate-400 mt-1">توزیع کلان بودجه ۱۳ هزار میلیاردی به تفکیک کاربری‌های ۸ گانه</p>
-                    </div>
+                    <p class="text-[11px] leading-relaxed text-slate-500 font-bold text-justify">محله ۸ با بلعیدن بخش عظیمی از بودجه محلات، گلوگاه اصلی توسعه است. در مقابل، محله‌های ۳ و ۵ با کمترین نیاز مالی، آماده بهره‌برداری کامل و تحویل نهایی هستند.</p>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-                    
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-indigo-200 hover:bg-white">
-                        <i class="fa-solid fa-water watermark-icon absolute -bottom-4 -left-4 text-6xl text-indigo-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">فاضلاب و تصفیه‌خانه</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-indigo-600 mt-3 flex items-baseline gap-1">۴,۰۰۰ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
+                <div class="bg-teal-50/50 p-5 rounded-2xl border border-teal-100 flex flex-col transition hover:shadow-md">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-shield-halved text-lg"></i></div>
+                        <h4 class="font-bold text-sm text-slate-700">مدیریت ریسک تورم ارزی</h4>
                     </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-amber-200 hover:bg-white">
-                        <i class="fa-solid fa-bolt watermark-icon absolute -bottom-4 -left-4 text-6xl text-amber-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">پست برق و نیروگاه</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-amber-500 mt-3 flex items-baseline gap-1">۳,۳۵۰ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-cyan-200 hover:bg-white">
-                        <i class="fa-solid fa-cloud-showers-heavy watermark-icon absolute -bottom-4 -left-4 text-6xl text-cyan-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">زهکشی و آب‌های سطحی</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-cyan-600 mt-3 flex items-baseline gap-1">۲,۴۵۰ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-slate-300 hover:bg-white">
-                        <i class="fa-solid fa-road watermark-icon absolute -bottom-4 -left-4 text-6xl text-slate-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">شبکه راه و معابر</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-slate-700 mt-3 flex items-baseline gap-1">۱,۹۷۲ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-rose-200 hover:bg-white">
-                        <i class="fa-solid fa-truck-medical watermark-icon absolute -bottom-4 -left-4 text-6xl text-rose-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">ساختمان‌های خدماتی</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-rose-500 mt-3 flex items-baseline gap-1">۳۵۰ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-red-200 hover:bg-white">
-                        <i class="fa-solid fa-fire watermark-icon absolute -bottom-4 -left-4 text-6xl text-red-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">شبکه گازرسانی</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-red-500 mt-3 flex items-baseline gap-1">۳۴۳ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-yellow-200 hover:bg-white">
-                        <i class="fa-solid fa-lightbulb watermark-icon absolute -bottom-4 -left-4 text-6xl text-yellow-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">برق‌رسانی و روشنایی</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-yellow-500 mt-3 flex items-baseline gap-1">۳۲۲ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                    <div class="summary-card group relative bg-slate-50 rounded-2xl p-4 border border-slate-100 overflow-hidden cursor-default transition-all duration-300 hover:shadow-md hover:border-blue-200 hover:bg-white">
-                        <i class="fa-solid fa-droplet watermark-icon absolute -bottom-4 -left-4 text-6xl text-blue-500 opacity-[0.03] transition-all duration-500 z-0"></i>
-                        <div class="relative z-10 text-right flex flex-col h-full justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-700 mb-1 leading-tight">شبکه آبرسانی</h4>
-                                <p class="text-[10px] text-slate-400 font-bold">هزینه کل برآوردی</p>
-                            </div>
-                            <p class="text-2xl font-black text-blue-500 mt-3 flex items-baseline gap-1">۲۱۳ <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-14">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-10 w-2 bg-indigo-600 rounded-full"></div>
-                <h2 class="text-3xl font-black text-slate-800">ریزپروژه‌های کلان و فرامحله‌ای</h2>
-            </div>
-            <div id="macro-container" class="space-y-4"></div>
-        </div>
-
-        <div class="mb-14">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-10 w-2 bg-teal-500 rounded-full"></div>
-                <h2 class="text-3xl font-black text-slate-800">توزیع بودجه در زیرساخت‌های محلات</h2>
-            </div>
-            <div id="local-container" class="space-y-4"></div>
-        </div>
-
-        <div class="mb-10 page-break-before">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-10 w-2 bg-amber-500 rounded-full"></div>
-                <h2 class="text-3xl font-black text-slate-800">تحلیل‌های مدیریتی و شاخص‌های کلیدی (KPIs)</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-700 mb-4 border-b pb-2"><i class="fa-solid fa-spider text-amber-500 ml-2"></i>مقایسه پیشرفت فیزیکی محلات</h3>
-                    <div class="relative h-[350px] w-full">
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                    <h3 class="text-lg font-bold text-slate-700 mb-4 border-b pb-2"><i class="fa-solid fa-chart-bar text-amber-500 ml-2"></i>مقایسه هزینه تکمیل به تفکیک محله (میلیارد تومان)</h3>
-                    <div class="relative h-[350px] w-full">
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 border-r-4 border-r-red-500 kpi-card">
-                    <div class="flex justify-between items-start mb-3">
-                        <h4 class="font-bold text-slate-800 text-sm">بحران پیشرفت محله ۸</h4>
-                        <div class="w-8 h-8 rounded bg-red-50 text-red-500 flex items-center justify-center"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    </div>
-                    <p class="text-xs text-slate-500 leading-relaxed font-bold">این محله با بالاترین سهم بودجه محلات (۸۳۱ میلیارد تومان) و پیشرفت تنها ۴۶٪ در شبکه راه، نیازمند تمرکز فوری ماشین‌آلات راه‌سازی و تزریق نقدینگی است.</p>
-                </div>
-                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 border-r-4 border-r-orange-500 kpi-card">
-                    <div class="flex justify-between items-start mb-3">
-                        <h4 class="font-bold text-slate-800 text-sm">وابستگی ارزی برق و فاضلاب</h4>
-                        <div class="w-8 h-8 rounded bg-orange-50 text-orange-500 flex items-center justify-center"><i class="fa-solid fa-coins"></i></div>
-                    </div>
-                    <p class="text-xs text-slate-500 leading-relaxed font-bold">بیش از ۶۵٪ بودجه نیروگاه (ژنراتورها) و تصفیه‌خانه‌ها ارزی است. نوسانات نرخ ارز بالای ۱۶۷ هزار تومان، ریسک اصلی این پروژه‌های کلان محسوب می‌شود.</p>
-                </div>
-                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 border-r-4 border-r-blue-500 kpi-card">
-                    <div class="flex justify-between items-start mb-3">
-                        <h4 class="font-bold text-slate-800 text-sm">تورم قیر در محلات ۴ و ۷</h4>
-                        <div class="w-8 h-8 rounded bg-blue-50 text-blue-500 flex items-center justify-center"><i class="fa-solid fa-road"></i></div>
-                    </div>
-                    <p class="text-xs text-slate-500 leading-relaxed font-bold">با توجه به وسعت بالای این دو محله (بیش از ۷۰ هزار مترمربع آسفالت باقی‌مانده)، پیش‌خرید قیر از بورس کالا برای کنترل هزینه‌ها الزامی است.</p>
+                    <p class="text-[11px] leading-relaxed text-slate-500 font-bold text-justify">تامین تجهیزات الکترومکانیکال (ژنراتورها و پمپ‌ها) پاشنه آشیل ارزی پروژه است. تسریع در خرید این اقلام پیش از جهش‌های احتمالی نرخ ارز، برای کنترل بودجه حیاتی است.</p>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <footer class="mt-16 mb-8 text-center no-print">
-        <p class="text-sm font-bold text-slate-500">
+    <footer class="text-center py-8 text-slate-500 text-xs font-bold no-print mb-4">
+        <p>
             تهیه شده توسط 
-            <span class="relative group inline-block cursor-help text-indigo-600 border-b border-dashed border-indigo-400 pb-0.5">
+            <span class="group relative cursor-help text-indigo-600 border-b border-dashed border-indigo-400 pb-0.5">
                 مهندسین مشاور ایده پرداز محیط
-                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-max px-4 py-3 bg-slate-800 text-white text-xs rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 text-center leading-relaxed font-normal">
-                    تحلیل و طراحی : حمیدرضا ترابی<br>hr.torabii@gmail.com
-                    <svg class="absolute text-slate-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255"><polygon class="fill-current" points="0,0 127.5,127.5 255,0"/></svg>
+                <span class="custom-tooltip bottom-full left-1/2 -translate-x-1/2 mb-2 text-center w-max px-4 py-3 bg-slate-800 text-white rounded-lg shadow-xl pointer-events-none z-50 leading-relaxed">
+                    تحلیل و شبیه‌سازی مالی: حمیدرضا ترابی<br>
+                    <span class="font-normal text-[10px] text-slate-300 mt-1 block">hr.torabii@gmail.com</span>
                 </span>
             </span>
-             - اسفندماه ۱۴۰۴
+            - اسفند ۱۴۰۴
         </p>
     </footer>
 
     <script>
-        const formatNum = (num) => new Intl.NumberFormat('fa-IR').format(num);
-        let chartsObj = {};
+        const BASE_RATE = 165000;
+        let currentRate = BASE_RATE;
+        const formatNum = (num) => new Intl.NumberFormat('fa-IR').format(Math.round(num));
 
-        // --- Data ---
-        const macroData = [
-            { id: 'm1', title: 'شبکه فاضلاب و تصفیه‌خانه‌ها', cost: 4000, icon: 'fa-water',
-              design: 'احداث تصفیه‌خانه اصلی با ظرفیت ۱۵۳۱ مترمکعب برای محلات متراکم و پکیج‌های غیرمتمرکز برای مناطق شیب‌دار جهت توزیع ریسک و رعایت الزامات پدافند غیرعامل.',
-              price: 'مبنای فهرست‌بهای آب و فاضلاب ۱۴۰۴، تخصیص دلار ۱۶۷ هزار تومانی برای تجهیزات الکترومکانیکال، اعمال ضریب منطقه‌ای و شرایط کار.',
-              unit: 'هزینه واحد تصفیه متمرکز: ۵۸۷ میلیون تومان/مترمکعب. هزینه پکیج غیرمتمرکز: ۸۵۰ م.ت/مترمکعب. اجرای شبکه: ۱۱ م.ت/متر.',
-              rows: [ { name: 'لوله‌گذاری شبکه اصلی متمرکز', cost: 520, desc: 'لوله کاروگیت و حفاری', icon: 'fa-layer-group' }, { name: 'ایستگاه‌های پمپاژ و سیویل', cost: 780, desc: 'ابنیه تصفیه‌خانه', icon: 'fa-building' }, { name: 'تجهیزات الکترومکانیکال متمرکز', cost: 500, desc: 'وابستگی شدید ارزی', icon: 'fa-cogs' }, { name: 'تامین پکیج‌های غیرمتمرکز', cost: 850, desc: 'زون‌های پراکنده', icon: 'fa-box-archive' }, { name: 'شبکه محلی و مهندسی', cost: 1350, desc: 'لوله‌کشی پساب و بالاسری', icon: 'fa-route' } ] },
-            { id: 'm2', title: 'شبکه توزیع برق و نیروگاه DG', cost: 3350, icon: 'fa-bolt',
-              design: 'احداث نیروگاه ۱۵ مگاواتی گازسوز (اجرای فاز اول ۱۰ مگاوات) با قابلیت Island Mode کامل جهت تاب‌آوری ۱۰۰٪. اجرای رینگ ۲۰kV کاملاً زیرزمینی.',
-              price: 'تامین ژنراتورهای صنعتی دائم‌کار. فهرست‌بهای تاسیسات برقی ۱۴۰۴ با ضریب ۱.۰۹ مازندران. فازبندی خرید جهت کاهش خواب سرمایه.',
-              unit: 'هزینه تامین ژنراتور: ۶۵۰ هزار دلار به ازای هر مگاوات. هزینه کابل‌کشی دفنی: ۱۲ میلیارد تومان در هر کیلومتر.',
-              rows: [ { name: 'نیروگاه گازسوز (فاز اول)', cost: 1550, desc: 'ژنراتورهای Tier-1', icon: 'fa-industry' }, { name: 'شبکه زیرزمینی ۲۰kV و LV', cost: 820, desc: 'رینگ بهینه دفنی', icon: 'fa-plug-circle-bolt' }, { name: 'پست‌های توزیع کمپکت', cost: 420, desc: 'پست‌های پیش‌ساخته', icon: 'fa-charging-station' }, { name: 'سیستم مانیتورینگ', cost: 120, desc: 'تله‌متری', icon: 'fa-desktop' }, { name: 'ابنیه و بالاسری', cost: 440, desc: 'سوله و طراحی', icon: 'fa-helmet-safety' } ] },
-            { id: 'm3', title: 'زهکشی و هدایت آب‌های سطحی', cost: 2450, icon: 'fa-cloud-showers-heavy',
-              design: 'طراحی مبتنی بر هیدرولوژی کوهپایه‌ای (دوره بازگشت ۵۰ ساله). ترکیب حوضچه‌های آرام‌کننده بالادست با خطوط انتقال.',
-              price: 'استفاده حداکثری از مصالح بومی (کانال‌های سنگی/بتنی درجا) برای کاهش هزینه. بخش GRP مبتنی بر دلار روز.',
-              unit: 'هزینه لوله GRP قطور: ۳۰ میلیون تومان/متر. اجرای کانال سنگی/بتنی: ۱۵ میلیون تومان/متر.',
-              rows: [ { name: 'خطوط انتقال GRP قطور', cost: 1100, desc: 'مسیرهای پرفشار', icon: 'fa-pipe-valve' }, { name: 'کانال‌های بتنی/سنگی', cost: 650, desc: 'مسیل‌های طبیعی', icon: 'fa-water' }, { name: 'حوضچه‌های سرریز', cost: 250, desc: 'استهلاک انرژی', icon: 'fa-filter' }, { name: 'کالورت‌ها و پل‌ها', cost: 150, desc: 'باکس‌های تقاطع', icon: 'fa-bridge' }, { name: 'مهندسی و بالاسری', cost: 300, desc: 'آزادسازی حریم', icon: 'fa-ruler-combined' } ] },
-            { id: 'm4', title: 'ساختمان‌های خدماتی (امداد و درمان)', cost: 350, icon: 'fa-truck-medical',
-              design: 'احداث ۱۰۰۰ مترمربع ایستگاه آتش‌نشانی و ۲۰۰ مترمربع درمانگاه اورژانس جهت تثبیت بیماران.',
-              price: 'ابنیه مبتنی بر فهرست‌بهای ۱۴۰۴. تجهیزات تخصصی امدادی کاملاً ارزی و مبتنی بر دلار ۱۶۷ هزار تومانی.',
-              unit: 'هزینه ابنیه خدماتی: ۳۵ میلیون تومان/مترمربع. هزینه ماشین آتش‌نشانی نردبان‌دار: ۶۰۰ هزار دلار.',
-              rows: [ { name: 'ماشین‌آلات آتش‌نشانی', cost: 200, desc: 'خرید کامیون نردبان‌دار', icon: 'fa-fire-extinguisher' }, { name: 'آمبولانس مجهز', cost: 65, desc: 'ICU سیار', icon: 'fa-heart-pulse' }, { name: 'ابنیه ایستگاه آتش‌نشانی', cost: 35, desc: '۱۰۰۰ مترمربع آشیانه', icon: 'fa-building-shield' }, { name: 'ابنیه درمانگاه', cost: 10, desc: '۲۰۰ مترمربع کلینیک', icon: 'fa-hospital' }, { name: 'محوطه‌سازی', cost: 40, desc: 'تجهیز کارگاه', icon: 'fa-helicopter' } ] },
-            { id: 'm5', title: 'اصلاح هندسی و پل ورودی', cost: 280, icon: 'fa-bridge',
-              design: 'تقاطع غیرهمسطح (عرشه ۵۷۰۰ مترمربع) جهت اتصال ایمن جاده ساحلی به گیت شهرک.',
-              price: 'مبتنی بر هزینه روز پل‌سازی با احتساب شمع‌کوبی عمیق در بستر جلگه‌ای.',
-              unit: 'هزینه احداث پل در شرایط روز: حدود ۴۰ میلیون تومان به ازای هر مترمربع عرشه.',
-              rows: [ { name: 'اجرای عرشه', cost: 110, desc: 'تیرهای پیش‌تنیده', icon: 'fa-road-bridge' }, { name: 'شمع‌کوبی عمیق', cost: 85, desc: 'پایه‌ها و کوله‌ها', icon: 'fa-borehole' }, { name: 'رمپ و لوپ', cost: 45, desc: 'دیوارهای حائل', icon: 'fa-bezier-curve' }, { name: 'تاسیسات ایمنی', cost: 15, desc: 'هندریل و روشنایی', icon: 'fa-lightbulb' }, { name: 'طراحی فاز ۲', cost: 25, desc: 'نظارت و بالاسری', icon: 'fa-compass-drafting' } ] },
-            { id: 'm6', title: 'معبر دسترسی غربی (درب ۲۸۰)', cost: 220, icon: 'fa-road',
-              design: 'شریان جدید ارتباطی به طول ۸۹۰ متر (۳۳ هزار مترمربع روسازی) جهت توزیع ترافیک.',
-              price: 'وابستگی مستقیم به نرخ روز قیر در بورس کالا. فهرست‌بهای راه و باند ۱۴۰۴.',
-              unit: 'هزینه اجرای روسازی و آسفالت درجه یک: ۶ میلیون تومان به ازای هر مترمربع.',
-              rows: [ { name: 'اساس و آسفالت', cost: 95, desc: 'دو لایه آسفالت', icon: 'fa-road' }, { name: 'عملیات خاکی', cost: 45, desc: 'ساب‌گرید', icon: 'fa-truck-moving' }, { name: 'جدول‌گذاری', cost: 25, desc: 'کانیو و پیاده‌رو', icon: 'fa-person-walking' }, { name: 'مبلمان ترافیکی', cost: 25, desc: 'پایه‌های روشنایی', icon: 'fa-traffic-light' }, { name: 'نقشه‌برداری', cost: 30, desc: 'بالاسری پیمانکار', icon: 'fa-map-location' } ] }
-        ];
+        const top10Colors = ['#dc2626', '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#10b981', '#14b8a6', '#0ea5e9', '#3b82f6'];
 
-        // Calculated Total Progress = Average of (asph, water, power, gas)
-        const localData = [
-            { id: 'l1', num: 1, title: 'زیرساخت محله ۱', cost: 242, area: '۵۴.۲۳', areaPct: '۷.۵', pop: '۱۵۹', fam: '۵۳', landPrice: '۳۰', desc: 'محله‌ای کم‌تراکم با زیرساخت‌های نسبتاً متوازن که چالش اصلی آن، کمبود شدید خدمات روبنایی و نیاز به فعال‌سازی ظرفیت‌های خالی است.', unmet: '۲۷', 
-              progress: { total: 85, asph: {p:80, rem:'۲۲,۶۱۰ م.م', c:170}, water: {p:86, rem:'۱,۵۸۴ متر', c:21}, power: {p:92, rem:'۹۲۰ متر', c:17}, gas: {p:83, rem:'۱,۸۷۷ متر', c:34} } },
-            
-            { id: 'l2', num: 2, title: 'زیرساخت محله ۲', cost: 141, area: '۶۶.۶۸', areaPct: '۹.۳', pop: '۶۳', fam: '۲۱', landPrice: '۳۵', desc: 'بافت متراکم و نسبتاً توسعه‌یافته با ارزش ملکی مطلوب. نیاز اصلی در زمینه لکه‌گیری آسفالت و توسعه محدود شبکه‌های مویرگی است.', unmet: '۱۴', 
-              progress: { total: 93, asph: {p:90, rem:'۱۳,۳۴۰ م.م', c:101}, water: {p:93, rem:'۸۵۱ متر', c:11}, power: {p:98, rem:'۲۲۴ متر', c:4}, gas: {p:90, rem:'۱,۳۶۱ متر', c:25} } },
-            
-            { id: 'l3', num: 3, title: 'زیرساخت محله ۳', cost: 91, area: '۳۷.۸۴', areaPct: '۵.۳', pop: '۷۷', fam: '۲۶', landPrice: '۴۰', desc: 'پرتراکم‌ترین محله با درصد پیشرفت عالی زیرساخت‌ها. بودجه در نظر گرفته شده عمدتاً برای پایداری و رفع نواقص جزئی تخصیص می‌یابد.', unmet: '۸', 
-              progress: { total: 92, asph: {p:90, rem:'۸,۱۲۰ م.م', c:61}, water: {p:93, rem:'۵۶۴ متر', c:8}, power: {p:91, rem:'۷۲۸ متر', c:13}, gas: {p:94, rem:'۴۸۹ متر', c:9} } },
-            
-            { id: 'l4', num: 4, title: 'زیرساخت محله ۴', cost: 413, area: '۶۹.۱', areaPct: '۹.۶', pop: '۱۴', fam: '۵', landPrice: '۳۰', desc: 'محله‌ای وسیع با تراکم جمعیتی بسیار پایین و پراکندگی قطعات که نیازمند حجم عظیمی از سرمایه‌گذاری در بخش آسفالت و روسازی است.', unmet: '۳۱', 
-              progress: { total: 76, asph: {p:74, rem:'۳۴,۰۳۰ م.م', c:256}, water: {p:72, rem:'۳,۷۶۷ متر', c:50}, power: {p:73, rem:'۳,۵۳۶ متر', c:65}, gas: {p:83, rem:'۲,۲۶۸ متر', c:42} } },
-            
-            { id: 'l5', num: 5, title: 'زیرساخت محله ۵', cost: 16, area: '۳۵.۶۶', areaPct: '۵.۰', pop: '۷۱', fam: '۲۴', landPrice: '۴۰', desc: 'محله‌ای با پیشرفت فیزیکی تقریباً کامل (۹۹٪). تنها نیازمند عملیات تکمیلی خرد و تحویل قطعی شبکه‌های تاسیساتی می‌باشد.', unmet: '۶', 
-              progress: { total: 99, asph: {p:97, rem:'۱,۶۳۰ م.م', c:12}, water: {p:99, rem:'۷۱ متر', c:1}, power: {p:99, rem:'۶۸ متر', c:1}, gas: {p:99, rem:'۷۱ متر', c:2} } },
-            
-            { id: 'l6', num: 6, title: 'زیرساخت محله ۶', cost: 125, area: '۳۶.۲۸', areaPct: '۵.۰', pop: '۲۷', fam: '۹', landPrice: '۱۰۰', desc: 'بافت مسکونی بلندمرتبه با بالاترین ارزش زمین در شهرک. نیازمند ارتقای ظرفیت شبکه‌های راه و آب برای پاسخگویی به تراکم بالا.', unmet: '۱۲', 
-              progress: { total: 85, asph: {p:78, rem:'۱۲,۱۵۰ م.م', c:91}, water: {p:85, rem:'۸۱۶ متر', c:11}, power: {p:89, rem:'۶۰۲ متر', c:11}, gas: {p:89, rem:'۶۴۳ متر', c:12} } },
-            
-            { id: 'l7', num: 7, title: 'زیرساخت محله ۷', cost: 491, area: '۳۵.۸', areaPct: '۵.۰', pop: '۵۲', fam: '۱۷', landPrice: '۲۰', desc: 'محله‌ای با شیب‌های کوهپایه‌ای و پیشرفت فیزیکی پایین که تکمیل شبکه‌های دفنی آن با دشواری‌ها و هزینه‌های بالایی همراه است.', unmet: '۲۹', 
-              progress: { total: 51, asph: {p:57, rem:'۳۵,۹۸۰ م.م', c:271}, water: {p:53, rem:'۳,۹۶۰ متر', c:52}, power: {p:49, rem:'۴,۲۹۵ متر', c:80}, gas: {p:43, rem:'۴,۷۶۶ متر', c:88} } },
-            
-            { id: 'l8', num: 8, title: 'زیرساخت محله ۸', cost: 831, area: '۶۵.۹۹', areaPct: '۹.۲', pop: '۳۲۷', fam: '۱۰۹', landPrice: '۱۵', desc: 'عقب‌مانده‌ترین محله از نظر پیشرفت زیرساختی که با توجه به وسعت آن، نیازمند یک برنامه توسعه جامع و سرمایه‌گذاری کلان است.', unmet: '۳۶', 
-              progress: { total: 50, asph: {p:46, rem:'۶۷,۹۱۰ م.م', c:510}, water: {p:64, rem:'۴,۵۰۸ متر', c:59}, power: {p:44, rem:'۷,۰۷۳ متر', c:131}, gas: {p:44, rem:'۷,۰۷۳ متر', c:131} } }
-        ];
-
-        // --- Render UI ---
-        function renderMacro() {
-            const container = document.getElementById('macro-container');
-            let html = '';
-            macroData.forEach(item => {
-                const pct = ((item.cost / 10650) * 100).toFixed(1); 
-                let rowsHtml = '';
-                item.rows.forEach(r => {
-                    const rowPct = Math.round((r.cost / item.cost) * 100);
-                    rowsHtml += `
-                        <div class="flex items-center justify-between p-3 border-b border-slate-100 hover:bg-slate-50 transition">
-                            <div class="flex items-center gap-3 w-1/2">
-                                <div class="w-8 h-8 rounded bg-indigo-100 text-indigo-600 flex justify-center items-center"><i class="fa-solid ${r.icon}"></i></div>
-                                <div><p class="font-bold text-slate-700 text-sm">${r.name}</p><p class="text-[11px] text-slate-400 mt-0.5">${r.desc}</p></div>
-                            </div>
-                            <div class="w-1/4 px-2 hidden md:block"><div class="w-full bg-slate-200 h-1.5 rounded-full"><div class="bg-indigo-400 h-1.5 rounded-full" style="width:${rowPct}%"></div></div></div>
-                            <div class="w-1/4 text-left"><span class="font-black text-slate-800">${formatNum(r.cost)}</span> <span class="text-[10px] text-slate-500">م.ت</span></div>
-                        </div>`;
-                });
-
-                html += `
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-4 overflow-hidden">
-                    <div class="p-5 cursor-pointer hover:bg-slate-50 transition" onclick="toggleAcc('m_${item.id}')">
-                        <div class="flex justify-between items-center mb-3">
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl text-indigo-600"><i class="fa-solid ${item.icon}"></i></div>
-                                <div><h3 class="text-lg md:text-xl font-bold text-slate-800">${item.title}</h3></div>
-                            </div>
-                            <div class="text-left flex flex-col items-end">
-                                <span class="text-2xl md:text-3xl font-black text-indigo-700">${formatNum(item.cost)}</span>
-                                <span class="text-xs font-bold text-slate-400 mt-1">میلیارد تومان</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="flex-grow bg-slate-100 h-2 rounded-full overflow-hidden"><div class="bg-indigo-500 h-full rounded-full" style="width: ${pct}%"></div></div>
-                            <span class="text-[11px] font-bold text-slate-400 whitespace-nowrap">${pct}٪ فرامحله‌ای</span>
-                            <i id="icon-m_${item.id}" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 mr-2"></i>
-                        </div>
-                    </div>
-                    <div id="content-m_${item.id}" class="accordion-content bg-slate-50 border-t border-slate-200">
-                        <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-                            <div class="lg:col-span-5 space-y-4">
-                                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                                    <h4 class="font-bold text-indigo-700 mb-2 text-sm"><i class="fa-solid fa-pen-ruler ml-1"></i> مبانی طراحی</h4>
-                                    <p class="text-[13px] font-bold text-slate-600 leading-relaxed text-justify">${item.design}</p>
-                                </div>
-                                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                                    <h4 class="font-bold text-teal-700 mb-2 text-sm"><i class="fa-solid fa-tags ml-1"></i> مبانی قیمت‌گذاری</h4>
-                                    <p class="text-[13px] font-bold text-slate-600 leading-relaxed text-justify">${item.price}</p>
-                                </div>
-                                <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 shadow-sm">
-                                    <h4 class="font-bold text-slate-700 mb-2 text-sm"><i class="fa-solid fa-calculator text-indigo-500 ml-1"></i> شاخص‌های هزینه واحد</h4>
-                                    <p class="text-[13px] font-bold text-indigo-800 leading-relaxed">${item.unit}</p>
-                                </div>
-                            </div>
-                            <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col">
-                                <div class="bg-slate-100 p-3 border-b border-slate-200 text-sm font-bold text-slate-700"><i class="fa-solid fa-table-list text-indigo-500 ml-2"></i>ریزمتره و تفکیک هزینه‌ها</div>
-                                <div class="p-2 flex-grow flex flex-col justify-center">${rowsHtml}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function renderLocal() {
-            const container = document.getElementById('local-container');
-            let html = '';
-            localData.forEach(item => {
-                const pct = ((item.cost / 2350) * 100).toFixed(1); 
-                const p = item.progress;
-                
-                // SVG Mini Progress Ring
-                const radius = 20;
-                const circumference = 2 * Math.PI * radius; // ~125.6
-                const strokeDashoffset = circumference - (p.total / 100) * circumference;
-
-                const pBars = [
-                    { name: 'شبکه راه و معابر', icon: 'fa-road', color: 'orange', data: p.asph },
-                    { name: 'شبکه آبرسانی', icon: 'fa-droplet', color: 'blue', data: p.water },
-                    { name: 'شبکه برق‌رسانی', icon: 'fa-bolt', color: 'yellow', data: p.power },
-                    { name: 'شبکه گازرسانی', icon: 'fa-fire', color: 'red', data: p.gas }
-                ].map(b => `
-                    <div class="mb-5">
-                        <div class="flex justify-between text-sm mb-1 font-bold">
-                            <span class="text-slate-700"><i class="fa-solid ${b.icon} text-${b.color}-500 ml-1"></i>${b.name}</span>
-                            <span class="text-${b.color}-600">${b.data.p}٪</span>
-                        </div>
-                        <div class="w-full bg-slate-100 rounded-full h-3 mb-2 overflow-hidden">
-                            <div class="bg-${b.color}-500 h-3 rounded-full progress-bar-striped" style="width: ${b.data.p}%"></div>
-                        </div>
-                        <div class="flex justify-between text-[11px] text-slate-500">
-                            <span>باقی‌مانده: <span class="font-bold">${b.data.rem}</span></span>
-                            <span class="font-bold text-slate-700">هزینه: <span class="text-${b.color}-600">${formatNum(b.data.c)}</span> م.ت</span>
-                        </div>
-                    </div>`).join('');
-
-                html += `
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-4 overflow-hidden">
-                    <div class="p-5 cursor-pointer hover:bg-slate-50 transition" onclick="toggleAcc('l_${item.id}')">
-                        <div class="flex justify-between items-center mb-3">
-                            <div class="flex items-center gap-4">
-                                <div class="relative w-14 h-14 flex items-center justify-center">
-                                    <svg class="w-14 h-14 progress-ring__circle">
-                                        <circle cx="28" cy="28" r="20" stroke="#f1f5f9" stroke-width="5" fill="transparent" />
-                                        <circle cx="28" cy="28" r="20" stroke="#0ea5e9" stroke-width="5" fill="transparent" stroke-dasharray="${circumference}" stroke-dashoffset="${strokeDashoffset}" stroke-linecap="round" />
-                                    </svg>
-                                    <div class="absolute inset-0 flex items-center justify-center flex-col">
-                                        <span class="text-[10px] font-black text-sky-600 mt-1">${p.total}٪</span>
-                                    </div>
-                                </div>
-                                <div><h3 class="text-lg md:text-xl font-bold text-slate-800">${item.title}</h3></div>
-                            </div>
-                            <div class="text-left flex flex-col items-end">
-                                <span class="text-2xl md:text-3xl font-black text-teal-700">${formatNum(item.cost)}</span>
-                                <span class="text-xs font-bold text-slate-400 mt-1">میلیارد تومان</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="flex-grow bg-slate-100 h-2 rounded-full overflow-hidden"><div class="bg-teal-500 h-full rounded-full" style="width: ${pct}%"></div></div>
-                            <span class="text-[11px] font-bold text-slate-400 whitespace-nowrap">${pct}٪ محلات</span>
-                            <i id="icon-l_${item.id}" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 mr-2"></i>
-                        </div>
-                    </div>
-                    <div id="content-l_${item.id}" class="accordion-content bg-slate-50 border-t border-slate-200">
-                        <div class="p-6">
-                            
-                            <p class="text-[13px] text-slate-700 leading-loose text-justify font-bold border-r-4 border-slate-400 pr-3 mb-6">${item.desc}</p>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                                <div class="bg-slate-100/50 p-4 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                                    <i class="fa-solid fa-vector-square text-slate-400 text-2xl mb-2"></i>
-                                    <span class="text-lg font-black text-slate-700">${item.area} <span class="text-xs font-normal">هکتار</span></span>
-                                    <span class="text-[11px] font-bold text-slate-500 mt-1">${item.areaPct}٪ از کل شهرک</span>
-                                </div>
-                                <div class="bg-slate-100/50 p-4 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                                    <i class="fa-solid fa-users text-slate-400 text-2xl mb-2"></i>
-                                    <span class="text-lg font-black text-slate-700">${item.pop} <span class="text-xs font-normal">نفر</span></span>
-                                    <span class="text-[11px] font-bold text-slate-500 mt-1">${item.fam} خانوار</span>
-                                </div>
-                                <div class="bg-slate-100/50 p-4 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                                    <i class="fa-solid fa-money-bill-wave text-slate-400 text-2xl mb-2"></i>
-                                    <span class="text-lg font-black text-slate-700">${item.landPrice} <span class="text-xs font-normal">م.ت</span></span>
-                                    <span class="text-[11px] font-bold text-slate-500 mt-1">ارزش زمین</span>
-                                </div>
-                                <div class="bg-slate-100/50 p-4 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                                    <i class="fa-solid fa-triangle-exclamation text-slate-400 text-2xl mb-2"></i>
-                                    <span class="text-lg font-black text-slate-700">${item.unmet} <span class="text-xs font-normal">مورد</span></span>
-                                    <span class="text-[11px] font-bold text-slate-500 mt-1">نواقص خدمات</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full">
-                                    <h4 class="font-bold text-slate-700 mb-6 border-b pb-2 text-lg"><i class="fa-solid fa-bars-progress text-slate-400 ml-2"></i>جزئیات پیشرفت و بودجه فیزیکی</h4>
-                                    ${pBars}
-                                </div>
-                                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-full flex flex-col justify-center items-center">
-                                    <h4 class="font-bold text-slate-700 mb-4 w-full border-b pb-2 text-lg"><i class="fa-solid fa-chart-pie text-slate-400 ml-2"></i>آنالیز گرافیکی توزیع هزینه‌ها</h4>
-                                    <div class="relative w-full max-w-sm h-[280px]"><canvas id="doughnut-${item.id}"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        // --- Interaction & Charts ---
-        function toggleAcc(id) {
-            const content = document.getElementById(`content-${id}`);
-            const icon = document.getElementById(`icon-${id}`);
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
-                icon.style.transform = "rotate(0deg)";
-            } else {
-                content.classList.add('open');
-                icon.style.transform = "rotate(180deg)";
-                if (id.startsWith('l_')) setTimeout(() => initLocalChart(id.split('_')[1]), 50);
-            }
-        }
-
-        function toggleAll(forceOpen) {
-            const allIds = [...macroData.map(m=>`m_${m.id}`), ...localData.map(l=>`l_${l.id}`)];
-            allIds.forEach(id => {
-                const content = document.getElementById(`content-${id}`);
-                const icon = document.getElementById(`icon-${id}`);
-                if (forceOpen) {
-                    content.classList.add('open');
-                    icon.style.transform = "rotate(180deg)";
-                    if (id.startsWith('l_')) setTimeout(() => initLocalChart(id.split('_')[1]), 50);
-                } else {
-                    content.classList.remove('open');
-                    icon.style.transform = "rotate(0deg)";
-                }
-            });
-        }
-
-        function initLocalChart(id) {
-            if (chartsObj[`d_${id}`]) return;
-            const item = localData.find(l => l.id === id);
-            const p = item.progress;
-            
-            Chart.defaults.font.family = 'Vazirmatn';
-            const ctx = document.getElementById(`doughnut-${id}`).getContext('2d');
-            chartsObj[`d_${id}`] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['راه و آسفالت', 'شبکه آب', 'شبکه برق', 'شبکه گاز'],
-                    datasets: [{
-                        data: [p.asph.c, p.water.c, p.power.c, p.gas.c],
-                        backgroundColor: ['#f97316', '#3b82f6', '#eab308', '#ef4444'],
-                        borderWidth: 3, borderColor: '#ffffff', hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '65%',
-                    plugins: { 
-                        legend: { display: false }, // Removed legend
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { size: 14, family: 'Vazirmatn' },
-                            bodyFont: { size: 14, family: 'Vazirmatn' },
-                            padding: 12,
-                            callbacks: {
-                                title: function() { return ''; }, // Hide duplicate title
-                                label: function(context) {
-                                    return ` ${context.label} : ${formatNum(context.raw)} میلیارد تومان`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function initAnalyticsCharts() {
-            Chart.defaults.font.family = 'Vazirmatn';
-            
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: localData.map(l => l.title.replace('زیرساخت ', '')),
-                    datasets: [
-                        { label: 'آسفالت', data: localData.map(l=>l.progress.asph.p), borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)' },
-                        { label: 'آب', data: localData.map(l=>l.progress.water.p), borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)' },
-                        { label: 'برق', data: localData.map(l=>l.progress.power.p), borderColor: '#eab308', backgroundColor: 'rgba(234, 179, 8, 0.1)' }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } } }
-            });
-
-            const sortedLocals = [...localData].sort((a,b) => b.cost - a.cost);
-            const ctxBar = document.getElementById('barChart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: sortedLocals.map(l => l.title.replace('زیرساخت ', '')),
-                    datasets: [{
-                        label: 'هزینه تکمیل (میلیارد تومان)',
-                        data: sortedLocals.map(l => l.cost),
-                        backgroundColor: '#0ea5e9',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { grid: { color: '#f1f5f9' } }, y: { grid: { display: false } } }
-                }
-            });
-        }
-
-        function exportPDF() {
-            toggleAll(true);
-            setTimeout(() => {
-                const element = document.getElementById('dashboard-content');
-                const opt = {
-                    margin:       [0.3, 0.2, 0.3, 0.2],
-                    filename:     'بودجه-جامع-زیرساخت-۱۴۰۴.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-                html2pdf().set(opt).from(element).save().then(() => toggleAll(false));
-            }, 1000);
-        }
-
-        window.onload = () => {
-            renderMacro();
-            renderLocal();
-            initAnalyticsCharts();
+        const cMap = {
+            indigo: { text: 'text-indigo-500', bg: 'bg-indigo-50', hoverBorder: 'hover:border-indigo-400', hoverText: 'group-hover:text-indigo-600', stroke: 'stroke-indigo-500' },
+            amber: { text: 'text-amber-500', bg: 'bg-amber-50', hoverBorder: 'hover:border-amber-400', hoverText: 'group-hover:text-amber-600', stroke: 'stroke-amber-500' },
+            cyan: { text: 'text-cyan-500', bg: 'bg-cyan-50', hoverBorder: 'hover:border-cyan-400', hoverText: 'group-hover:text-cyan-600', stroke: 'stroke-cyan-500' },
+            slate: { text: 'text-slate-500', bg: 'bg-slate-50', hoverBorder: 'hover:border-slate-400', hoverText: 'group-hover:text-slate-700', stroke: 'stroke-slate-500' },
+            rose: { text: 'text-rose-500', bg: 'bg-rose-50', hoverBorder: 'hover:border-rose-400', hoverText: 'group-hover:text-rose-600', stroke: 'stroke-rose-500' },
+            red: { text: 'text-red-500', bg: 'bg-red-50', hoverBorder: 'hover:border-red-400', hoverText: 'group-hover:text-red-600', stroke: 'stroke-red-500' },
+            yellow: { text: 'text-yellow-500', bg: 'bg-yellow-50', hoverBorder: 'hover:border-yellow-400', hoverText: 'group-hover:text-yellow-600', stroke: 'stroke-yellow-500' },
+            blue: { text: 'text-blue-500', bg: 'bg-blue-50', hoverBorder: 'hover:border-blue-400', hoverText: 'group-hover:text-blue-600', stroke: 'stroke-blue-500' }
         };
+
+        let macroData = [
+            { id: 'm1', title: 'فاضلاب و تصفیه‌خانه', icon: 'fa-water', color: 'indigo', design: 'احداث تصفیه‌خانه اصلی با ظرفیت ۱۵۳۱ مترمکعب برای محلات متراکم و پکیج‌های غیرمتمرکز برای مناطق شیب‌دار جهت توزیع ریسک و رعایت الزامات پدافند غیرعامل.', price: 'مبنای فهرست‌بهای آب و فاضلاب ۱۴۰۴، تخصیص دلار ۱۶۷ هزار تومانی برای تجهیزات، اعمال ضریب منطقه‌ای و شرایط کار.', rows: [ { name: 'لوله‌گذاری شبکه اصلی متمرکز', base: 520, fxPct: 0.40, procPct: 0.60 }, { name: 'ایستگاه‌های پمپاژ و سیویل', base: 780, fxPct: 0.45, procPct: 0.40 }, { name: 'تجهیزات الکترومکانیکال متمرکز', base: 500, fxPct: 0.95, procPct: 0.90 }, { name: 'تامین پکیج‌های غیرمتمرکز', base: 850, fxPct: 0.85, procPct: 0.80 }, { name: 'شبکه محلی و مهندسی', base: 1350, fxPct: 0.35, procPct: 0.50 } ] },
+            { id: 'm2', title: 'توزیع برق و نیروگاه', icon: 'fa-bolt', color: 'amber', design: 'احداث نیروگاه ۱۵ مگاواتی گازسوز (اجرای فاز اول ۱۰ مگاوات) با قابلیت Island Mode کامل جهت تاب‌آوری ۱۰۰٪. اجرای رینگ ۲۰kV کاملاً زیرزمینی.', price: 'تامین ژنراتورهای صنعتی دائم‌کار. فهرست‌بهای تاسیسات برقی ۱۴۰۴. فازبندی خرید جهت کاهش خواب سرمایه.', rows: [ { name: 'نیروگاه گازسوز (ژنراتورها)', base: 1550, fxPct: 0.98, procPct: 0.95 }, { name: 'شبکه زیرزمینی ۲۰kV و LV', base: 820, fxPct: 0.70, procPct: 0.70 }, { name: 'پست‌های توزیع کمپکت', base: 420, fxPct: 0.80, procPct: 0.85 }, { name: 'سیستم مانیتورینگ', base: 120, fxPct: 0.90, procPct: 0.80 }, { name: 'ابنیه و بالاسری', base: 440, fxPct: 0.30, procPct: 0.30 } ] },
+            { id: 'm3', title: 'زهکشی و آب‌های سطحی', icon: 'fa-cloud-showers-heavy', color: 'cyan', design: 'طراحی مبتنی بر هیدرولوژی کوهپایه‌ای (دوره بازگشت ۵۰ ساله). ترکیب حوضچه‌های آرام‌کننده بالادست با خطوط انتقال.', price: 'استفاده حداکثری از مصالح بومی (کانال‌های سنگی/بتنی درجا) برای کاهش هزینه. بخش GRP مبتنی بر دلار روز.', rows: [ { name: 'خطوط انتقال GRP قطور', base: 1100, fxPct: 0.85, procPct: 0.80 }, { name: 'کانال‌های بتنی/سنگی', base: 650, fxPct: 0.35, procPct: 0.40 }, { name: 'حوضچه‌های سرریز', base: 250, fxPct: 0.35, procPct: 0.50 }, { name: 'کالورت‌ها و پل‌ها', base: 150, fxPct: 0.35, procPct: 0.50 }, { name: 'مهندسی و آزادسازی', base: 300, fxPct: 0.20, procPct: 0.10 } ] },
+            { id: 'm4', title: 'خدماتی (امداد و درمان)', icon: 'fa-truck-medical', color: 'rose', design: 'احداث ۱۰۰۰ مترمربع ایستگاه آتش‌نشانی و ۲۰۰ مترمربع درمانگاه اورژانس جهت تثبیت بیماران.', price: 'ابنیه مبتنی بر فهرست‌بهای ۱۴۰۴. تجهیزات تخصصی امدادی کاملاً ارزی و مبتنی بر نرخ روز.', rows: [ { name: 'ماشین‌آلات آتش‌نشانی نردبان‌دار', base: 200, fxPct: 0.98, procPct: 0.98 }, { name: 'آمبولانس مجهز (ICU)', base: 65, fxPct: 0.95, procPct: 0.95 }, { name: 'ابنیه آتش‌نشانی', base: 35, fxPct: 0.40, procPct: 0.50 }, { name: 'ابنیه درمانگاه', base: 10, fxPct: 0.40, procPct: 0.50 }, { name: 'محوطه‌سازی و هلی‌پد', base: 40, fxPct: 0.35, procPct: 0.40 } ] },
+            { id: 'm5', title: 'اصلاح هندسی و پل ورودی', icon: 'fa-bridge', color: 'slate', design: 'تقاطع غیرهمسطح (عرشه ۵۷۰۰ مترمربع) جهت اتصال ایمن جاده ساحلی به گیت شهرک.', price: 'مبتنی بر هزینه روز پل‌سازی با احتساب شمع‌کوبی عمیق در بستر جلگه‌ای.', rows: [ { name: 'اجرای عرشه و دال', base: 110, fxPct: 0.55, procPct: 0.60 }, { name: 'شمع‌کوبی و پایه‌ها', base: 85, fxPct: 0.40, procPct: 0.40 }, { name: 'رمپ و دیوارهای حائل', base: 45, fxPct: 0.45, procPct: 0.50 }, { name: 'تاسیسات و ایمنی', base: 15, fxPct: 0.60, procPct: 0.70 }, { name: 'طراحی و بالاسری', base: 25, fxPct: 0.20, procPct: 0.10 } ] },
+            { id: 'm6', title: 'معبر دسترسی غربی', icon: 'fa-road', color: 'slate', design: 'شریان جدید ارتباطی به طول ۸۹۰ متر (۳۳ هزار مترمربع روسازی) جهت توزیع ترافیک پدافندی.', price: 'وابستگی مستقیم به نرخ روز قیر در بورس کالا. فهرست‌بهای راه و باند ۱۴۰۴.', rows: [ { name: 'اساس و آسفالت (قیر)', base: 95, fxPct: 0.65, procPct: 0.70 }, { name: 'عملیات خاکی', base: 45, fxPct: 0.35, procPct: 0.20 }, { name: 'جدول‌گذاری و پیاده‌رو', base: 25, fxPct: 0.35, procPct: 0.40 }, { name: 'مبلمان ترافیکی و روشنایی', base: 25, fxPct: 0.65, procPct: 0.80 }, { name: 'نقشه‌برداری', base: 30, fxPct: 0.20, procPct: 0.10 } ] }
+        ];
+
+        let localData = [
+            { id: 'l1', title: 'محله ۱', base: 216.7, fxPct: 0.60, p: { r: 80, w: 86, e: 92, g: 83 } }, { id: 'l2', title: 'محله ۲', base: 125.8, fxPct: 0.60, p: { r: 90, w: 93, e: 98, g: 90 } }, { id: 'l3', title: 'محله ۳', base: 81.4,  fxPct: 0.60, p: { r: 90, w: 93, e: 91, g: 94 } },
+            { id: 'l4', title: 'محله ۴', base: 369.1, fxPct: 0.60, p: { r: 74, w: 72, e: 73, g: 83 } }, { id: 'l5', title: 'محله ۵', base: 14.0,  fxPct: 0.60, p: { r: 97, w: 99, e: 99, g: 99 } }, { id: 'l6', title: 'محله ۶', base: 111.9, fxPct: 0.60, p: { r: 78, w: 85, e: 89, g: 89 } },
+            { id: 'l7', title: 'محله ۷', base: 438.5, fxPct: 0.60, p: { r: 57, w: 53, e: 49, g: 43 } }, { id: 'l8', title: 'محله ۸', base: 743.3, fxPct: 0.60, p: { r: 46, w: 64, e: 44, g: 44 } }, { id: 'ls', title: 'حوزه خدماتی', base: 249.2, fxPct: 0.60, p: { r: 60, w: 75, e: 80, g: 60 } }
+        ];
+
+        let activeMacroId = 'm1';
+
+        function calculateDynamicCost(baseCost, fxPct, rate) {
+            return (baseCost * fxPct * (rate / BASE_RATE)) + (baseCost * (1 - fxPct));
+        }
+
+        function getComputedRows(rate) {
+            let allRows = [];
+            macroData.forEach(m => { m.rows.forEach(r => { allRows.push({ ...r, parentTitle: m.title, currentCost: calculateDynamicCost(r.base, r.fxPct, rate) }); }); });
+            localData.forEach(l => { allRows.push({ name: `زیرساخت ${l.title}`, parentTitle: 'محلات و حوزه‌ها', base: l.base, fxPct: l.fxPct, procPct: 0.60, currentCost: calculateDynamicCost(l.base, l.fxPct, rate) }); });
+            return allRows;
+        }
+
+        function getMacroTotals(rate) {
+            let totals = {};
+            macroData.forEach(m => totals[m.id] = m.rows.reduce((sum, r) => sum + calculateDynamicCost(r.base, r.fxPct, rate), 0));
+            return totals;
+        }
+        function getLocalTotal(rate) { return localData.reduce((sum, l) => sum + calculateDynamicCost(l.base, l.fxPct, rate), 0); }
+
+        function handleSliderChange(val) { currentRate = parseInt(val); document.getElementById('current-rate-display').innerText = formatNum(currentRate); updateDashboard(); }
+        function resetSlider() { document.getElementById('fx-slider').value = BASE_RATE; handleSliderChange(BASE_RATE); }
+
+        function updateDashboard() {
+            const rate = currentRate;
+            const macroTotals = getMacroTotals(rate);
+            const sumMacro = Object.values(macroTotals).reduce((a,b)=>a+b,0);
+            const sumLocal = getLocalTotal(rate);
+            const grandTotal = sumMacro + sumLocal;
+            
+            document.getElementById('total-budget').innerHTML = `${formatNum(grandTotal)} <span class="text-2xl md:text-3xl text-slate-400 font-bold">میلیارد تومان</span>`;
+            document.getElementById('macro-total').innerHTML = `${formatNum(sumMacro)} <span class="text-sm text-indigo-800/60 font-bold">م.ت</span>`;
+            document.getElementById('local-total').innerHTML = `${formatNum(sumLocal)} <span class="text-sm text-amber-700/60 font-bold">م.ت</span>`;
+
+            renderSummaryCards(rate, macroTotals, sumLocal, grandTotal);
+
+            const allRows = getComputedRows(rate);
+            let totalFX = 0; let totalIRR = 0; let totalProc = 0; let totalConst = 0;
+            allRows.forEach(r => {
+                totalFX += r.base * r.fxPct * (rate / BASE_RATE); totalIRR += r.base * (1 - r.fxPct);
+                totalProc += r.currentCost * r.procPct; totalConst += r.currentCost * (1 - r.procPct);
+            });
+            
+            const fxPctStr = ((totalFX / grandTotal) * 100).toFixed(1);
+            const procPctStr = ((totalProc / grandTotal) * 100).toFixed(1);
+
+            document.getElementById('fx-pct-txt').innerText = `${fxPctStr}٪`; document.getElementById('fx-bar').style.width = `${fxPctStr}%`; document.getElementById('irr-bar').style.width = `${100 - fxPctStr}%`;
+            document.getElementById('fx-val-txt').innerText = `${formatNum(totalFX)} م.ت`; document.getElementById('irr-val-txt').innerText = `${formatNum(totalIRR)} م.ت`;
+            document.getElementById('proc-pct-txt').innerText = `${procPctStr}٪`; document.getElementById('proc-bar').style.width = `${procPctStr}%`; document.getElementById('const-bar').style.width = `${100 - procPctStr}%`;
+            document.getElementById('proc-val-txt').innerText = `${formatNum(totalProc)} م.ت`; document.getElementById('const-val-txt').innerText = `${formatNum(totalConst)} م.ت`;
+
+            const sorted = [...allRows].sort((a,b) => b.currentCost - a.currentCost).slice(0, 10);
+            const maxCost = sorted[0].currentCost;
+            let top10Html = '';
+            sorted.forEach((item, index) => {
+                const w = (item.currentCost / maxCost) * 100;
+                const color = top10Colors[index];
+                top10Html += `
+                    <div class="mb-3.5 relative">
+                        <div class="flex justify-between text-[13px] font-bold mb-1">
+                            <span class="text-slate-700">${index + 1}. ${item.name} <span class="text-[10px] text-slate-400 font-normal">(${item.parentTitle})</span></span>
+                            <span style="color:${color}">${formatNum(item.currentCost)} م.ت</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5"><div class="h-1.5 rounded-full transition-all duration-300" style="width: ${w}%; background-color: ${color}"></div></div>
+                    </div>`;
+            });
+            document.getElementById('top10-container').innerHTML = top10Html;
+
+            renderMacroTabs(macroTotals); 
+            renderMacroDetails(activeMacroId, macroTotals);
+            renderMatrixGrid(rate);
+        }
+
+        function renderSummaryCards(rate, macroTotals, sumLocal, grandTotal) {
+            const localRatio = sumLocal / 2350; 
+            const categories = [
+                { id: 'c1', title: 'فاضلاب و تصفیه‌خانه', type: '(فرامحله‌ای)', cost: macroTotals['m1'], colorKey: 'indigo', icon: 'fa-water' },
+                { id: 'c2', title: 'پست برق و نیروگاه', type: '(فرامحله‌ای)', cost: macroTotals['m2'], colorKey: 'amber', icon: 'fa-bolt' },
+                { id: 'c3', title: 'زهکشی و آب‌های سطحی', type: '(فرامحله‌ای)', cost: macroTotals['m3'], colorKey: 'cyan', icon: 'fa-cloud-showers-heavy' },
+                { id: 'c4', title: 'شبکه راه و معابر', type: '(فرامحله‌ای + محلات)', cost: macroTotals['m5'] + macroTotals['m6'] + (1472 * localRatio), colorKey: 'slate', icon: 'fa-road' },
+                { id: 'c5', title: 'ساختمان‌های خدماتی', type: '(فرامحله‌ای)', cost: macroTotals['m4'], colorKey: 'rose', icon: 'fa-truck-medical' },
+                { id: 'c6', title: 'شبکه گازرسانی', type: '(کل محلات)', cost: 343 * localRatio, colorKey: 'red', icon: 'fa-fire' },
+                { id: 'c7', title: 'برق‌رسانی و روشنایی', type: '(داخل محلات)', cost: 322 * localRatio, colorKey: 'yellow', icon: 'fa-lightbulb' },
+                { id: 'c8', title: 'شبکه آبرسانی', type: '(کل محلات)', cost: 213 * localRatio, colorKey: 'blue', icon: 'fa-droplet' },
+            ];
+
+            let html = '';
+            categories.forEach(c => {
+                const pct = (c.cost / grandTotal) * 100;
+                const dashOffset = 100 - pct; 
+                const tColor = cMap[c.colorKey]; 
+
+                html += `
+                    <div class="summary-card group relative bg-white rounded-2xl p-4 md:p-5 border border-slate-100 cursor-default transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl ${tColor.hoverBorder}">
+                        <div class="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none z-0">
+                            <i class="fa-solid ${c.icon} watermark-icon absolute -bottom-4 -left-4 text-7xl ${tColor.text} opacity-[0.03] transition-all duration-500"></i>
+                        </div>
+                        <div class="relative z-10 flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl ${tColor.bg} flex items-center justify-center ${tColor.text} transition-colors group-hover:bg-white border border-transparent group-hover:border-slate-100">
+                                    <i class="fa-solid ${c.icon} text-lg"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-slate-700 leading-tight ${tColor.hoverText} transition-colors">${c.title}</h4>
+                                    <p class="text-[10px] text-slate-400 font-bold mt-1">${c.type}</p>
+                                </div>
+                            </div>
+                            <div class="relative w-8 h-8 group/chart cursor-help shrink-0">
+                                <svg viewBox="0 0 36 36" class="w-8 h-8 transform -rotate-90 drop-shadow-sm">
+                                    <circle cx="18" cy="18" r="15.915" fill="none" class="stroke-slate-100" stroke-width="4"></circle>
+                                    <circle cx="18" cy="18" r="15.915" fill="none" class="${tColor.stroke} transition-all duration-500" stroke-width="4" stroke-dasharray="100 100" stroke-dashoffset="${dashOffset}"></circle>
+                                </svg>
+                                <div class="custom-tooltip text-[10px]">سهم از کل: ${pct.toFixed(1)}٪</div>
+                            </div>
+                        </div>
+                        <div class="relative z-10 text-right mt-2">
+                            <p class="text-[10px] text-slate-400 font-bold mb-0.5">هزینه کل برآوردی</p>
+                            <p class="text-2xl font-black text-slate-800 flex items-baseline gap-1 ${tColor.hoverText} transition-colors">${formatNum(c.cost)} <span class="text-[10px] text-slate-500 font-bold">م.ت</span></p>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('dynamic-summary-cards').innerHTML = html;
+        }
+
+        function renderMacroTabs(totals) {
+            document.getElementById('macro-tabs').innerHTML = macroData.map(m => `
+                <button onclick="selectMacro('${m.id}')" class="tab-btn w-full text-right p-4 border-b border-slate-100 flex items-center justify-between ${m.id === activeMacroId ? 'active' : 'text-slate-600'}">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid ${m.icon} ${m.id === activeMacroId ? cMap[m.color].text : 'text-slate-400'} w-5 text-center"></i>
+                        <span class="text-sm font-bold">${m.title}</span>
+                    </div>
+                    <span class="text-xs font-black">${formatNum(totals[m.id])}</span>
+                </button>
+            `).join('');
+        }
+        function selectMacro(id) { activeMacroId = id; updateDashboard(); }
+
+        function renderMacroDetails(id, totals) {
+            const m = macroData.find(x => x.id === id);
+            const totalCost = totals[m.id];
+            const tColor = cMap[m.color];
+            
+            let rowsHtml = '';
+            m.rows.forEach(r => {
+                const cCost = calculateDynamicCost(r.base, r.fxPct, currentRate);
+                let rowPct = 0; if(totalCost > 0) rowPct = Math.round((cCost / totalCost) * 100);
+                rowsHtml += `
+                    <div class="flex items-center justify-between py-3 border-b border-slate-200 border-dashed">
+                        <div class="w-[45%] pr-2">
+                            <p class="font-bold text-slate-700 text-sm">${r.name}</p>
+                            <p class="text-[10px] text-slate-400 font-bold mt-1">وابستگی ارزی: ${Math.round(r.fxPct*100)}٪</p>
+                        </div>
+                        <div class="w-[35%] px-4 hidden sm:block">
+                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden border border-slate-300">
+                                <div class="${tColor.bg.replace('bg-', 'bg-').replace('50', '500')} h-full animate-stripes transition-all duration-300" style="width:${rowPct}%"></div>
+                            </div>
+                            <p class="text-[9px] text-slate-500 font-bold mt-1.5 text-center">سهم از این بخش: ${rowPct}٪</p>
+                        </div>
+                        <div class="w-[20%] text-left pl-2">
+                            <span class="font-black text-slate-800 text-lg">${formatNum(cCost)}</span> <span class="text-[10px] font-bold text-slate-500">م.ت</span>
+                        </div>
+                    </div>`;
+            });
+
+            document.getElementById('macro-details').innerHTML = `
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 group relative">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-2xl font-black text-slate-800">${m.title}</h3>
+                        <div class="w-6 h-6 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center cursor-help transition hover:bg-slate-300"><i class="fa-solid fa-info text-xs"></i></div>
+                    </div>
+                    <div class="custom-tooltip top-full bottom-auto mt-2 text-right w-[300px]">
+                        <div class="mb-2 border-b border-slate-600 pb-2"><span class="text-amber-400 font-bold text-xs"><i class="fa-solid fa-pen-ruler ml-1"></i>مبانی طراحی:</span><p class="text-xs font-normal mt-1 leading-relaxed text-justify">${m.design}</p></div>
+                        <div><span class="text-cyan-400 font-bold text-xs"><i class="fa-solid fa-tags ml-1"></i>مبانی قیمت‌گذاری:</span><p class="text-xs font-normal mt-1 leading-relaxed text-justify">${m.price}</p></div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-3xl font-black ${tColor.text} transition-all duration-300">${formatNum(totalCost)}</p>
+                        <p class="text-[10px] font-bold text-slate-500">مجموع (میلیارد تومان)</p>
+                    </div>
+                </div>
+                <div>${rowsHtml}</div>
+            `;
+        }
+
+        // --- NEW: Smart Matrix Grid for Locals ---
+        function getProgressColor(avg) {
+            if(avg >= 85) return '#10b981'; // Emerald 500
+            if(avg >= 50) return '#f59e0b'; // Amber 500
+            return '#ef4444';               // Red 500
+        }
+
+        function renderMatrixGrid(rate) {
+            const localsWithCost = localData.map(l => {
+                const cCost = calculateDynamicCost(l.base, l.fxPct, rate);
+                const avgProg = (l.p.r + l.p.w + l.p.e + l.p.g) / 4;
+                return { ...l, currentCost: cCost, avgProg: avgProg, colorCode: getProgressColor(avgProg) };
+            }).sort((a,b) => b.currentCost - a.currentCost); // Sort by Cost
+
+            let html = '';
+            localsWithCost.forEach(l => {
+                const circ = 2 * Math.PI * 22; // ~138.2
+                const offset = circ - (l.avgProg / 100) * circ;
+                
+                html += `
+                    <div class="group relative bg-white rounded-2xl p-5 border border-slate-200 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-default">
+                        <div class="flex justify-between items-center h-full">
+                            <div class="relative w-[60px] h-[60px] flex items-center justify-center shrink-0">
+                                <svg class="w-full h-full transform -rotate-90">
+                                    <circle cx="30" cy="30" r="22" stroke="#f1f5f9" stroke-width="5" fill="none" />
+                                    <circle cx="30" cy="30" r="22" stroke="${l.colorCode}" stroke-width="5" fill="none" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" class="transition-all duration-700" />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-[11px] font-black" style="color: ${l.colorCode}">${Math.round(l.avgProg)}٪</span>
+                                </div>
+                            </div>
+                            <div class="text-left pl-1">
+                                <h4 class="text-sm font-black text-slate-800 mb-1">${l.title}</h4>
+                                <p class="text-2xl font-black text-slate-700 transition-all duration-300">${formatNum(l.currentCost)} <span class="text-[10px] text-slate-400 font-bold">م.ت</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center p-5 z-20">
+                            <p class="text-white font-black text-sm border-b border-slate-700 pb-2 mb-3 text-center">${l.title} <span class="text-[10px] text-slate-400 font-normal">(پیشرفت فیزیکی)</span></p>
+                            <div class="grid grid-cols-2 gap-y-3 gap-x-4 text-xs">
+                                <div class="flex justify-between items-center"><span class="text-slate-400"><i class="fa-solid fa-road ml-1 text-slate-500 text-[10px]"></i>راه:</span><span class="font-bold text-orange-400">${l.p.r}٪</span></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-400"><i class="fa-solid fa-droplet ml-1 text-slate-500 text-[10px]"></i>آب:</span><span class="font-bold text-blue-400">${l.p.w}٪</span></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-400"><i class="fa-solid fa-bolt ml-1 text-slate-500 text-[10px]"></i>برق:</span><span class="font-bold text-yellow-400">${l.p.e}٪</span></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-400"><i class="fa-solid fa-fire ml-1 text-slate-500 text-[10px]"></i>گاز:</span><span class="font-bold text-red-400">${l.p.g}٪</span></div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('matrix-container').innerHTML = html;
+        }
+
+        window.onload = () => updateDashboard();
     </script>
-    
+
     <script>
     window.addEventListener('keydown', function(e){
       if (e.key === 'Backspace') {
