@@ -154,7 +154,6 @@
 
     <div id="bookContainer" class="book-container w-full max-w-5xl h-[95vh] max-h-[960px]">
         
-        <!-- Page 1: Cover -->
         <div id="coverPage" class="page active">
             <header class="flex justify-center pt-2 md:pt-4">
                 <img src="https://uploadkon.ir/uploads/df5427_25NA-LOGO-copy.png" alt="لوگوی نمک آبرود" class="h-28 md:h-32 max-h-[20vh]"
@@ -184,25 +183,28 @@
                             </span>
                         </span>
                     </p>
-                    <p>شهریورماه 1404</p>
+                    <p>اسفندماه 1404</p>
                 </div>
             </footer>
         </div>
 
-        <!-- Page 2: Table of Contents -->
         <div id="tocPage" class="page">
             <header class="flex justify-between items-center border-b border-gray-300">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-800">فهرست مطالب</h2>
-                <button id="backToCoverButton" title="بازگشت به جلد" class="flex items-center p-2 rounded-full hover:bg-gray-200 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span class="text-xs text-gray-500 font-light mr-1">بازگشت</span>
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen()" class="p-2 rounded-full hover:bg-gray-200 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button id="backToCoverButton" title="بازگشت به جلد" class="flex items-center p-2 rounded-full hover:bg-gray-200 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-xs text-gray-500 font-light mr-1">بازگشت</span>
+                    </button>
+                </div>
             </header>
             <main>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
-                    <!-- Cards are now in the correct order -->
                     <div class="toc-card bg-white rounded-lg p-5 text-center cursor-pointer border" data-page="reportPage">
                         <h3 class="font-bold text-lg text-gray-800">گزارش مدیریتی و تحلیلی شناخت</h3>
                         <p class="text-sm text-gray-500 mt-2">تحلیل وضعیت موجود و پتانسیل‌ها</p>
@@ -214,7 +216,7 @@
                         <div class="info"><p>برای مشاهده جزئیات کامل کلیک کنید.</p></div>
                     </div>
                     <div class="toc-card bg-white rounded-lg p-5 text-center cursor-pointer border" data-page="incomeDashboardPage">
-                        <h3 class="font-bold text-lg text-gray-800">داشبورد مدیریتی درآمدهای مسکونی</h3>
+                        <h3 class="font-bold text-lg text-gray-800">داشبورد مدیریتی درآمدهای گردشگری و مسکونی</h3>
                         <p class="text-sm text-gray-500 mt-2">تحلیل جامع درآمدها برای تصمیم‌گیری‌های کلان مدیریتی</p>
                         <div class="info"><p>برای مشاهده جزئیات کامل کلیک کنید.</p></div>
                     </div>
@@ -234,7 +236,7 @@
                         <div class="info"><p>برای مشاهده جزئیات کامل کلیک کنید.</p></div>
                     </div>
                     <div class="toc-card bg-white rounded-lg p-5 text-center cursor-pointer border" data-page="dashboardPage">
-                        <h3 class="font-bold text-lg text-gray-800">داشبورد جامع راهبری مالی و اجرایی</h3>
+                        <h3 class="font-bold text-lg text-gray-800">داشبورد جامع تخصیص بودجه به زیرساخت‌ها</h3>
                         <p class="text-sm text-gray-500 mt-2">تحلیل و پایش شاخص‌های کلیدی</p>
                         <div class="info"><p>برای مشاهده جزئیات کامل کلیک کنید.</p></div>
                     </div>
@@ -248,7 +250,6 @@
                         <p class="text-sm text-gray-500 mt-2">Feasibility Study of Proposed Projects</p>
                         <div class="info"><p>برای مشاهده جزئیات کامل کلیک کنید.</p></div>
                     </div>
-                    <!-- کارت جدید در اینجا اضافه شد -->
                     <div class="toc-card bg-white rounded-lg p-5 text-center cursor-pointer border" data-page="omanaPage">
                         <h3 class="font-bold text-lg text-gray-800">وظایف و مسئولیت‌های هیئت امنا (مالکین)</h3>
                         <p class="text-sm text-gray-500 mt-2">بررسی ساختار و وظایف هیئت امنا</p>
@@ -261,48 +262,134 @@
             </footer>
         </div>
         
-        <!-- Content Pages -->
         <div id="reportPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">گزارش مدیریتی و تحلیلی شناخت شهرک نمک‌آبرود</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/DashboardNA/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">گزارش مدیریتی و تحلیلی شناخت شهرک نمک‌آبرود</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('reportFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="reportFrame" src="https://hrtorabii-404.github.io/namakabroud-report/DashboardNA/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="costDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد مدیریتی برآورد هزینه</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Infra/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد مدیریتی برآورد هزینه</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('costFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="costFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Infra/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="packagePage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">بسته های پیشنهادی پروژه های بالقوه</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Package/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">بسته های پیشنهادی پروژه های بالقوه</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('packageFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="packageFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Package/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="investmentDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد تحلیلی پروژه‌های سرمایه‌گذاری</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد تحلیلی پروژه‌های سرمایه‌گذاری</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('investmentFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="investmentFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/20pFi/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="infraDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد راهبری اولویت بندی پروژه ها</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Prioritization/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد راهبری اولویت بندی پروژه ها</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('infraFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="infraFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Prioritization/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="dashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد جامع راهبری مالی و اجرایی</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Cost/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد جامع تخصیص بودجه به زیرساخت‌ها</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('dashboardFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="dashboardFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Cost/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="mapsDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد تعاملی پروژه‌ها و نقشه ضوابط پهنه‌بندی</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Maps/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد تعاملی پروژه‌ها و نقشه ضوابط پهنه‌بندی</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('mapsFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="mapsFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Maps/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="fsDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد ارزیابی مالی پروژه های پیشنهادی</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/FS_project/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد ارزیابی مالی پروژه های پیشنهادی</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('fsFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="fsFrame" src="https://hrtorabii-404.github.io/namakabroud-report/FS_project/" class="w-full h-full border-0"></iframe></main>
         </div>
+        
         <div id="incomeDashboardPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">داشبورد مدیریتی درآمدهای مسکونی</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/MaskuniIncome/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">داشبورد مدیریتی درآمدهای گردشگری و مسکونی</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('incomeFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="incomeFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/MaskuniIncome/" class="w-full h-full border-0"></iframe></main>
         </div>
 
-        <!-- صفحه جدید در اینجا اضافه شد -->
         <div id="omanaPage" class="page content-page">
-            <header class="flex justify-between items-center"><h2 class="text-lg font-bold text-gray-800">وظایف و مسئولیت‌های هیئت امنا (مالکین)</h2><button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button></header>
-            <main><iframe src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Omanayi/" class="w-full h-full border-0"></iframe></main>
+            <header class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">وظایف و مسئولیت‌های هیئت امنا (مالکین)</h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleFullScreen('omanaFrame')" class="p-2 rounded-full hover:bg-gray-300/50 text-gray-600 transition-colors" title="تمام صفحه">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path class="fs-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                    <button class="back-to-toc flex items-center p-2 rounded-full hover:bg-gray-300/50 transition-colors" title="بازگشت به فهرست"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg><span class="text-xs text-gray-500 font-light mr-1">بازگشت</span></button>
+                </div>
+            </header>
+            <main><iframe id="omanaFrame" src="https://hrtorabii-404.github.io/namakabroud-report/Dashboard/Omanayi/" class="w-full h-full border-0"></iframe></main>
         </div>
 
     </div>
@@ -330,21 +417,19 @@
         showPage(pageId);
     }
 
-function goBack() {
+    function goBack() {
         if (navigationHistory.length > 1) {
             navigationHistory.pop();
             const prevPage = navigationHistory[navigationHistory.length - 1];
             showPage(prevPage);
             
-            // *** مهم: فوکوس را به پنجره اصلی برگردان ***
-            // تا Backspace بعدی در صفحه فهرست به درستی کار کند
             if (prevPage === 'tocPage' || prevPage === 'coverPage') {
                 window.focus();
             }
         }
     }
 
-    // Event Listeners
+    // Event Listeners for Navigation
     coverClickableArea.addEventListener('click', () => navigateTo('tocPage'));
     backToCoverButton.addEventListener('click', () => navigateTo('coverPage'));
     
@@ -357,12 +442,9 @@ function goBack() {
             const pageId = card.dataset.page;
             if (pageId) {
                 const targetPage = document.getElementById(pageId);
-                // Reload iframe on navigation to ensure scripts are fresh
                 if (targetPage) {
                     const iframe = targetPage.querySelector('iframe');
                     if (iframe && iframe.src) {
-                       // Note: Re-setting src might not be enough for some caching scenarios
-                       // but is good practice.
                        const oldSrc = iframe.src;
                        iframe.src = 'about:blank';
                        setTimeout(() => { iframe.src = oldSrc; }, 0);
@@ -374,8 +456,6 @@ function goBack() {
     });
     
     window.addEventListener('message', function(e) {
-        // A minor security check, but for this context it's okay.
-        // In a real app, you'd want to check e.origin.
         if (e && e.data && e.data.type === 'NAVIGATE_BACK') {
             goBack();
         }
@@ -384,11 +464,7 @@ function goBack() {
     window.addEventListener('keydown', function(e) {
         if (e.key === 'Backspace') {
             const activePage = document.querySelector('.page.active');
-            // Only act if the focus is on the main page (not inside an iframe)
             if (document.hasFocus() && activePage) {
-                 // If it's a content page (with an iframe), do nothing, let the child handle it.
-                 // If it's TOC, go back to cover.
-                 // If it's cover, do nothing.
                 if (activePage.id === 'tocPage') {
                     e.preventDefault();
                     goBack();
@@ -396,9 +472,55 @@ function goBack() {
             }
         }
     });
-</script>
 
+    // --- FULLSCREEN FUNCTIONALITY (Native Browser API) ---
+    window.toggleFullScreen = function(elementId) {
+        const elem = elementId ? document.getElementById(elementId) : document.documentElement;
+        
+        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    // Change icon dynamically based on fullscreen state
+    document.addEventListener("fullscreenchange", updateFsIcons);
+    document.addEventListener("webkitfullscreenchange", updateFsIcons);
+    document.addEventListener("mozfullscreenchange", updateFsIcons);
+    document.addEventListener("MSFullscreenChange", updateFsIcons);
+
+    function updateFsIcons() {
+        const isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+        const paths = document.querySelectorAll('.fs-icon');
+        
+        paths.forEach(path => {
+            if (isFullscreen) {
+                path.setAttribute('d', 'M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3');
+                path.parentElement.parentElement.setAttribute('title', 'خروج از تمام صفحه');
+            } else {
+                path.setAttribute('d', 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4');
+                path.parentElement.parentElement.setAttribute('title', 'تمام صفحه');
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
-
